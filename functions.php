@@ -95,9 +95,21 @@ if ( is_admin() ) {
 	function sem_update() {
 		include_once sem_path . '/inc/update.php';
 	}
-	
+
+       
 	add_action('load-update.php', 'sem_update');
 } elseif ( isset($_GET['preview']) && $_GET['preview'] == 'custom-css' ) {
 	include_once dirname(__FILE__) . '/inc/custom.php';
+} 
+
+function enable_php_code ($text) {
+    if (strpos($text, '<' . '?') !== false) {
+        ob_start();
+        @eval('?' . '>' . $text);
+        $text = ob_get_contents();
+        ob_end_clean();
+    }
+    return $text;
 }
-?>
+
+add_filter('widget_text', 'enable_php_code', 99);

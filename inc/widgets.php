@@ -2036,7 +2036,7 @@ EOS;
 			$header = false;
 		}
 		
-		if ( $header !== false ) {
+		if ( !empty($header) ) {
 			$header_size = @getimagesize(WP_CONTENT_DIR . $header);
 			if ( $header_size ) {
 				wp_cache_set('sem_header', $header_size, 'sem_header');
