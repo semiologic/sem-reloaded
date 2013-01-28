@@ -51,6 +51,7 @@ add_option('sem_api_key', '');
 include sem_path . '/inc/panels.php';
 include sem_path . '/inc/widgets.php';
 include sem_path . '/inc/template.php';
+include sem_path . '/inc/wp-enhancements.php';
 
 if ( file_exists(sem_path . '/custom.php') )
 	include sem_path . '/custom.php';
@@ -101,15 +102,4 @@ if ( is_admin() ) {
 } elseif ( isset($_GET['preview']) && $_GET['preview'] == 'custom-css' ) {
 	include_once dirname(__FILE__) . '/inc/custom.php';
 } 
-
-function enable_php_code ($text) {
-    if (strpos($text, '<' . '?') !== false) {
-        ob_start();
-        @eval('?' . '>' . $text);
-        $text = ob_get_contents();
-        ob_end_clean();
-    }
-    return $text;
-}
-
-add_filter('widget_text', 'enable_php_code', 99);
+?>
