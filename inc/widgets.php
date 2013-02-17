@@ -451,7 +451,7 @@ class entry_content extends WP_Widget {
 		}
 		
 		$thumbnail = '';
-		if ( function_exists('get_the_post_thumbnail') ) {
+		if ( $show_thumbnail && function_exists('get_the_post_thumbnail') ) {
 			add_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
 			$thumbnail = get_the_post_thumbnail();
 			remove_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
@@ -481,7 +481,7 @@ class entry_content extends WP_Widget {
 	 * @param mixed $in
 	 * @param int $id
 	 * @param string $size
-	 * @return False on failure, array on success
+	 * @return false on failure, array on success
 	 **/
 
 	function thumbnail_downsize($in, $id, $size) {
@@ -527,6 +527,7 @@ class entry_content extends WP_Widget {
 		$instance['show_excerpts'] = isset($new_instance['show_excerpts']);
 		$instance['more_link'] = trim(strip_tags($new_instance['more_link']));
 		$instance['paginate'] = trim(strip_tags($new_instance['paginate']));
+        $instance['show_thumbnail'] = isset($new_instance['show_thumbnail']);
 		
 		return $instance;
 	} # update()
@@ -566,9 +567,20 @@ class entry_content extends WP_Widget {
 			. __('Use the post\'s excerpt on blog and archive pages.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
-		
-		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
+        echo '<p>'
+            . '<label>'
+            . '<input type="checkbox"'
+            . ' name="' . $this->get_field_name('show_thumbnail') . '"'
+            . checked($show_thumbnail, true, false)
+            . ' />'
+            . '&nbsp;'
+            . __('Show the featured image, if set, for the post.', 'sem-reloaded')
+            . '</label>'
+            . '</p>' . "\n";
+
+      	echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('Read more on %s...', 'sem-reloaded') . '</code>'
@@ -605,6 +617,7 @@ class entry_content extends WP_Widget {
 			'show_excerpts' => false,
 			'more_link' => __('Read more on %s...', 'sem-reloaded'),
 			'paginate' => __('Pages:', 'sem-reloaded'),
+            'show_thumbnail' => true,
 			);
 	} # defaults()
 } # entry_content
@@ -667,19 +680,13 @@ class entry_categories extends WP_Widget {
 		$categories = get_the_category_list(', ');
 		
 		$author = get_the_author();
-		$author_url = apply_filters('the_author_url', get_the_author_meta('url'));
-		
-		if ( $author_url && $author_url != 'http://' ) {
-			$author = '<span class="entry_author">'
-				. '<a href="' . esc_url($author_url) . '" rel="external">'
-				. $author
-				. '</a>'
-				. '</span>';
-		} else {
-			$author = '<span class="entry_author">'
-				. '<span>' . $author . '</span>'
-				. '</span>';
-		}
+		$author_url = get_author_posts_url( get_the_author_meta( 'ID' ) );
+
+        $author = '<span class="entry_author">'
+            . '<a href="' . esc_url($author_url) . '" rel="author">'
+            . $author
+            . '</a>'
+            . '</span>';
 		
 		$date = apply_filters('the_time', get_the_time(__('M jS, Y', 'sem-reloaded')), __('M jS, Y', 'sem-reloaded'));
 		
@@ -1904,7 +1911,7 @@ class header extends WP_Widget {
 	 * @param string $header
 	 * @return string $html
 	 **/
-	function display_image($header = null) {
+	static function display_image($header = null) {
 		if ( !$header )
 			$header = header::get_header();
 
@@ -1930,7 +1937,7 @@ class header extends WP_Widget {
 	 * @return string $html
 	 **/
 
-	function display_flash($header = null) {
+	static function display_flash($header = null) {
 		if ( !$header )
 			$header = header::get_header();
 
@@ -1962,7 +1969,7 @@ EOS;
 	 * @return void
 	 **/
 
-	function letter() {
+	static function letter() {
 		$header = header::get();
 		
 		if ( !$header || $header != get_post_meta(get_the_ID(), '_sem_header', true) )
@@ -1977,7 +1984,7 @@ EOS;
 	 *
 	 * @return string $header_basedir
 	 **/
-	function get_basedir() {
+	static function get_basedir() {
 		static $header_basedir;
 		
 		if ( isset($header_basedir) )
@@ -2002,7 +2009,7 @@ EOS;
 	 * @return string $header
 	 **/
 
-	function get() {
+	static function get() {
 		static $header;
 		
 		if ( !is_admin() && isset($header) )
@@ -2415,7 +2422,7 @@ class sem_nav_menu extends WP_Widget {
 	function display_page($item) {
 		extract($item, EXTR_SKIP);
 		$ref = (int) $ref;
-		$page = get_page($ref);
+		$page = get_post($ref);
 		
 		if ( !$page || $page->post_parent != 0 && get_post_meta($page->ID, '_widgets_exclude', true) )
 			return;
@@ -2493,7 +2500,7 @@ class sem_nav_menu extends WP_Widget {
 		if ( is_page() ) {
 			global $wp_the_query;
 			$page_id = (int) $wp_the_query->get_queried_object_id();
-			$page = get_page($page_id);
+			$page = get_post($page_id);
 		} else {
 			$page_id = 0;
 			$page = null;
@@ -2501,9 +2508,9 @@ class sem_nav_menu extends WP_Widget {
 		
 		if ( get_option('show_on_front') == 'page' ) {
 			$front_page_id = (int) get_option('page_on_front');
-			$front_page = get_page($front_page_id);
+			$front_page = get_post($front_page_id);
 			$blog_page_id = (int) get_option('page_for_posts');
-			$blog_page = $blog_page_id ? get_page($blog_page_id) : null;
+			$blog_page = $blog_page_id ? get_post($blog_page_id) : null;
 		} else {
 			$front_page_id = 0;
 			$front_page = null;
@@ -2516,7 +2523,7 @@ class sem_nav_menu extends WP_Widget {
 			$ancestors = array();
 			while ( $page && $page->post_parent != 0 ) {
 				$ancestors[] = (int) $page->post_parent;
-				$page = get_page($page->post_parent);
+				$page = get_post($page->post_parent);
 			}
 			$ancestors = array_reverse($ancestors);
 			wp_cache_set($page_id, $ancestors, 'page_ancestors');
@@ -2527,7 +2534,7 @@ class sem_nav_menu extends WP_Widget {
 			$front_page_ancestors = array();
 			while ( $front_page && $front_page->post_parent != 0 ) {
 				$front_page_ancestors[] = (int) $front_page->post_parent;
-				$front_page = get_page($front_page->post_parent);
+				$front_page = get_post($front_page->post_parent);
 			}
 			$front_page_ancestors = array_reverse($front_page_ancestors);
 			wp_cache_set($front_page_id, $front_page_ancestors, 'page_ancestors');
@@ -2538,7 +2545,7 @@ class sem_nav_menu extends WP_Widget {
 			$blog_page_ancestors = array();
 			while ( $blog_page && $blog_page->post_parent != 0 ) {
 				$blog_page_ancestors[] = (int) $blog_page->post_parent;
-				$blog_page = get_page($blog_page->post_parent);
+				$blog_page = get_post($blog_page->post_parent);
 			}
 			$blog_page_ancestors = array_reverse($blog_page_ancestors);
 			wp_cache_set($blog_page_id, $blog_page_ancestors, 'page_ancestors');
@@ -2873,7 +2880,7 @@ class sem_nav_menu extends WP_Widget {
 		echo '<div class="nav_menu_item_sortables">' . "\n";
 		
 		foreach ( $items as $item ) {
-			$label = $item['label'];
+            $label = isset($item['label']) ? $item['label'] : '';
 			$type = $item['type'];
 			switch ( $type ) {
 			case 'home':
@@ -3175,7 +3182,8 @@ EOS;
 	 * flush_post()
 	 *
 	 * @param int $post_id
-	 * @return void
+	 * @return void|mixed
+     *
 	 **/
 
 	function flush_post($post_id) {

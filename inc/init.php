@@ -35,8 +35,10 @@ if ( !class_exists('sem_fixes') ) {
 	wp_timezone_override_offset();
 }
 
-if ( function_exists('add_theme_support') )
+if ( function_exists('add_theme_support') ) {
 	add_theme_support('post-thumbnails');
+    add_theme_support( 'automatic-feed-links' );
+}
 
 global $wp_version;
 if ( version_compare( $wp_version, '3.4', '>=' ) ) 
@@ -53,6 +55,7 @@ if ( !function_exists('true') ) :
 /**
  * true()
  *
+ * @param bool $bool
  * @return bool true
  **/
 
@@ -66,6 +69,7 @@ if ( !function_exists('false') ) :
 /**
  * false()
  *
+ * @param bool $bool
  * @return bool false
  **/
 

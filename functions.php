@@ -11,6 +11,8 @@
 
 include dirname(__FILE__) . '/inc/init.php';
 
+global $sem_options;
+
 # set content width
 switch ( $sem_options['active_layout'] ) {
 case 'm':

@@ -6,12 +6,15 @@
  **/
 
 class sem_update {
-	/**
-	 * upgrader_source_selection()
-	 *
-	 * @param mixed $in
-	 * @return $in
-	 **/
+    /**
+     * upgrader_source_selection()
+     *
+     * @param $source
+     * @param $remote_source
+     * @param $wp_upgrader
+     * @internal param mixed $in
+     * @return $in
+     */
 
 	function upgrader_source_selection($source, $remote_source, $wp_upgrader) {
 		global $wp_filesystem;

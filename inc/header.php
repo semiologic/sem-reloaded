@@ -329,14 +329,15 @@ class sem_header {
 				. '</p>' . "\n";
 		}
 	} # edit_entry()
-	
-	
-	/**
-	 * save_entry()
-	 *
-	 * @param int $post_ID
-	 * @return void
-	 **/
+
+
+    /**
+     * save_entry()
+     *
+     * @param $post_id
+     * @internal param int $post_ID
+     * @return void
+     */
 	
 	function save_entry($post_id) {
 		if ( !$_POST || wp_is_post_revision($post_id) || !current_user_can('edit_post', $post_id) )

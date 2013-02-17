@@ -12,11 +12,11 @@ jQuery.fn.log = function(name) {
 	}
 	jQuery.lastLog = d;
 	return this;
-}
+};
 
 jQuery.log = function(name) {
 	jQuery.fn.log(name);
-}
+};
 
 jQuery.initLogs = function() {
 	var d = ( new Date ).getTime(),
@@ -24,7 +24,7 @@ jQuery.initLogs = function() {
 	jQuery.started = d;
 	jQuery.lastLog = d;
 	return ret;
-}
+};
 
 jQuery.dumpLogs = function() {
 	var ret = new Array,
@@ -34,7 +34,7 @@ jQuery.dumpLogs = function() {
 		ret.push(jQuery.logs[i].elapsed + 'ms\t' + jQuery.logs[i].completed + 'ms\t' + jQuery.logs[i].size + '\t' + jQuery.logs[i].name);
 	}
 	jQuery('#jsdump').html(jQuery.trim(ret.join('\r\n')));
-}
+};
 
 jQuery.logs = new Array;
 jQuery.started = ( new Date ).getTime();

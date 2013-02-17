@@ -12,7 +12,7 @@ class sem_panels {
 	 * @return void
 	 **/
 
-	function register() {
+	static function register() {
 		# autofix panels
 		sem_panels::switch_themes();
 		
@@ -205,7 +205,7 @@ class sem_panels {
 	 * @return void
 	 **/
 
-	function display($panel_id) {
+	static function display($panel_id) {
 		if ( $panel_id != 'the_entry' && !class_exists('widget_contexts') && is_letter() )
 			return;
 		

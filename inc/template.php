@@ -165,9 +165,7 @@ class sem_template {
 	 **/
 
 	function strip_sidebars($layout) {
-		global $content_width;
-		
-		
+
 		return str_replace(array('s', 't'), 'm', $layout);
 	} # strip_sidebars()
 	
@@ -318,7 +316,7 @@ class sem_template {
 	 * @return string $credits
 	 **/
 
-	function get_theme_credits() {
+	static function get_theme_credits() {
 		if ( get_option('sem_api_key') ) {
 			return '<a href="http://www.getsemiologic.com">'
 				. __('Semiologic Pro', 'sem-reloaded')
@@ -343,7 +341,7 @@ class sem_template {
 	 * @return array $credits
 	 **/
 
-	function get_skin_credits() {
+	static function get_skin_credits() {
 		global $sem_options;
 		
 		if ( is_admin() || !is_array($sem_options['skin_data']) ) {
@@ -371,15 +369,16 @@ class sem_template {
 			'skin_author' => $author,
 			);
 	} # get_skin_credits()
-	
-	
-	/**
-	 * get_skin_data()
-	 *
-	 * @return array $data
-	 **/
 
-	function get_skin_data($skin_id) {
+
+    /**
+     * get_skin_data()
+     *
+     * @param $skin_id
+     * @return array $data
+     */
+
+	static function get_skin_data($skin_id) {
 		$fields = array( 'name', 'uri', 'version', 'author_name', 'author_uri', 'description', 'tags' );
 		
 		$allowed_tags = array(
@@ -402,7 +401,6 @@ class sem_template {
 		if ( !$fp ) {
 			foreach ( $fields as $field )
 				$$field = '';
-			$tags = array();
 			return compact($fields);
 		}
 
