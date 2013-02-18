@@ -107,6 +107,16 @@ class sem_skin {
 	font-size: 14px;
 }
 
+.helvetica {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+}
+
+.lucida {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+    font-size: 14px;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -426,7 +436,9 @@ EOS;
 			'georgia' => __('Georgia stack: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif', 'sem-reloaded'),
 			'times' => __('Times stack: "Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif', 'sem-reloaded'),
 			'courier' => __('Courier stack: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace', 'sem-reloaded'),
-			);
+            'helvetica' => __('Helvetica stack: "Helvetica Neue", Helvetica, Arial, Sans-Serif', 'sem-reloaded'),
+            'lucida' => __('Lucida stack: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, Sans-Serif', 'sem-reloaded'),
+        );
 	} # get_fonts()
 } # sem_skin
 

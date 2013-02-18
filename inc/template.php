@@ -100,7 +100,14 @@ class sem_template {
 				$classes[] = $template;
 			}
 		}
-		
+
+        if ( is_singular() ) {
+            global $post;
+            if ( isset( $post ) ) {
+                $classes[] = $post->post_type . '-' . $post->post_name;
+            }
+        }
+
 		return $classes;
 	} # body_class()
 	
@@ -222,7 +229,7 @@ class sem_template {
 			add_filter('option_blog_public', 'false');
 		} elseif ( !is_admin() && !current_user_can('manage_options') ) {
 			# avoid cap-related issues
-			if ( preg_match("|://[^/]*[Ss]e[Mm]io[Ll]o[Gg]ic[^/]+\.|i", get_option('home')) )
+			if ( preg_match("|://[^/]*[Ss]e[Mm]io[Ll]o[Gg]ic[^/]+\.|i", home_url()) )
 				add_filter('option_blog_public', 'false', 1000);
 		}
 		

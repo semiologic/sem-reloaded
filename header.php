@@ -5,9 +5,12 @@
 # You would lose your changes when you upgrade your site. Use php widgets instead.
 #
 
-?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php language_attributes(); ?>>
-<head><title><?php
+?><!DOCTYPE html>
+<html <?php language_attributes(); ?>>
+<head>
+<meta charset="<?php bloginfo( 'charset' ); ?>" />
+<meta name="viewport" content="width=device-width" />
+<title><?php
 if ( $title = trim(wp_title('&#8211;', false)) ) {
 	if ( strpos($title, '&#8211;') === 0 )
 		$title = trim(substr($title, strlen('&#8211;')));
@@ -16,10 +19,17 @@ if ( $title = trim(wp_title('&#8211;', false)) ) {
 	bloginfo('description');
 }
 ?></title>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php bloginfo('charset'); ?>" />
-<link rel="alternate" type="application/rss+xml" title="<?php _e('RSS feed'); ?>" href="<?php bloginfo('rss2_url'); ?>" />
+<link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
-<?php do_action('wp_head'); ?>
+<!--[if lt IE 9]>
+<script src="<?php echo get_template_directory_uri(); ?>/js/html5shiv.js" type="text/javascript"></script>
+<![endif]-->
+<?php
+    if ( is_singular() && get_option( 'thread_comments' ) )
+   		wp_enqueue_script( 'comment-reply' );
+
+    do_action('wp_head');
+?>
 </head>
 <body class="<?php echo implode(' ', get_body_class(array('skin', 'custom'))); ?>">
 <?php

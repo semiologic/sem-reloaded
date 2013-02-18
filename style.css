@@ -2,12 +2,13 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 0.9.9 dev
+Version: 0.9.9.1
 Author: Denis de Bernardy & Mike Koepke
-Author URI: http://www.mesoconcepts.com
+Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
-Domain Path: /lang
-*/
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Tags: two-columns, three-columns, fixed-width, custom-header, custom-background, threaded-comments, sticky-post, microformats,
 
 /*
 Terms of use
@@ -15,7 +16,6 @@ Terms of use
 
 This software is copyright Mesoconcepts (http://www.mesoconcepts.com), and is distributed under the terms of the GPL license, v.2.
 
-http://www.opensource.org/licenses/gpl-2.0.php
 **/
 
 /*
@@ -155,6 +155,13 @@ Theme Fonts
 	font-family: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace;
 }
 
+.helvetica {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.lucida {
+    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
 
 /*
 Semiologic Defaults

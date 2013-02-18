@@ -151,7 +151,7 @@ class sem_widgets {
 			echo $before_title . $title . $after_title;
 		
 		echo '<form method="get"'
-				. ' action="' . esc_url(user_trailingslashit(get_option('home'))) . '"'
+				. ' action="' . esc_url(user_trailingslashit(home_url())) . '"'
 				. ' class="searchform" name="searchform"'
 				. '>'
 			. '<input type="text" class="s" name="s"'
@@ -1804,7 +1804,7 @@ class header extends WP_Widget {
 
 			$site_name = '<div id="sitename" class="sitename">'
 				. ( !( is_front_page() && !is_paged() )
-					? ( '<a href="' . esc_url(user_trailingslashit(get_option('home'))) . '">' . get_option('blogname') . '</a>' )
+					? ( '<a href="' . esc_url(user_trailingslashit(home_url())) . '">' . get_option('blogname') . '</a>' )
 					: get_option('blogname')
 					)
 				. '</div>' . "\n";
@@ -1893,7 +1893,7 @@ class header extends WP_Widget {
 		
 		if ( !( is_front_page() && !is_paged() ) ) {
 			$html = '<a'
-			. ' href="' . esc_url(user_trailingslashit(get_option('home'))) . '"'
+			. ' href="' . esc_url(user_trailingslashit(home_url())) . '"'
 			. ' title="'
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
@@ -1994,7 +1994,7 @@ EOS;
 		if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL )
 			$header_basedir .= '/' . $_SERVER['HTTP_HOST'];
 		if ( function_exists('is_multisite') && is_multisite() ) {
-			$home_path = parse_url(get_option('home'));
+			$home_path = parse_url(home_url());
 			$home_path = isset($home_path['path']) ? rtrim($home_path['path'], '/') : '';
 			$header_basedir .= $home_path;
 		}
@@ -2351,7 +2351,7 @@ class sem_nav_menu extends WP_Widget {
 		extract($item, EXTR_SKIP);
 		if ( !isset($label) || (string) $label === '' )
 			$label = __('Home', 'sem-reloaded');
-		$url = esc_url(user_trailingslashit(get_option('home')));
+		$url = esc_url(user_trailingslashit(home_url()));
 		
 		$classes = array('nav_home');
 		$link = $label;
@@ -2385,7 +2385,7 @@ class sem_nav_menu extends WP_Widget {
 		if ( !$url || $url == 'http://' )
 			return;
 		
-		if ( rtrim($url, '/') == rtrim(get_option('home'), '/') )
+		if ( rtrim($url, '/') == rtrim(home_url(), '/') )
 			return sem_nav_menu::display_home($item);
 		
 		if ( !sem_nav_menu::is_local_url($url) ) {
@@ -2668,7 +2668,7 @@ class sem_nav_menu extends WP_Widget {
 		static $site_domain;
 		
 		if ( !isset($site_domain) ) {
-			$site_domain = get_option('home');
+			$site_domain = home_url();
 			$site_domain = parse_url($site_domain);
 			$site_domain = $site_domain['host'];
 			$site_domain = preg_replace("/^www\./i", '', $site_domain);
@@ -2885,7 +2885,7 @@ class sem_nav_menu extends WP_Widget {
 			switch ( $type ) {
 			case 'home':
 				$ref = 'home';
-				$url = user_trailingslashit(get_option('home'));
+				$url = user_trailingslashit(home_url());
 				$handle = 'home';
 				break;
 			case 'url':
@@ -3022,7 +3022,7 @@ EOS;
 			switch ( $type ) {
 			case 'home':
 				$ref = 'home';
-				$url = user_trailingslashit(get_option('home'));
+				$url = user_trailingslashit(home_url());
 				$handle = 'home';
 				break;
 			case 'url':
@@ -3378,7 +3378,7 @@ class navbar extends sem_nav_menu {
 				$go = '<input type="submit" id="go" class="go button submit" value="' . esc_attr($go) . '" />';
 			
 			echo '<form method="get"'
-					. ' action="' . esc_url(user_trailingslashit(get_option('home'))) . '"'
+					. ' action="' . esc_url(user_trailingslashit(home_url())) . '"'
 					. ' id="searchform" name="searchform"'
 					. '>'
 				. '&nbsp;'				# force line-height

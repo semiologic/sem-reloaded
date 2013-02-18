@@ -403,7 +403,7 @@ EOS;
 		} elseif ( !$publish ) {
 			echo '<div class="updated fade">'
 				. '<p>'
-				. sprintf(__('Settings Saved. <a href="%s">Preview Changes</a>.', 'sem-reloaded'), user_trailingslashit(get_option('home')) . '?preview=custom-css')
+				. sprintf(__('Settings Saved. <a href="%s">Preview Changes</a>.', 'sem-reloaded'), user_trailingslashit(home_url()) . '?preview=custom-css')
 				. '</p>'
 				. '</div>';
 		} elseif ( $fs_error ) {
@@ -423,7 +423,7 @@ EOS;
 		} elseif ( $published ) {
 			echo '<div class="updated fade">'
 				. '<p>'
-				. sprintf(__('Settings Saved and Published. <a href="%s">View Changes</a>.', 'sem-reloaded'), user_trailingslashit(get_option('home')))
+				. sprintf(__('Settings Saved and Published. <a href="%s">View Changes</a>.', 'sem-reloaded'), user_trailingslashit(home_url()))
 				. '</p>'
 				. '</div>';
 		} elseif ( $saved ) {
@@ -476,7 +476,7 @@ EOS;
 			. '</p>' . "\n";
 		
 		echo '<p>'
-			. sprintf(__('Your changes will not appear on your site until you publish them. You can <a href="%s">preview your changes</a> if you save without publishing.', 'sem-reloaded'), user_trailingslashit(get_option('home')) . '?preview=custom-css')
+			. sprintf(__('Your changes will not appear on your site until you publish them. You can <a href="%s">preview your changes</a> if you save without publishing.', 'sem-reloaded'), user_trailingslashit(home_url()) . '?preview=custom-css')
 			. '</p>' . "\n";
 		
 		echo '<div id="good_reasons" style="display: none;">';
@@ -757,7 +757,7 @@ EOS;
 			. '</p>' . "\n";
 		
 		echo '<p>'
-			. __('The gist, here, is to remember that the C in CSS stands for cascading and that CSS is applied on a &quot;last strongest declaration gets used&quot; basis (i.e. mind the order). `foo`, `.foo`, and `#foo` are interchangeable in CSS-compliant browsers; `foo.bar` is stronger than `foo`, and `foo bar` is even stronger. In other words, to affect a particular area, use `.foo` or `#foo`; to affect `bar` within a particular area, use `.foo bar` or `#foo bar`.')
+			. __('The gist, here, is to remember that the C in CSS stands for cascading and that CSS is applied on a &quot;last strongest declaration gets used&quot; basis (i.e. mind the order). `foo`, `.foo`, and `#foo` are interchangeable in CSS-compliant browsers; `foo.bar` is stronger than `foo`, and `foo bar` is even stronger. In other words, to affect a particular area, use `.foo` or `#foo`; to affect `bar` within a particular area, use `.foo bar` or `#foo bar`.', 'sem-reloaded')
 			. '</p>' . "\n";
 		
 		echo '<p>'
@@ -1326,7 +1326,7 @@ EOS;
 		if ( empty($_GET['preview']) || $_GET['preview'] != 'custom-css' || !current_user_can('switch_themes') )
 			return;
 		
-		$home_url = '^' . preg_quote(get_option('home'), '/') . '(?:$|\\/)';
+		$home_url = '^' . preg_quote(home_url(), '/') . '(?:$|\\/)';
 		$admin_url = '^' . preg_quote(untrailingslashit(admin_url()), '/') . '(?:$|\\/)';
 		$login_url = '^' . preg_quote(untrailingslashit(wp_login_url()), '/') . '(?:$|\\?)';
 		
