@@ -321,7 +321,7 @@ class sem_panels {
 			global $wp_filter;
 			$filter_backup = $wp_filter['sidebars_widgets'];
 			unset($wp_filter['sidebars_widgets']);
-			$sidebars_widgets = wp_get_sidebars_widgets(false);
+			$sidebars_widgets = wp_get_sidebars_widgets();
 			$wp_filter['sidebars_widgets'] = $filter_backup;
 			$sidebars_widgets = sem_panels::convert($sidebars_widgets);
 			$sidebars_widgets = sem_panels::install($sidebars_widgets);
@@ -401,8 +401,13 @@ class sem_panels {
 		$registered_sidebars = array_keys($wp_registered_sidebars);
 		$registered_sidebars = array_diff($registered_sidebars, array('wp_inactive_widgets'));
 		foreach ( $registered_sidebars as $sidebar )
-			$sidebars_widgets[$sidebar] = (array) $sidebars_widgets[$sidebar];
-		$sidebars_widgets['wp_inactive_widgets'] = (array) $sidebars_widgets['wp_inactive_widgets'];
+            if (isset($sidebars_widgets[$sidebar])) {
+                $sidebars_widgets[$sidebar] = (array) $sidebars_widgets[$sidebar];
+            }
+        if (isset($sidebars_widgets['wp_inactive_widgets']))
+		    $sidebars_widgets['wp_inactive_widgets'] = (array) $sidebars_widgets['wp_inactive_widgets'];
+        else
+            $sidebars_widgets['wp_inactive_widgets'] = array();
 		
 		# convert left/right sidebars into sidebar-1/-2
 		foreach ( array(
@@ -429,7 +434,7 @@ class sem_panels {
 		}
 		
 		foreach ( $default_widgets as $panel => $widgets ) {
-			if ( empty($sidebars_widgets[$panel]) )
+			if ( isset($sidebars_widgets[$panel]) && empty($sidebars_widgets[$panel]) )
 				$sidebars_widgets[$panel] = (array) $sidebars_widgets[$panel];
 			else
 				continue;

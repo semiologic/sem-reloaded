@@ -39,7 +39,7 @@ do_action('before_the_canvas');
 
 # wrapper
 
-echo '<div id="wrapper">' . "\n";
+echo '<div id="wrapper" class="hfeed">' . "\n";
 
 echo '<div id="wrapper_top"><div class="hidden"></div></div>' . "\n";
 
@@ -81,7 +81,7 @@ echo '<div id="wrapper_bg">' . "\n";
 			
 		# content
 		
-		echo '<div id="main" class="main">' . "\n";
+		echo '<div id="main" class="main" role="main">' . "\n";
 
 		echo '<div id="main_top"><div class="hidden"></div></div>' . "\n";
 		

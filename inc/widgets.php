@@ -219,21 +219,34 @@ class entry_header extends WP_Widget {
 			$date = the_date('', '', '', false);
 		
 		$title = the_title('', '', false);
-		
+
 		if ( $title && !is_singular() ) {
 			$permalink = apply_filters('the_permalink', get_permalink());
-			$title = '<a href="' . esc_url($permalink) . '" title="' . esc_attr($title) . '">'
+			$title = '<a href="' . esc_url($permalink) . '" title="' . esc_attr($title) . '" rel="bookmark">'
 				. $title
 				. '</a>';
 		}
-		
+
+        $byline = '';
+        if ( $show_author_byline) {
+            $author = get_the_author();
+            $author_url = get_author_posts_url( get_the_author_meta( 'ID' ) );
+
+          $byline = '<span class="byline_author vcard">'
+              . $author_byline . ' '
+              . '<a class="url fn n" href="' . esc_url($author_url) . '" rel="author">'
+              . $author
+              . '</a>'
+        	  . '</span>' . "\n";
+        }
+
 		if ( $date || $title ) {
 			if ( $date ) {
 				echo '<div class="entry_date">' . "\n"
 					. '<div class="pad">' . "\n"
-					. '<span>'
+                    . '<time class="published" datetime="' . esc_attr( get_the_date( 'c' ) ) . '">'
 					. $date
-					. '</span>'
+                    . '</time>'
 					. '</div>' . "\n"
 					. '</div>' . "\n";
 			}
@@ -242,17 +255,17 @@ class entry_header extends WP_Widget {
 				echo '<div class="entry_header">' . "\n"
 					. '<div class="entry_header_top"><div class="hidden"></div></div>' . "\n"
 					. '<div class="pad">' . "\n"
-					. '<h1>'
+					. '<h1 class="entry-title">'
 					. $title
 					. '</h1>' . "\n"
-					. '</div>' . "\n"
+                    . $byline . "\n"
+                    . '</div>' . "\n"
 					. '<div class="entry_header_bottom"><div class="hidden"></div></div>' . "\n"
 					. '</div>' . "\n";
 			}
 		}
 	} # widget()
-	
-	
+
 	/**
 	 * update()
 	 *
@@ -263,6 +276,8 @@ class entry_header extends WP_Widget {
 
 	function update($new_instance, $old_instance) {
 		$instance['show_post_date'] = isset($new_instance['show_post_date']);
+        $instance['show_author_byline'] = isset($new_instance['show_author_byline']);
+      	$instance['author_byline'] = trim(strip_tags($new_instance['author_byline']));
 		
 		return $instance;
 	} # update()
@@ -291,6 +306,30 @@ class entry_header extends WP_Widget {
 			. __('Show post dates.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
+
+        echo '<p>'
+     			. '<label>'
+     			. '<input type="checkbox"'
+     			. ' name="' . $this->get_field_name('show_author_byline') . '"'
+     			. checked($show_author_byline, true, false)
+     			. ' />'
+     			. '&nbsp;'
+     			. __('Show author byline.', 'sem-reloaded')
+     			. '</label>'
+     			. '</p>' . "\n";
+
+        echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
+
+ 		echo '<p>'
+ 			. '<label>'
+ 			. '<code>' . __('By', 'sem-reloaded') . '</code>'
+ 			. '<br />' . "\n"
+ 			. '<input type="text" class="widefat"'
+ 			. ' name="' . $this->get_field_name('author_byline') . '"'
+ 			. ' value="' . esc_attr($author_byline) . '"'
+ 			. ' />'
+ 			. '</label>'
+ 			. '</p>' . "\n";
 	} # form()
 	
 	
@@ -303,6 +342,8 @@ class entry_header extends WP_Widget {
 	function defaults() {
 		return array(
 			'show_post_date' => true,
+            'show_author_byline' => false,
+            'author_byline' => __('By', 'sem-reloaded'),
 			);
 	} # defaults()
 } # entry_header
@@ -359,11 +400,12 @@ class entry_content extends WP_Widget {
 		
 		if ( $show_excerpts && !is_singular() ) {
 			$content = apply_filters('the_excerpt', get_the_excerpt());
+            $content_class = "entry-summary";
 		} else {
 			$more_link = sprintf($more_link, $title);
 			
 			$content = get_the_content($more_link, 0, '');
-			
+
 			if ( is_attachment() && $post->post_parent && preg_match("/^image\//i", $post->post_mime_type) ) {
 				# strip wpautop junk
 				$content = preg_replace("/<br\s*\/>\s+$/", '', $content);
@@ -409,6 +451,7 @@ class entry_content extends WP_Widget {
 					'echo' => 0,
 					)
 				);
+            $content_class = "entry-content";
 		}
 		
 		$actions = '';
@@ -464,7 +507,7 @@ class entry_content extends WP_Widget {
 		}
 		
 		if ( $actions || $content ) {
-			echo '<div class="entry_content">' . "\n"
+			echo '<div class="entry_content ' . $content_class . '">' . "\n"
 				. '<div class="pad">' . "\n"
 				. $actions
 				. $thumbnail
@@ -682,8 +725,8 @@ class entry_categories extends WP_Widget {
 		$author = get_the_author();
 		$author_url = get_author_posts_url( get_the_author_meta( 'ID' ) );
 
-        $author = '<span class="entry_author">'
-            . '<a href="' . esc_url($author_url) . '" rel="author">'
+        $author = '<span class="entry_author vcard">'
+            . '<a class="url fn n" href="' . esc_url($author_url) . '" rel="author">'
             . $author
             . '</a>'
             . '</span>';
@@ -794,10 +837,12 @@ class entry_categories extends WP_Widget {
 			. '<label>'
 			. '<code>' . __('Filed under %1$s by %2$s on %3$s. %4$s.', 'sem-reloaded') . '</code>'
 			. '<br />' . "\n"
+            . '<code>' . __('%1$s - categories, %2$s - $author, %3$s - $date, %4$s - $comments', 'sem-reloaded') . '</code>'
+         	. '<br />' . "\n"
 			. '<input type="text" class="widefat"'
-				. ' name="' . $this->get_field_name('filed_under_by') . '"'
-				. ' value="' . esc_attr($filed_under_by) . '"'
-				. ' />'
+            . ' name="' . $this->get_field_name('filed_under_by') . '"'
+            . ' value="' . esc_attr($filed_under_by) . '"'
+            . ' />'
 			. '</label>'
 			. '</p>' . "\n";
 		
@@ -1214,7 +1259,7 @@ class blog_header extends WP_Widget {
 		extract($instance, EXTR_SKIP);
 		
 		echo $before_widget;
-		
+
 		echo '<h1>';
 
 		if ( is_category() ) {
@@ -1237,9 +1282,13 @@ class blog_header extends WP_Widget {
 				. '</div>' . "\n";
 		} elseif ( is_author() ) {
 			global $wp_the_query;
+
 			$user = new WP_User($wp_the_query->get_queried_object_id());
-			echo $user->display_name;
-			$desc = trim($user->description);
+            echo '<span class="vcard">'
+             . '<a class="url fn n" href="' . esc_url( get_author_posts_url( $user->ID ) ) . '" title="' . esc_attr( $user->display_name ) . '" rel="me">'
+             . $user->display_name
+             . '</a></span>';
+            $desc = trim($user->description);
 		} elseif ( is_search() ) {
 			echo sprintf($search_title, apply_filters('the_search_query', get_search_query()));
 		} elseif ( is_404() ) {
@@ -1248,10 +1297,20 @@ class blog_header extends WP_Widget {
 		}
 
 		echo '</h1>' . "\n";
-		
-		if ( $desc )
-			echo wpautop(apply_filters('widget_text', $desc));
-		
+
+        if (is_author() && class_exists('author_image')) {
+            $author_image = author_image::get($user->ID);
+            echo $author_image;
+        }
+
+		if ( $desc ) {
+			echo '<div class="archives_header_desc">'
+            . wpautop(apply_filters('widget_text', $desc))
+            . '</div>';
+        }
+
+        echo '<div style="clear: both;"></div>' . "\n";
+
 		echo $after_widget;
 	} # widget()
 	
@@ -1785,7 +1844,8 @@ class header extends WP_Widget {
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
 				. esc_attr(get_option('blogdescription'))
-				. '"';
+				. '" '
+                . 'role="banner"';
 
 		echo '>' . "\n";
 		
@@ -2357,7 +2417,7 @@ class sem_nav_menu extends WP_Widget {
 		$link = $label;
 		
 		if ( !is_front_page() || is_front_page() && is_paged() )
-			$link = '<a href="' . $url . '" title="' . esc_attr(get_option('blogname')) . '">'
+			$link = '<a href="' . $url . '" title="' . esc_attr(get_option('blogname')) . '" rel="home">'
 				. $link
 				. '</a>';
 		if ( !is_search() && !is_404() && !is_page() )
@@ -2454,7 +2514,7 @@ class sem_nav_menu extends WP_Widget {
 		if ( get_option('show_on_front') == 'page' && get_option('page_on_front') == $page->ID ) {
 			$classes[] = 'nav_home';
 			if ( !is_front_page() || is_front_page() && is_paged() )
-				$link = '<a href="' . user_trailingslashit($url) . '" title="' . esc_attr($label) . '">'
+				$link = '<a href="' . user_trailingslashit($url) . '" title="' . esc_attr($label) . '" rel="home">'
 					. $link
 					. '</a>';
 			if ( is_front_page() || in_array($page->ID, $ancestors) )
@@ -3348,7 +3408,7 @@ class navbar extends sem_nav_menu {
 		
 		echo '<div class="pad">' . "\n";
 		
-		echo '<div id="header_nav" class="header_nav inline_menu">';
+		echo '<div id="header_nav" class="header_nav inline_menu" role="navigation">';
 
 		parent::widget($args, $instance);
 
@@ -3573,7 +3633,7 @@ class footer extends sem_nav_menu {
 				$footer_class .= ' float_sep_nav';
 		}
 		
-		echo '<div id="footer" class="wrapper' . $footer_class . '">' . "\n";
+		echo '<div id="footer" class="wrapper' . $footer_class . '" role="contentinfo">' . "\n";
 		
 		echo '<div id="footer_top"><div class="hidden"></div></div>' . "\n";
 		
