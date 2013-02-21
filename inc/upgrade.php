@@ -1,4 +1,27 @@
 <?php
+
+    /**
+     * upgrade_sem_6_1()
+     *
+     * @return void
+     **/
+
+    function upgrade_sem_6_1() {
+    	global $sem_options, $sem_captions, $sem_nav_menus, $wpdb, $sem_pro_version;
+
+	# drop obsolete plugins
+	$active_plugins = get_option('active_plugins', array());
+
+	$obsolete_plugins = array(
+		'hitslink/hitslink.php',
+		'dealdotcom-widgets/dealdotcom-widgets.php',
+		'search-reloaded/search-reloaded.php',
+		);
+
+	$active_plugins = array_diff($active_plugins, $obsolete_plugins);
+	update_option('active_plugins', $active_plugins);
+} # upgrade_sem_6_0()
+
 /**
  * upgrade_sem_6_0()
  *
@@ -608,6 +631,10 @@ if ( version_compare($sem_options['version'], '6.0-rc1', '<') ) {
 
 if ( version_compare($sem_options['version'], '6.0', '<') )
 	upgrade_sem_6_0_plugins();
+
+if ( version_compare($sem_options['version'], '6.1', '<') )
+	upgrade_sem_6_1();
+
 
 unset($sem_options['skin_data']);
 $sem_options['version'] = sem_version;

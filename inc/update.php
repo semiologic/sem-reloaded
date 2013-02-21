@@ -22,7 +22,11 @@ class sem_update {
 		$new = untrailingslashit($source);
 		
 		show_message(__('Importing Semiologic Reloaded Customizations', 'sem-reloaded'));
-		
+
+        // check this is our theme
+        if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
+            return $source;
+
 		# copy user customizations
 		foreach ( array('custom.css', 'custom.php') as $file ) {
 			if ( file_exists("$old/$file") )
@@ -33,7 +37,17 @@ class sem_update {
 			$wp_filesystem->mkdir("$new/custom");
 			copy_dir("$old/custom", "$new/custom");
 		}
-		
+
+        // copy any user templates
+       $templates = get_page_templates();
+       $semio_templates = array('letter.php', 'monocolumn.php', 'special.php');
+       foreach ( $templates as $template_name => $template_filename ) {
+            if (in_array($template_filename, $semio_templates))
+                continue;
+            $wp_filesystem->copy("$old/$template_filename", "$new/$template_filename");
+       }
+
+
 		$handle = @opendir("$old/skins");
 		
 		if ( !$handle )
@@ -42,7 +56,14 @@ class sem_update {
 		while ( ( $skin = readdir($handle) ) !== false ) {
 			if ( in_array($skin, array('.', '..')) )
 				continue;
-			
+
+            // skip any files directly in the skin directory
+            if ( is_file($skin) )
+                continue;
+
+            if ( !is_dir("$new/skins") )
+            	$wp_filesystem->mkdir("$new/skins");
+
 			if ( !is_dir("$new/skins/$skin") ) {
 				$wp_filesystem->mkdir("$new/skins/$skin");
 				copy_dir("$old/skins/$skin", "$new/skins/$skin");
@@ -65,6 +86,8 @@ class sem_update {
 	} # upgrader_source_selection()
 } # sem_update
 
-if ( !empty($_REQUEST['action']) && $_REQUEST['action'] == 'upgrade-theme' )
-	add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
+if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
+    if ( !empty($_REQUEST['themes']) && ( stripos('sem-reloaded', $_REQUEST['themes']) !== FALSE ) )
+	    add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
+}
 ?>
