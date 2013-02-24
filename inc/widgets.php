@@ -234,7 +234,7 @@ class entry_header extends WP_Widget {
 
           $byline = '<span class="byline_author vcard">'
               . $author_byline . ' '
-              . '<a class="url fn n" href="' . esc_url($author_url) . '" rel="author">'
+              . '<a class="url fn" href="' . esc_url($author_url) . '" rel="author">'
               . $author
               . '</a>'
         	  . '</span>' . "\n";
@@ -244,7 +244,7 @@ class entry_header extends WP_Widget {
 			if ( $date ) {
 				echo '<div class="entry_date">' . "\n"
 					. '<div class="pad">' . "\n"
-                    . '<time class="published" datetime="' . esc_attr( get_the_date( 'c' ) ) . '">'
+                    . '<time class="updated" datetime="' . esc_attr( get_the_date( 'c' ) ) . '">'
 					. $date
                     . '</time>'
 					. '</div>' . "\n"
@@ -726,7 +726,7 @@ class entry_categories extends WP_Widget {
 		$author_url = get_author_posts_url( get_the_author_meta( 'ID' ) );
 
         $author = '<span class="entry_author vcard">'
-            . '<a class="url fn n" href="' . esc_url($author_url) . '" rel="author">'
+            . '<a class="url fn" href="' . esc_url($author_url) . '" rel="author">'
             . $author
             . '</a>'
             . '</span>';
@@ -736,7 +736,11 @@ class entry_categories extends WP_Widget {
 		if ( !is_day() )
 			$date = '<a href="' . esc_url(get_month_link(get_the_time('Y'), get_the_time('m'))) . '">' . $date . '</a>';
 		
-		$date = '<span class="entry_date">' . $date . '</span>';
+		$date = '<span class="entry_date">'
+            . '<time class="updated" datetime="' . esc_attr( get_the_date( 'c' ) ) . '">'
+            . $date
+            . '</time>'
+            . '</span>';
 		
 		$comments = '';
 		$num = get_comments_number();
@@ -1943,7 +1947,7 @@ class header extends WP_Widget {
 		list($width, $height) = $header_size;
 		
 		$html = '<img src="' . sem_url . '/icons/pixel.gif"'
-			. ' height="' . intval($height) . '" width="100%"'
+			. ' height="' . intval($height) . '"'
 			. ' alt="'
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
@@ -2222,6 +2226,7 @@ EOS;
 .skin #header_img {
 	background: url(${header}) no-repeat top center;
 	height: ${height}px;
+	width: 100%;
 	border: 0px;
 	position: relative;
 	padding: 0px;

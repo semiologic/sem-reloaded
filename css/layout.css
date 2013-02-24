@@ -203,13 +203,13 @@ li.search_result {
 * html #s {
 	margin-top: 3px;
 	margin-bottom: 3px;
-	vertical-align: center;
+	vertical-align: middle;
 }
 
 * html #go {
 	margin-top: 3px;
 	margin-bottom: 1px;
-	vertical-align: center;
+	vertical-align: middle;
 }
 
 

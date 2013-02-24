@@ -2,7 +2,7 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 0.9.9.3
+Version: 0.9.9.4
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
@@ -91,7 +91,7 @@ input, textarea, select {
 }
 
 input, textarea, select {
-	*font-size:100%;
+	font-size:100%;
 }
 
 legend {

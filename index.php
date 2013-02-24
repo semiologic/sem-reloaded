@@ -27,7 +27,8 @@ include sem_path . '/header.php';
 					
 					$class = get_post_class();
 					
-					echo '<div class="entry' . ( $class ? ( ' ' . implode(' ', $class) ) : '' ) . '">' . "\n"
+					echo '<article>'
+					    . '<div class="entry' . ( $class ? ( ' ' . implode(' ', $class) ) : '' ) . '">' . "\n"
 						. '<div class="entry_top"><div class="hidden"></div></div>' . "\n"
 						. '<div class="entry_bg">' . "\n";
 					
@@ -36,7 +37,8 @@ include sem_path . '/header.php';
 					echo '<div class="spacer"></div>' . "\n"
 						. '</div>' . "\n"
 						. '<div class="entry_bottom"><div class="hidden"></div></div>' . "\n"
-						. '</div>' . '<!-- entry -->' . "\n";
+						. '</div>' . '<!-- entry -->' . "\n"
+                        . '</article>'  . "\n";
 
 				endwhile; # have_posts()
 

@@ -56,11 +56,13 @@ if ( have_posts() ) :
 		the_post();
 
 ?>
+<article>
 <div class="entry" id="entry-<?php the_ID(); ?>">
 <?php
 		sem_panels::display('the_entry');
 ?>
 </div>
+</article>
 <?php
 	endwhile;
 # or fallback

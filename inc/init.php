@@ -4,7 +4,7 @@
 #
 
 if ( !defined('sem_version') )
-	define('sem_version', '6.0.3');
+	define('sem_version', '6.1-beta');
 
 if ( !defined('sem_debug') )
 	define('sem_debug', isset($_GET['debug']) );
@@ -20,7 +20,7 @@ if ( !defined('sem_header_cache_debug') )
 if ( !defined('sem_css_debug') )
 	define('sem_css_debug', false);
 
-define('sem_last_mod', sem_css_debug ? time() : '20121106');
+define('sem_last_mod', sem_css_debug ? time() : '20130220');
 
 if ( function_exists('memory_get_usage') && ( (int) @ini_get('memory_limit') < 48 ) )
 	@ini_set('memory_limit', '48M');
