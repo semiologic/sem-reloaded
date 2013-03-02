@@ -525,7 +525,8 @@ class sem_template {
 			$type = get_class($wp_registered_widgets[$widget_id]['callback'][0]);
 			if ( is_a($wp_registered_widgets[$widget_id]['callback'][0], 'WP_Widget') ) {
 				$instance = $wp_registered_widgets[$widget_id]['callback'][0]->get_settings();
-				$instance = $instance[$wp_registered_widgets[$widget_id]['callback'][0]->number];
+				$instance = isset($instance[$wp_registered_widgets[$widget_id]['callback'][0]->number]) ?
+                    $instance[$wp_registered_widgets[$widget_id]['callback'][0]->number] : $instance;
 				if ( apply_filters('widget_display_callback', $instance, $wp_registered_widgets[$widget_id]['callback'][0], $params) === false )
 					return $params;
 				
@@ -604,7 +605,8 @@ class sem_template {
 			$type = get_class($wp_registered_widgets[$widget_id]['callback'][0]);
 			if ( is_a($wp_registered_widgets[$widget_id]['callback'][0], 'WP_Widget') ) {
 				$instance = $wp_registered_widgets[$widget_id]['callback'][0]->get_settings();
-				$instance = $instance[$wp_registered_widgets[$widget_id]['callback'][0]->number];
+				$instance = isset($instance[$wp_registered_widgets[$widget_id]['callback'][0]->number]) ?
+                    $instance[$wp_registered_widgets[$widget_id]['callback'][0]->number] : $instance;
 				if ( apply_filters('widget_display_callback', $instance, $wp_registered_widgets[$widget_id]['callback'][0], $params) === false )
 					return $params;
 				
