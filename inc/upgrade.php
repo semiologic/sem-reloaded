@@ -13,9 +13,7 @@
 	$active_plugins = get_option('active_plugins', array());
 
 	$obsolete_plugins = array(
-		'hitslink/hitslink.php',
 		'dealdotcom-widgets/dealdotcom-widgets.php',
-		'search-reloaded/search-reloaded.php',
 		);
 
 	$active_plugins = array_diff($active_plugins, $obsolete_plugins);

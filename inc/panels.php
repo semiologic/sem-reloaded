@@ -438,7 +438,9 @@ class sem_panels {
 		}
 		
 		foreach ( $default_widgets as $panel => $widgets ) {
-			if ( isset($sidebars_widgets[$panel]) && empty($sidebars_widgets[$panel]) )
+            if ( !isset($sidebars_widgets[$panel]) )
+                $sidebars_widgets[$panel] = array();
+			elseif ( empty($sidebars_widgets[$panel]) )
 				$sidebars_widgets[$panel] = (array) $sidebars_widgets[$panel];
 			else
 				continue;

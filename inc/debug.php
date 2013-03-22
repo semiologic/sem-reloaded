@@ -170,7 +170,7 @@ function dump_phpinfo() {
 	if ( function_exists('is_super_admin') && !is_super_admin() )
 		return;
 	
-	if ( isset($_GET['debug']) && $_GET['debug'] == 'phpinfo' && current_user_can('manage_options') ) {
+	if ( (isset($_GET['debug']) && $_GET['debug'] == 'phpinfo') && current_user_can('manage_options') ) {
 		phpinfo();
 		die;
 	}
@@ -193,7 +193,7 @@ function dump_js() {
 	wp_enqueue_script('jquery-logger', $folder . '/jquery.logger.js', array('jquery'),  '20090903');
 } # dump_js()
 
-if ( $_GET['debug'] == 'js' )
+if ( isset($_GET['debug']) && $_GET['debug'] == 'js' )
 	add_action('wp_print_scripts', 'dump_js');
 
 
