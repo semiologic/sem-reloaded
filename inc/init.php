@@ -4,7 +4,7 @@
 #
 
 if ( !defined('sem_version') )
-	define('sem_version', '6.1-RC1');
+	define('sem_version', '6.1-RC2');
 
 if ( !defined('sem_debug') )
 	define('sem_debug', isset($_GET['debug']) );
@@ -20,10 +20,10 @@ if ( !defined('sem_header_cache_debug') )
 if ( !defined('sem_css_debug') )
 	define('sem_css_debug', false);
 
-define('sem_last_mod', sem_css_debug ? time() : '20130220');
+define('sem_last_mod', sem_css_debug ? time() : '20130322');
 
-if ( function_exists('memory_get_usage') && ( (int) @ini_get('memory_limit') < 48 ) )
-	@ini_set('memory_limit', '48M');
+if ( function_exists('memory_get_usage') && ( (int) @ini_get('memory_limit') < 64 ) )
+	@ini_set('memory_limit', '64M');
 
 define('sem_path', dirname(dirname(__FILE__)));
 define('sem_url', get_stylesheet_directory_uri());

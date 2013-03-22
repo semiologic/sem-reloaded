@@ -20,7 +20,7 @@ class sem_update {
 		global $wp_filesystem;
 		$old = sem_path;
 		$new = untrailingslashit($source);
-		
+
 		show_message(__('Importing Semiologic Reloaded Customizations', 'sem-reloaded'));
 
         // check this is our theme
@@ -87,7 +87,6 @@ class sem_update {
 } # sem_update
 
 if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
-    if ( !empty($_REQUEST['themes']) && ( stripos('sem-reloaded', $_REQUEST['themes']) !== FALSE ) )
 	    add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
 }
 ?>

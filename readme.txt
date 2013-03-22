@@ -1,9 +1,9 @@
 === Semiologic theme ===
-Contributors: Denis-de-Bernardy
+Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
-Tags: semiologic
+Tags: semiologic, wordpress theme
 Requires at least: 3.2
-Tested up to: 3.4.2
+Tested up to: 3.5.1
 Stable tag: trunk
 
 The Semiologic theme, reloaded for WordPress.
@@ -27,10 +27,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
-= 0.9.8 =
+= 1.0-RC1 =
 
 - Add WP 3.4 theme support
-- 
+-
+
 
 = 0.9.7 =
 
