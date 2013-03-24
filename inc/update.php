@@ -23,7 +23,7 @@ class sem_update {
 
 		show_message(__('Importing Semiologic Reloaded Customizations', 'sem-reloaded'));
 
-        // check this is our theme
+                // check this is our theme
         if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
             return $source;
 
@@ -86,7 +86,7 @@ class sem_update {
 	} # upgrader_source_selection()
 } # sem_update
 
-if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
-	    add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
-}
+//if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
+    add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
+//}
 ?>

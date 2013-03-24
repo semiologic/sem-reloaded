@@ -21,16 +21,32 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Installation ==
 
-1. Upload the plugin folder to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
+1. Upload the plugin folder to the `/wp-content/themes/` directory
+2. Activate the theme through the 'Themes' menu in WordPress
 
 
 == Change Log ==
 
-= 1.0-RC1 =
+= 1.0 =
 
+- WP 3.5 compatibility
 - Add WP 3.4 theme support
--
+- Microformat support in the theme
+- Author byline under post/page title
+- Author name now links to author page
+- Author page now support author image and additional css skinning options
+- Post feature image can now be disabled for post entry.
+- PHP code now natively supported in text widgets.
+- Text widgets now allow shortcodes including video embeds
+- Convert to HTML5 HTML Headers
+- Added Helvetica and Lucinda font stacks
+- Added post/page-post_name css class for more specific post/page skinning
+- Theme upgrades now preserve custom skins and added template files
+- W3C HTML and CSS Validation improvements
+- Replace deprecated WP functions
+- Fix .entry link overflow wrapping
+- Fix php lint warnings and errors
+- Fix unknown index warnings
 
 
 = 0.9.7 =

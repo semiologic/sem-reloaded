@@ -99,8 +99,10 @@ if ( is_admin() ) {
 		include_once sem_path . '/inc/update.php';
 	}
 
-       
-	add_action('load-update.php', 'sem_update');
+    if ( !empty($_GET['action']) && in_array( $_GET['action'], array( 'upgrade-theme', 'update-selected-themes')) )
+        sem_update();
+
+//	add_action('load-update.php', 'sem_update');
 } elseif ( isset($_GET['preview']) && $_GET['preview'] == 'custom-css' ) {
 	include_once dirname(__FILE__) . '/inc/custom.php';
 } 
