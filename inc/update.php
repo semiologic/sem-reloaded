@@ -20,8 +20,8 @@ class sem_update {
 		global $wp_filesystem;
 
         // check this is our theme
-        if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
-            return $source;
+//        if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
+//            return $source;
 
 		$old = sem_path;
 		$new = untrailingslashit($source);
