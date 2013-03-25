@@ -27,6 +27,10 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.0.1 =
+
+- Fix .entry link overflow wrapping side effect with Firefox
+
 = 1.0 =
 
 - WP 3.5 compatibility

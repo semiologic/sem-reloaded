@@ -18,14 +18,15 @@ class sem_update {
 
 	function upgrader_source_selection($source, $remote_source, $wp_upgrader) {
 		global $wp_filesystem;
+
+        // check this is our theme
+        if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
+            return $source;
+
 		$old = sem_path;
 		$new = untrailingslashit($source);
 
 		show_message(__('Importing Semiologic Reloaded Customizations', 'sem-reloaded'));
-
-                // check this is our theme
-        if ( 'sem-reloaded' != $wp_upgrader->skin->theme_info->stylesheet )
-            return $source;
 
 		# copy user customizations
 		foreach ( array('custom.css', 'custom.php') as $file ) {
