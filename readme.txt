@@ -27,6 +27,10 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.0.3 =
+
+- Fixed shadow bug in header image on some skins I broke in 1.0
+
 = 1.0.2 =
 
 - Added template files aren't being preserved upon updating

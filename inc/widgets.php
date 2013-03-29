@@ -1947,7 +1947,7 @@ class header extends WP_Widget {
 		list($width, $height) = $header_size;
 		
 		$html = '<img src="' . sem_url . '/icons/pixel.gif"'
-			. ' height="' . intval($height) . '"'
+			. ' height="' . intval($height) . '"  width="100%"'
 			. ' alt="'
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
