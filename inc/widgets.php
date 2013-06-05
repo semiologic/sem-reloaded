@@ -494,7 +494,7 @@ class entry_content extends WP_Widget {
 		}
 		
 		$thumbnail = '';
-		if ( $show_thumbnail && function_exists('get_the_post_thumbnail') ) {
+		if ( !is_single() && $show_thumbnail && function_exists('get_the_post_thumbnail') ) {
 			add_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
 			$thumbnail = get_the_post_thumbnail();
 			remove_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
@@ -1947,7 +1947,7 @@ class header extends WP_Widget {
 		list($width, $height) = $header_size;
 		
 		$html = '<img src="' . sem_url . '/icons/pixel.gif"'
-			. ' height="' . intval($height) . '"  width="100%"'
+			. ' height="' . intval($height) . '"'
 			. ' alt="'
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
@@ -2024,14 +2024,14 @@ swfobject.embedSWF("$player", "$player_id", "$width", "$height", "9.0.0");
 
 EOS;
 	} # display_flash()
-	
-	
-	/**
-	 * letter()
-	 *
-	 * @param int $post_ID
-	 * @return void
-	 **/
+
+
+    /**
+     * letter()
+     *
+     *
+     * @return void
+     */
 
 	static function letter() {
 		$header = header::get();
@@ -2231,6 +2231,9 @@ EOS;
 	position: relative;
 	padding: 0px;
 	margin: 0px auto;
+}
+.skin #header_img img {
+    width: 100%;
 }
 </style>
 
@@ -2709,6 +2712,7 @@ class sem_nav_menu extends WP_Widget {
 		foreach ( array_keys($pages) as $k ) {
 			$ancestors = wp_cache_get($pages[$k]->ID, 'page_ancestors');
 			array_shift($ancestors);
+            $ancestors = array_reverse($ancestors);
 			$pages[$k]->ancestors = $ancestors;
 		}
 

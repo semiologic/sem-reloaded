@@ -654,7 +654,10 @@ class sem_template {
 		ob_start();
 		_custom_background_cb();
 		$o = ob_get_clean();
-		echo str_replace('body {', 'html {', $o);
+		$o = str_replace('body.custom-background', 'html', $o);
+        if (strpos($o, 'background-image') === FALSE)
+            $o = str_replace('background-color', 'background', $o);
+        echo $o;
 	} # custom_background_cb()
 } # sem_template
 

@@ -27,6 +27,15 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.1 =
+
+- Alter css encoding for header image shadow for W3C compliance
+- Fix hardcoded font-family for sitename, h1, h2 and calendar caption
+- Embellished Helvetica font stack
+- Fixed incorrect url being generated for hierarchies with children of children in Pages, Nav-Menus and Silo widgets.  url was being generated as parent/grandparent/child
+- Don't show featured image post thumbnail on a single post page
+- Setting a custom background color now fully extends to the top and bottom of the screen.  (Top and bottom white stripes are now gone)
+
 = 1.0.3 =
 
 - Fixed shadow bug in header image on some skins I broke in 1.0

@@ -2,7 +2,7 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 1.0.3
+Version: 1.1
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
@@ -156,7 +156,7 @@ Theme Fonts
 }
 
 .helvetica {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 }
 
 .lucida {
@@ -266,13 +266,13 @@ h1 {
 	font-size: 24px;
 	letter-spacing: -1px;
 	line-height: 123.1%;
-	font-family: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif;
+    font-family: inherit;
 }
 
 h2 {
 	font-size: 19px;
 	line-height: 123.1%;
-	font-family: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif;
+    font-family: inherit;
 }
 
 .widget_calendar table {
@@ -282,7 +282,7 @@ h2 {
 .widget_calendar caption {
 	font-size: 17px;
 	line-height: 123.1%;
-	font-family: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif;
+    font-family: inherit;
 }
 
 .widget_calendar tfoot a {
@@ -467,7 +467,7 @@ img.avatar {
 #sitename {
 	margin: 0px;
 	letter-spacing: -1px;
-	font-family: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif;
+    font-family: inherit;
 	font-weight: normal;
 	text-align: center;
 	padding-top: 5px;

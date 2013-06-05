@@ -436,7 +436,7 @@ EOS;
 			'antica' => __('Antica stack: Palatino, "Book Antica", "Palatino Linotype", "URW Palladio L", Palladio, Georgia, "DejaVu Serif", Serif', 'sem-reloaded'),
 			'georgia' => __('Georgia stack: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif', 'sem-reloaded'),
 			'times' => __('Times stack: "Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif', 'sem-reloaded'),
-            'helvetica' => __('Helvetica stack: "Helvetica Neue", Helvetica, Arial, Sans-Serif', 'sem-reloaded'),
+            'helvetica' => __('Helvetica stack: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif', 'sem-reloaded'),
             'lucida' => __('Lucida stack: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, Sans-Serif', 'sem-reloaded'),
             'courier' => __('Courier stack: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace', 'sem-reloaded'),
         );
