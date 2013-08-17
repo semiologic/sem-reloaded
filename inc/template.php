@@ -6,7 +6,32 @@
  **/
 
 class sem_template {
-	/**
+    /**
+     * sem_template()
+     */
+    function sem_template() {
+        if ( !is_admin() ) {
+        	add_action('wp', array($this, 'wp'), 0);
+        	add_action('template_redirect', array($this, 'template_redirect'), 0);
+        	add_action('wp_print_scripts', array($this, 'scripts'));
+        	add_action('wp_print_styles', array($this, 'styles'));
+        	add_action('wp_head', array($this, 'trackback_rdf'), 100);
+        	add_filter('body_class', array($this, 'body_class'));
+        	add_filter('widget_title', array($this, 'widget_title'));
+        	add_action('wp_footer', array($this, 'display_credits'), 5);
+        	add_filter('query_string', array($this, 'archive_query_string'), 20);
+        	add_filter('dynamic_sidebar_params', array($this, 'the_header_sidebar_params'), 15);
+        	add_filter('dynamic_sidebar_params', array($this, 'the_footer_sidebar_params'), 15);
+        	remove_action('wp_print_styles', array($this, 'styles'), 5);
+        } else {
+        	add_action('admin_menu', array($this, 'admin_menu'));
+        	add_action('admin_menu', array($this, 'meta_boxes'));
+	        add_action('admin_menu', array($this, 'add_editor_styles'));
+	        add_filter('tiny_mce_before_init', array($this, 'add_editor_body_class'));
+        }
+    }
+
+    /**
 	 * admin_menu()
 	 *
 	 * @return void
@@ -171,7 +196,7 @@ class sem_template {
 	 * @return string $layout
 	 **/
 
-	function strip_sidebars($layout) {
+	static function strip_sidebars($layout) {
 
 		return str_replace(array('s', 't'), 'm', $layout);
 	} # strip_sidebars()
@@ -184,7 +209,7 @@ class sem_template {
 	 * @return string $layout
 	 **/
 
-	function force_letter($layout) {
+	static function force_letter($layout) {
 		global $content_width;
 		$content_width = 620;
 		
@@ -260,8 +285,8 @@ class sem_template {
 		add_filter('option_blog_public', 'false');
 		add_filter('comments_open', 'false');
 		add_filter('pings_open', 'false');
-		add_filter('active_layout', array('sem_template', 'strip_sidebars'));
-		remove_action('wp_footer', array('sem_template', 'display_credits'), 5);
+		add_filter('active_layout', array($this, 'strip_sidebars'));
+		remove_action('wp_footer', array($this, 'display_credits'), 5);
 		
 		include_once sem_path . '/print.php';
 		die;
@@ -286,7 +311,7 @@ class sem_template {
 	 * @return void
 	 **/
 
-	function display_credits() {
+	static function display_credits() {
 		global $sem_options;
 		
 		echo '<div id="credits">' . "\n"
@@ -650,7 +675,7 @@ class sem_template {
 	 *
 	 * @return void
 	 **/
-	function custom_background_cb() {
+	static function custom_background_cb() {
 		ob_start();
 		_custom_background_cb();
 		$o = ob_get_clean();
@@ -659,23 +684,90 @@ class sem_template {
             $o = str_replace('background-color', 'background', $o);
         echo $o;
 	} # custom_background_cb()
+
+
+	/**
+	 * add_editor_styles()
+	 *
+	 * @return void
+	 **/
+
+	function add_editor_styles() {
+		if ( ! is_admin() )
+			return;
+
+		global $sem_options;
+		$skin_path = sem_path . '/skins/' . $sem_options['active_skin'];
+		$skin_url = sem_url . '/skins/' . $sem_options['active_skin'];
+
+		// call WP function to add the theme's style.css.  Make theme check happy
+		add_editor_style( sem_url . '/style.css' );
+
+		// now add the additional style sheets we use.  Add directly to WP global array.  No other way
+		$stylesheets    = array();
+
+		$stylesheets[] = sem_url . '/css/layout.css';
+
+		if ( file_exists($skin_path . '/icons.css') )
+			$stylesheets[] =  $skin_url . '/icons.css';
+		else
+			$stylesheets[] = sem_url . '/css/icons.css';
+
+		if ( apply_filters('active_layout', $sem_options['active_layout']) == 'letter' ) {
+			$stylesheets[] =  sem_url . '/css/letter.css';
+			if ( file_exists($skin_path . '/letter.css') )
+				$stylesheets[] =  $skin_url . '/letter.css';
+		} else {
+			$stylesheets[] =  $skin_url . '/skin.css';
+			if ( file_exists(sem_path . '/custom.css') )
+				$stylesheets[] = sem_url . '/custom.css';
+			if ( file_exists($skin_path . '/custom.css') )
+				$stylesheets[] =  $skin_url . '/custom.css';
+		}
+
+		global $editor_styles;
+		$editor_styles = (array) $editor_styles;
+		$editor_styles = array_merge( $editor_styles, $stylesheets );
+	} // add_editor_styles()
+
+
+	/**
+	 * add_editor_body_class()
+	 *
+	 * @param array $mceInit
+	 * @return array $$mceInit
+	 */
+
+	function add_editor_body_class($mceInit) {
+		global $sem_options;
+
+		$classes = array();
+
+		$active_layout = apply_filters('active_layout', $sem_options['active_layout']);
+
+		$classes[] = $active_layout;
+
+		if ( $active_layout != 'letter' ) {
+			$extra_layout = str_replace(array('s', 't'), 'm', $active_layout);
+
+			if ( $extra_layout != $active_layout) {
+				$classes[] = $extra_layout;
+				$classes[] = str_replace(array('s', 't'), '', $active_layout)
+					. ( substr_count(str_replace('t', 's', $active_layout), 's')) . 's';
+			}
+		}
+
+		$classes[] = preg_replace("/[^a-z]+/", '_', $sem_options['active_skin']);
+
+		if ( $sem_options['active_font'] )
+			$classes[] = preg_replace("/[^a-z]+/", '_', $sem_options['active_font']);
+
+		$mceInit['body_class'] .= ' '  . implode( ' ', $classes);
+
+		return $mceInit;
+	}
 } # sem_template
 
-if ( !is_admin() ) {
-	add_action('wp', array('sem_template', 'wp'), 0);
-	add_action('template_redirect', array('sem_template' ,'template_redirect'), 0);
-	add_action('wp_print_scripts', array('sem_template', 'scripts'));
-	add_action('wp_print_styles', array('sem_template', 'styles'));
-	add_action('wp_head', array('sem_template' ,'trackback_rdf'), 100);
-	add_filter('body_class', array('sem_template', 'body_class'));
-	add_filter('widget_title', array('sem_template', 'widget_title'));
-	add_action('wp_footer', array('sem_template', 'display_credits'), 5);
-	add_filter('query_string', array('sem_template', 'archive_query_string'), 20);
-	add_filter('dynamic_sidebar_params', array('sem_template', 'the_header_sidebar_params'), 15);
-	add_filter('dynamic_sidebar_params', array('sem_template', 'the_footer_sidebar_params'), 15);
-	remove_action('wp_print_styles', array('external_links', 'styles'), 5);
-} else {
-	add_action('admin_menu', array('sem_template', 'admin_menu'));
-	add_action('admin_menu', array('sem_template', 'meta_boxes'));
-}
+
+$sem_template = new sem_template();
 ?>

@@ -6,7 +6,16 @@
  **/
 
 class sem_header {
-	/**
+    /**
+     * sem_header()
+     */
+    function sem_header() {
+        add_action('admin_print_scripts', array($this, 'scripts'));
+        add_action('appearance_page_header', array($this, 'save_options'), 0);
+        add_action('save_post', array($this, 'save_entry'), 30);
+    }
+
+    /**
 	 * scripts()
 	 *
 	 * @return void
@@ -130,7 +139,7 @@ class sem_header {
 	 * @return void
 	 **/
 	
-	function edit_options() {
+	static function edit_options() {
 		echo '<div class="wrap">';
 		
 		echo '<form enctype="multipart/form-data" method="post" action="">';
@@ -215,7 +224,7 @@ class sem_header {
 			}
 			
 			echo '<p>'
-				. sprintf(__('Maximum file size is %s based on your server\'s configuration.', 'sem-reloaded'), wp_convert_bytes_to_hr(apply_filters('import_upload_size_limit', wp_max_upload_size())))
+				. sprintf(__('Maximum file size is %s based on your server\'s configuration.', 'sem-reloaded'), size_format(apply_filters('import_upload_size_limit', wp_max_upload_size())))
 				. '</p>' . "\n";
 			
 			echo '<div class="submit">'
@@ -236,7 +245,7 @@ class sem_header {
 	 * @return void
 	 **/
 	
-	function edit_entry($post)
+	static function edit_entry($post)
 	{
 		$post_ID = $post->ID;
 		
@@ -325,7 +334,7 @@ class sem_header {
 			}
 			
 			echo '<p>'
-				. sprintf(__('Maximum file size is %s based on your server\'s configuration.', 'sem-reloaded'), wp_convert_bytes_to_hr(apply_filters('import_upload_size_limit', wp_max_upload_size())))
+				. sprintf(__('Maximum file size is %s based on your server\'s configuration.', 'sem-reloaded'), size_format(apply_filters('import_upload_size_limit', wp_max_upload_size())))
 				. '</p>' . "\n";
 		}
 	} # edit_entry()
@@ -397,7 +406,6 @@ class sem_header {
 	} # save_entry()
 } # sem_header
 
-add_action('admin_print_scripts', array('sem_header', 'scripts'));
-add_action('appearance_page_header', array('sem_header', 'save_options'), 0);
-add_action('save_post', array('sem_header', 'save_entry'), 30);
+$sem_header = new sem_header();
+
 ?>

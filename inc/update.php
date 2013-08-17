@@ -7,6 +7,15 @@
 
 class sem_update {
     /**
+     * sem_update()
+     */
+    function sem_update() {
+        //if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
+            add_filter('upgrader_source_selection', array($this, 'upgrader_source_selection'), 10, 3);
+        //}
+    }
+
+    /**
      * upgrader_source_selection()
      *
      * @param $source
@@ -87,7 +96,6 @@ class sem_update {
 	} # upgrader_source_selection()
 } # sem_update
 
-//if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
-    add_filter('upgrader_source_selection', array('sem_update', 'upgrader_source_selection'), 10, 3);
-//}
+
+$sem_update = new sem_update();
 ?>

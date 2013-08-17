@@ -6,7 +6,27 @@
  **/
 
 class sem_custom {
-	/**
+    /**
+     * sem_custom()
+     */
+    function sem_custom() {
+        add_option('sem_custom', array(), false, 'no');
+        add_option('sem_custom_published', array(), false, 'no');
+
+        if ( is_admin() ) {
+        	add_action('admin_print_styles', array($this, 'styles'));
+        	add_action('admin_print_scripts', array($this, 'scripts'));
+        	add_action('admin_head', array($this, 'admin_head'));
+        	add_action('admin_footer', array($this, 'admin_footer'));
+        	add_action('appearance_page_custom', array($this, 'save_options'), 0);
+        } else {
+        	add_action('wp_print_scripts', array($this, 'wp_print_scripts'));
+        	add_action('wp_head', array($this, 'wp_head'));
+        	add_action('wp_footer', array($this, 'wp_footer'));
+        }
+    }
+
+    /**
 	 * styles()
 	 *
 	 * @return void
@@ -308,8 +328,8 @@ EOS;
 		
 		if ( !empty($_POST['restore']) ) {
 			$published_css = get_option('sem_custom_published');
-			$restore_css = $published_css[$sem_option['active_skin']]
-				? is_array($published_css[$sem_option['active_skin']])
+			$restore_css = $published_css[$sem_options['active_skin']]
+				? is_array($published_css[$sem_options['active_skin']])
 				: array();
 			update_option('sem_custom', $restore_css);
 			$restored = true;
@@ -442,7 +462,7 @@ EOS;
 	 * @return void
 	 **/
 
-	function edit_options() {
+	static function edit_options() {
 		if ( function_exists('is_multisite') && is_multisite() )
 			return;
 		
@@ -650,6 +670,7 @@ EOS;
   - #body, #body_bg
 
     - #main, #main_bg
+      - .main_content
 
       - .entry, .entry_bg
 
@@ -665,10 +686,12 @@ EOS;
         - .main_widget h2
 
     - #sidebar, #sidebar2, .sidebar_bg
+      - .sidebar_content
 
       - .widget, .widget_bg, .mm1s .widget, .mm1s .widget_bg
 
     - #sidebars, #sidebars_bg
+     - .sidebar_content
 
       - .wide_sidebar .widget, .wide_sidebar .widget_bg
 
@@ -792,7 +815,7 @@ EOS;
 	 * @return array $areas
 	 **/
 
-	function get_area($area = null) {
+	static function get_area($area = null) {
 		$areas = array();
 		
 		$areas['content'] =  array(
@@ -854,7 +877,7 @@ EOS;
 	 * @return void
 	 **/
 
-	function edit_area($area) {
+	static function edit_area($area) {
 		static $color_picker = 0;
 		$color_picker++;
 		$custom = get_option('sem_custom');
@@ -1057,7 +1080,7 @@ EOS;
 	 * @return array $fonts
 	 **/
 
-	function get_fonts() {
+	static function get_fonts() {
 		return array(
 			'' =>  __('- Default Font Family -', 'sem-reloaded'),
 			'arial' => __('Arial stack / Sans-Serif', 'sem-reloaded'),
@@ -1067,6 +1090,8 @@ EOS;
 			'antica' => __('Antica stack / Serif', 'sem-reloaded'),
 			'georgia' => __('Georgia stack / Serif', 'sem-reloaded'),
 			'times' => __('Times stack / Serif', 'sem-reloaded'),
+            'helvetica' => __('Helvetica stack/, Sans-Serif', 'sem-reloaded'),
+            'lucida' => __('Lucida stack / Sans-Serif', 'sem-reloaded'),
 			'courier' => __('Courier stack / Monospace', 'sem-reloaded'),
 			);
 	} # get_fonts()
@@ -1078,7 +1103,7 @@ EOS;
 	 * @return array $font_weights
 	 **/
 
-	function get_font_weights() {
+	static function get_font_weights() {
 		return array(
 			'' => __('- Default -', 'sem-reloaded'),
 			'bold' => __('Bold', 'sem-reloaded'),
@@ -1093,7 +1118,7 @@ EOS;
 	 * @return array $font_styles
 	 **/
 
-	function get_font_styles() {
+	static function get_font_styles() {
 		return array(
 			'' => __('- Default -', 'sem-reloaded'),
 			'italic' => __('Italic', 'sem-reloaded'),
@@ -1108,7 +1133,7 @@ EOS;
 	 * @return array $font_decorations
 	 **/
 
-	function get_font_decorations() {
+	static function get_font_decorations() {
 		return array(
 			'' => __('- Default -', 'sem-reloaded'),
 			'none' => __('None', 'sem-reloaded'),
@@ -1135,6 +1160,8 @@ EOS;
 			'antica' => '"Palatino, "Book Antica", "Palatino Linotype", "URW Palladio L", Palladio, Georgia, "DejaVu Serif", Serif',
 			'georgia' => 'Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif',
 			'times' => '"Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif',
+            'helvetica' => '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Sans-Serif',
+            'lucida' => '"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, Sans-Serif',
 			'courier' => '"Courier New", "Liberation Mono", "Nimbus Mono L", Monospace',
 			);
 		$font_sizes = array();
@@ -1355,18 +1382,7 @@ EOS;
 	} # wp_footer()
 } # sem_custom
 
-add_option('sem_custom', array(), false, 'no');
-add_option('sem_custom_published', array(), false, 'no');
 
-if ( is_admin() ) {
-	add_action('admin_print_styles', array('sem_custom', 'styles'));
-	add_action('admin_print_scripts', array('sem_custom', 'scripts'));
-	add_action('admin_head', array('sem_custom', 'admin_head'));
-	add_action('admin_footer', array('sem_custom', 'admin_footer'));
-	add_action('appearance_page_custom', array('sem_custom', 'save_options'), 0);
-} else {
-	add_action('wp_print_scripts', array('sem_custom', 'wp_print_scripts'));
-	add_action('wp_head', array('sem_custom', 'wp_head'));
-	add_action('wp_footer', array('sem_custom', 'wp_footer'));
-}
+$sem_custom = new sem_custom();
+
 ?>

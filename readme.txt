@@ -3,7 +3,7 @@ Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic, wordpress theme
 Requires at least: 3.2
-Tested up to: 3.5.1
+Tested up to: 3.6
 Stable tag: trunk
 
 The Semiologic theme, reloaded for WordPress.
@@ -26,6 +26,17 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 1.2 =
+
+- Initial implementation of editor style to match select skin and fonts
+- Compressed presentation of skin and layout pages
+- Added missing required WP css class rules
+- New themes added in version 1.0 and 1.1 are now available as choices in the custom css editor.
+- Added new .main_content and .sidebar_content css class for additional skinning options
+- Use size_format in place of deprecated wp_convert_bytes_to_hr
+- WP 3.6 compat
+- PHP 5.4 compat
 
 = 1.1 =
 

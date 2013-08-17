@@ -42,8 +42,7 @@ if ( function_exists('add_theme_support') ) {
 
 global $wp_version;
 if ( version_compare( $wp_version, '3.4', '>=' ) ) 
-	add_theme_support( 'custom-background', 
-                array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) ); 
+	add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
 else
 	add_custom_background(array('sem_template', 'custom_background_cb'));	
 

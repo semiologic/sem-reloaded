@@ -6,7 +6,17 @@
  **/
 
 class sem_layout {
-	/**
+    /**
+     * sem_layout()
+     *
+     */
+    function sem_layout() {
+        add_action('appearance_page_layout', array($this, 'save_options'), 0);
+        add_action('admin_head', array($this, 'admin_head'));
+        wp_enqueue_script('jquery');
+    }
+
+    /**
 	 * admin_head()
 	 *
 	 * @return void
@@ -111,7 +121,7 @@ EOS;
 	 * @return void
 	 **/
 
-	function edit_options() {
+	static function edit_options() {
 		echo '<div class="wrap">' . "\n";
 		echo '<form method="post" action="" id="option_picker">' . "\n";
 		
@@ -169,7 +179,7 @@ EOS;
 		
 		echo '<table id="available_options" cellspacing="0" cellpadding="0">' . "\n";
 		
-		$row_size = 2;
+		$row_size = 4;
 		$num_rows = ceil(count($layouts) / $row_size);
 		
 		$i = 0;
@@ -251,7 +261,7 @@ EOS;
 	 * @return array $layout_options
 	 **/
 
-	function get_layouts() {
+	static function get_layouts() {
 		return array(
 			'mts' => array(
 				'name' => __('Content, Wide Sidebar', 'sem-reloaded'),
@@ -337,7 +347,6 @@ EOS;
 	} # get_layouts()
 } # sem_layout
 
-add_action('appearance_page_layout', array('sem_layout', 'save_options'), 0);
-add_action('admin_head', array('sem_layout', 'admin_head'));
-wp_enqueue_script('jquery');
+$sem_layout = new sem_layout();
+
 ?>

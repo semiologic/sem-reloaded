@@ -6,7 +6,16 @@
  **/
 
 class sem_skin {
-	/**
+    /**
+     * sem_skin()
+     */
+    function sem_skin() {
+        add_action('appearance_page_skin', array($this, 'save_options'), 0);
+        add_action('admin_head', array($this, 'admin_head'));
+        wp_enqueue_script('jquery');
+    }
+
+    /**
 	 * admin_head()
 	 *
 	 * @return void
@@ -169,7 +178,7 @@ EOS;
 	 * @return void
 	 **/
 	
-	function edit_options() {
+	static function edit_options() {
 		echo '<div class="wrap">' . "\n";
 		echo '<form method="post" action="" id="option_picker">' . "\n";
 		
@@ -245,7 +254,7 @@ EOS;
 		
 		echo '<table id="available_options" cellspacing="0" cellpadding="0">' . "\n";
 		
-		$row_size = 3;
+		$row_size = 6;
 		$num_rows = ceil(count($skins) / $row_size);
 		
 		$i = 0;
@@ -288,7 +297,7 @@ EOS;
 			
 			echo '<p>'
 				. '<label for="skin-' . $skin . '">'
-				. '<img src="' . esc_url($screenshot) . '" alt="" />'
+				. '<img src="' . esc_url($screenshot) . '" alt="" width="160" height="120" />'
 				. '</label>'
 				. '</p>' . "\n"
 				. '<h4>'
@@ -383,7 +392,7 @@ EOS;
 	 * @return array $skins
 	 **/
 
-	function get_skins() {
+	static function get_skins() {
 		$skins = array();
 		$handle = @opendir(sem_path . '/skins');
 
@@ -415,7 +424,7 @@ EOS;
 	 * @return int
 	 **/
 
-	function sort($a, $b) {
+	static function sort($a, $b) {
 		return strnatcasecmp($a['name'], $b['name']);
 	} # sort()
 	
@@ -426,7 +435,7 @@ EOS;
 	 * @return array $fonts
 	 **/
 
-	function get_fonts() {
+	static function get_fonts() {
 		return array(
 			'' =>  __('The skin\'s default stack', 'sem-reloaded'),
 			'arial' => __('Arial stack: Arial, "Liberation Sans", "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
@@ -443,7 +452,6 @@ EOS;
 	} # get_fonts()
 } # sem_skin
 
-add_action('appearance_page_skin', array('sem_skin', 'save_options'), 0);
-add_action('admin_head', array('sem_skin', 'admin_head'));
-wp_enqueue_script('jquery');
+$sem_skin = new sem_skin();
+
 ?>

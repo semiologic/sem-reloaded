@@ -6,7 +6,26 @@
  **/
 
 class sem_widgets {
-	/**
+    /**
+     * sem_widgets()
+     */
+    function sem_widgets() {
+        add_action('widgets_init', array($this, 'register'));
+
+        if ( is_admin() ) {
+        	add_action('admin_print_scripts-widgets.php', array($this, 'admin_scripts'));
+        	add_action('admin_print_styles-widgets.php', array($this, 'admin_styles'));
+        }
+
+        add_action('widget_tag_cloud_args', array($this, 'tag_cloud_args'));
+        add_filter('widget_display_callback', array($this, 'widget_display_callback'), 10, 3);
+
+        wp_cache_add_non_persistent_groups(array('sem_header'));
+        wp_cache_add_non_persistent_groups(array('nav_menu_roots', 'page_ancestors', 'page_children'));
+        wp_cache_add_non_persistent_groups(array('widget_queries', 'pre_flush_post'));
+    }
+
+    /**
 	 * register()
 	 *
 	 * @return void
@@ -134,7 +153,7 @@ class sem_widgets {
 	 * @return false
 	 **/
 
-	function search_widget($instance, $args) {
+	static function search_widget($instance, $args) {
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
 		
@@ -495,9 +514,9 @@ class entry_content extends WP_Widget {
 		
 		$thumbnail = '';
 		if ( !is_single() && $show_thumbnail && function_exists('get_the_post_thumbnail') ) {
-			add_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
+			add_filter('image_downsize', array($this, 'thumbnail_downsize'), 10, 3);
 			$thumbnail = get_the_post_thumbnail();
-			remove_filter('image_downsize', array('entry_content', 'thumbnail_downsize'), 10, 3);
+			remove_filter('image_downsize', array($this, 'thumbnail_downsize'), 10, 3);
 		}
 		
 		if ( $thumbnail ) {
@@ -1800,6 +1819,10 @@ class header extends WP_Widget {
 	 **/
 
 	function header() {
+        if ( !is_admin() ) {
+        	add_action('wp', array($this, 'wire'), 20);
+        }
+
 		$widget_name = __('Header: Site Header', 'sem-reloaded');
 		$widget_ops = array(
 			'classname' => 'header',
@@ -2199,7 +2222,7 @@ EOS;
 		if ( $ext == 'swf' ) {
 			wp_enqueue_script('swfobject');
 		} else {
-			add_action('wp_head', array('header', 'css'), 30);
+			add_action('wp_head', array($this, 'css'), 30);
 		}
 	} # wire()
 	
@@ -2304,6 +2327,35 @@ EOS;
  **/
 
 class sem_nav_menu extends WP_Widget {
+    /**
+     * sem_nav_menu()
+     */
+    function sem_nav_menu() {
+        foreach ( array(
+                'switch_theme',
+                'update_option_active_plugins',
+                'update_option_show_on_front',
+                'update_option_page_on_front',
+                'update_option_page_for_posts',
+                'update_option_sidebars_widgets',
+                'update_option_sem5_options',
+                'update_option_sem6_options',
+                'generate_rewrite_rules',
+
+                'flush_cache',
+                'after_db_upgrade',
+                ) as $hook )
+            add_action($hook, array($this, 'flush_cache'));
+
+        add_action('pre_post_update', array($this, 'pre_flush_post'));
+
+        foreach ( array(
+                'save_post',
+                'delete_post',
+                ) as $hook )
+            add_action($hook, array($this, 'flush_post'), 1); // before _save_post_hook()
+    }
+
 	/**
 	 * widget()
 	 *
@@ -2349,7 +2401,8 @@ class sem_nav_menu extends WP_Widget {
 		sem_nav_menu::cache_pages();
 		
 		if ( !$items ) {
-			$items = call_user_func(array(get_class($this), 'default_items'));
+//			$items = call_user_func(array(get_class($this), 'default_items'));
+            $items = $this->default_items();
 		}
 		
 		$root_pages = wp_cache_get(0, 'page_children');
@@ -3032,7 +3085,7 @@ EOS;
 	 * @return void
 	 **/
 
-	function admin_footer() {
+	static function admin_footer() {
 		$pages = wp_cache_get('nav_menu_roots', 'nav_menu_roots');
 		
 		if ( $pages === false ) {
@@ -3261,7 +3314,7 @@ EOS;
 			return;
 		
 		# prevent mass-flushing when the permalink structure hasn't changed
-		remove_action('generate_rewrite_rules', array('sem_nav_menu', 'flush_cache'));
+		remove_action('generate_rewrite_rules', array($this, 'flush_cache'));
 		
 		$post = get_post($post_id);
 		if ( !$post || $post->post_type != 'page' || wp_is_post_revision($post_id) )
@@ -3720,16 +3773,20 @@ class footer extends sem_nav_menu {
 			echo '<p>'
 				. '<label for="' . $this->get_field_id($field) . '">'
 				. '<code>' . htmlspecialchars($defaults[$field], ENT_QUOTES, get_option('blog_charset')) . '</code>'
+				. ( isset($defaults[$field . '_label'])
+					? '<br />' . "\n" . '<code>' . $defaults[$field . '_label'] . '</code>'
+					: ''
+					)
 				. '</label>'
 				. '<br />' . "\n"
 				. '<textarea class="widefat" cols="20" rows="4"'
-					. ' id="' . $this->get_field_id($field) . '"'
-					. ' name="' . $this->get_field_name($field) . '"'
-					. ( !current_user_can('unfiltered_html')
-						? ' disabled="disabled"'
-						: ''
-						)
-					. ' >'
+				. ' id="' . $this->get_field_id($field) . '"'
+				. ' name="' . $this->get_field_name($field) . '"'
+				. ( !current_user_can('unfiltered_html')
+					? ' disabled="disabled"'
+					: ''
+					)
+				. ' >'
 				. esc_html($$field)
 				. '</textarea>'
 				. '</p>' . "\n";
@@ -3761,6 +3818,7 @@ class footer extends sem_nav_menu {
 	function defaults() {
 		return array_merge(array(
 			'copyright' => __('Copyright %1$s, %2$s', 'sem-reloaded'),
+			'copyright_label' => __('%1$s - Site name, %2$s - Year', 'sem-reloaded'),
 			'float_footer' => false,
 			), parent::defaults());
 	} # defaults()
@@ -3803,43 +3861,8 @@ class footer extends sem_nav_menu {
 } # footer
 
 
-add_action('widgets_init', array('sem_widgets', 'register'));
 
-if ( !is_admin() ) {
-	add_action('wp', array('header', 'wire'), 20);
-} else {
-	add_action('admin_print_scripts-widgets.php', array('sem_widgets', 'admin_scripts'));
-	add_action('admin_print_styles-widgets.php', array('sem_widgets', 'admin_styles'));
-}
+$sem_widgets = new sem_widgets();
+//$sem_nav_menu = new sem_nav_menu();
 
-foreach ( array(
-		'switch_theme',
-		'update_option_active_plugins',
-		'update_option_show_on_front',
-		'update_option_page_on_front',
-		'update_option_page_for_posts',
-		'update_option_sidebars_widgets',
-		'update_option_sem5_options',
-		'update_option_sem6_options',
-		'generate_rewrite_rules',
-		
-		'flush_cache',
-		'after_db_upgrade',
-		) as $hook )
-	add_action($hook, array('sem_nav_menu', 'flush_cache'));
-
-add_action('pre_post_update', array('sem_nav_menu', 'pre_flush_post'));
-
-foreach ( array(
-		'save_post',
-		'delete_post',
-		) as $hook )
-	add_action($hook, array('sem_nav_menu', 'flush_post'), 1); // before _save_post_hook()
-
-add_action('widget_tag_cloud_args', array('sem_widgets', 'tag_cloud_args'));
-add_filter('widget_display_callback', array('sem_widgets', 'widget_display_callback'), 10, 3);
-
-wp_cache_add_non_persistent_groups(array('sem_header'));
-wp_cache_add_non_persistent_groups(array('nav_menu_roots', 'page_ancestors', 'page_children'));
-wp_cache_add_non_persistent_groups(array('widget_queries', 'pre_flush_post'));
 ?>

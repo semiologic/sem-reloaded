@@ -6,13 +6,26 @@
  **/
 
 class sem_panels {
-	/**
+    /**
+     * sem_panels()
+     */
+    function sem_panels() {
+        sem_panels::register();
+
+        if ( !defined('DOING_CRON') )
+        	add_action('init', array($this, 'init_widgets'), 2000);
+
+        add_action( 'after_switch_theme', array($this, 'reload_widgets'), 2000);
+
+    } # sem_panels()
+
+    /**
 	 * register()
 	 *
 	 * @return void
 	 **/
 
-	static function register() {
+	function register() {
 		# autofix panels
 		sem_panels::switch_themes();
 		
@@ -611,11 +624,6 @@ class sem_panels {
     }  # reload_widgets()
 } # sem_panels
 
-sem_panels::register();
-
-if ( !defined('DOING_CRON') )
-	add_action('init', array('sem_panels', 'init_widgets'), 2000);
-
-add_action( 'after_switch_theme', array('sem_panels', 'reload_widgets'), 2000);
+$sem_panels = new sem_panels();
 
 ?>
