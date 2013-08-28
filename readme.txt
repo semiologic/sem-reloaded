@@ -6,12 +6,12 @@ Requires at least: 3.2
 Tested up to: 3.6
 Stable tag: trunk
 
-The Semiologic theme, reloaded for WordPress.
+The Semiologic theme, Reloaded for WordPress.
 
 
 == Description ==
 
-The Semiologic theme, reloaded for WordPress.
+The Semiologic theme, Reloaded for WordPress.
 
 
 = Help Me! =
@@ -26,6 +26,10 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 1.2.1 =
+
+- Disabled editor style for now as still too quirky in the presentation
 
 = 1.2 =
 
