@@ -27,6 +27,12 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.3 =
+
+- Page-specific header functionality was creating a bogus empty extra folder (headerNNNN) in the wp-content directory.  These folders can simply be removed.
+- Deleting a page-specific now removes the subfolder under /wp-content/header/NNNN.
+- WP 3.8 compat
+
 = 1.2.1 =
 
 - Disabled editor style for now as still too quirky in the presentation

@@ -188,8 +188,6 @@ EOS;
 		$skins = sem_skin::get_skins();
 		$fonts = sem_skin::get_fonts();
 		
-		screen_icon();
-		
 		echo '<h2>' . __('Manage Skin &amp; Font', 'sem-reloaded') . '</h2>' . "\n";
 		
 		echo '<h3>' . __('Current Skin &amp; Font', 'sem-reloaded') . '</h3>' . "\n";

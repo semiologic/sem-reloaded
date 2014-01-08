@@ -130,8 +130,6 @@ EOS;
 		global $sem_options;
 		$layouts = sem_layout::get_layouts();
 		
-		screen_icon();
-		
 		echo '<h2>' . __('Manage Layout', 'sem-reloaded') . '</h2>' . "\n";
 		
 		echo '<h3>' . __('Current Layout', 'sem-reloaded') . '</h3>' . "\n";

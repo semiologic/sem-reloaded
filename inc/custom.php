@@ -483,8 +483,6 @@ EOS;
 		echo '<div class="wrap">' . "\n"
 			. '<form method="POST" action="themes.php?page=custom">' . "\n";
 		
-		screen_icon();
-		
 		echo '<h2>'
 			. __('Manage Custom CSS', 'sem-reloaded')
 			. '</h2>' . "\n";

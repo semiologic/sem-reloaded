@@ -10,7 +10,7 @@ class sem_header {
      * sem_header()
      */
     function sem_header() {
-        add_action('admin_print_scripts', array($this, 'scripts'));
+        add_action('admin_enqueue_scripts', array($this, 'scripts'));
         add_action('appearance_page_header', array($this, 'save_options'), 0);
         add_action('save_post', array($this, 'save_entry'), 30);
     }
@@ -150,8 +150,6 @@ class sem_header {
 		
 		$header = header::get();
 		$active_skin = $sem_options['active_skin'];
-		
-		screen_icon();
 		
 		echo '<h2>' . __('Manage Header', 'sem-reloaded') . '</h2>' . "\n";
 		
@@ -312,7 +310,7 @@ class sem_header {
 				echo '<h4>'
 					. '<label for="header_file">'
 						. ( defined('GLOB_BRACE')
-							? __('Upload a New Header (jpg, png, gif, swf)', 'sem-reloaded')
+							? __('Upload a New Header (jpg, jpeg, png, gif, swf)', 'sem-reloaded')
 							: __('Upload a New Header (jpg)', 'sem-reloaded')
 							)
 						. '</label>'
@@ -334,7 +332,7 @@ class sem_header {
 			}
 			
 			echo '<p>'
-				. sprintf(__('Maximum file size is %s based on your server\'s configuration.', 'sem-reloaded'), size_format(apply_filters('import_upload_size_limit', wp_max_upload_size())))
+				. sprintf(__('Maximum uploadable file size is %s based on your server\'s configuration.', 'sem-reloaded'), size_format(apply_filters('import_upload_size_limit', wp_max_upload_size())))
 				. '</p>' . "\n";
 		}
 	} # edit_entry()
@@ -377,7 +375,7 @@ class sem_header {
 			
 			if ( !in_array($ext, defined('GLOB_BRACE') ? array('jpg', 'jpeg', 'png', 'gif', 'swf') : array('jpg')) ) {
 				return;
-			} elseif ( !wp_mkdir_p(WP_CONTENT_DIR . header::get_basedir() . $post_id) ) {
+			} elseif ( !wp_mkdir_p(WP_CONTENT_DIR . header::get_basedir() . '/' .  $post_id) ) {
 				return;
 			} elseif ( $header && !@unlink(WP_CONTENT_DIR . $header) ) {
 				return;
@@ -387,8 +385,6 @@ class sem_header {
 			update_site_option('sem_entropy', $entropy);
 			
 			$name = WP_CONTENT_DIR . header::get_basedir() . '/' . $post_id . '/header-' . $entropy . '.' . $ext;
-			
-			wp_mkdir_p(WP_CONTENT_DIR . header::get_basedir() . '/' . $post_id);
 			@move_uploaded_file($_FILES['header_file']['tmp_name'], $name);
 			
 			$stat = stat(dirname($name));
@@ -400,7 +396,9 @@ class sem_header {
 			if ( !@unlink(WP_CONTENT_DIR . $header) ) {
 				return;
 			}
-			
+			if ( !@rmdir(WP_CONTENT_DIR . header::get_basedir() . '/' .  $post_id) ) {
+				return;
+			}
 			delete_post_meta($post_id, '_sem_header');
 		}
 	} # save_entry()
