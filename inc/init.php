@@ -28,23 +28,6 @@ if ( function_exists('memory_get_usage') && ( (int) @ini_get('memory_limit') < 6
 define('sem_path', dirname(dirname(__FILE__)));
 define('sem_url', get_stylesheet_directory_uri());
 
-# fix calendar, see http://core.trac.wordpress.org/ticket/9588
-if ( !class_exists('sem_fixes') ) {
-	if ( function_exists('date_default_timezone_set') )
-		date_default_timezone_set('UTC');
-	wp_timezone_override_offset();
-}
-
-if ( function_exists('add_theme_support') ) {
-	add_theme_support('post-thumbnails');
-    add_theme_support( 'automatic-feed-links' );
-}
-
-global $wp_version;
-if ( version_compare( $wp_version, '3.4', '>=' ) ) 
-	add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
-else
-	add_custom_background(array('sem_template', 'custom_background_cb'));	
 
 #
 # extra functions

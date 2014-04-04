@@ -6,10 +6,38 @@
  **/
 
 class sem_update {
-    /**
-     * sem_update()
-     */
-    function sem_update() {
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Plugin setup.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return void
+	 */
+	public function __construct() {
         //if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
             add_filter('upgrader_source_selection', array($this, 'upgrader_source_selection'), 10, 3);
         //}
@@ -97,5 +125,5 @@ class sem_update {
 } # sem_update
 
 
-$sem_update = new sem_update();
-?>
+//$sem_update = new sem_update();
+sem_update::get_instance();

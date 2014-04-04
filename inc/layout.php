@@ -6,14 +6,39 @@
  **/
 
 class sem_layout {
-    /**
-     * sem_layout()
-     *
-     */
-    function sem_layout() {
-        add_action('appearance_page_layout', array($this, 'save_options'), 0);
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
+        add_action('semiologic_page_layout', array($this, 'save_options'), 0);
         add_action('admin_head', array($this, 'admin_head'));
-        wp_enqueue_script('jquery');
+		add_action('wp_enqueue_scripts', array($this, 'scripts'));
     }
 
     /**
@@ -88,7 +113,16 @@ jQuery(document).ready(function() {
 
 EOS;
 	} # admin_head()
-	
+
+	/**
+	 * scripts()
+	 *
+	 * @return void
+	 **/
+
+	function scripts() {
+		wp_enqueue_script('jquery');
+	} # scripts()
 	
 	/**
 	 * save_options()
@@ -269,6 +303,14 @@ EOS;
 				'sidebars' => __('2 x 200px (170px net)', 'sem-reloaded'),
 				'inline_boxes' => __('3 x 317px (287px net)', 'sem-reloaded'),
 				),
+			'tsm' => array(
+				'name' => __('Wide Sidebar, Content', 'sem-reloaded'),
+				'wrapper' => __('950px', 'sem-reloaded'),
+				'content' => __('550px (490px net)', 'sem-reloaded'),
+				'wide_sidebars' => __('400px (370px net)', 'sem-reloaded'),
+				'sidebars' => __('2 x 200px (170px net)', 'sem-reloaded'),
+				'inline_boxes' => __('3 x 317px (287px net)', 'sem-reloaded'),
+				),
 			'sms' => array(
 				'name' => __('Sidebar, Content, Sidebar', 'sem-reloaded'),
 				'wrapper' => __('950px', 'sem-reloaded'),
@@ -333,18 +375,9 @@ EOS;
 				'sidebars' => __('Not Available', 'sem-reloaded'),
 				'inline_boxes' => __('3 x 317px (287px net)', 'sem-reloaded'),
 				),
-			'tsm' => array(
-				'name' => __('Wide Sidebar, Content', 'sem-reloaded'),
-				'wrapper' => __('950px', 'sem-reloaded'),
-				'content' => __('550px (490px net)', 'sem-reloaded'),
-				'wide_sidebars' => __('400px (370px net)', 'sem-reloaded'),
-				'sidebars' => __('2 x 200px (170px net)', 'sem-reloaded'),
-				'inline_boxes' => __('3 x 317px (287px net)', 'sem-reloaded'),
-				),
 			);
 	} # get_layouts()
 } # sem_layout
 
-$sem_layout = new sem_layout();
-
-?>
+//$sem_layout = new sem_layout();
+sem_layout::get_instance();

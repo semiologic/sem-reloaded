@@ -3,7 +3,7 @@ Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic, wordpress theme
 Requires at least: 3.2
-Tested up to: 3.6
+Tested up to: 3.8
 Stable tag: trunk
 
 The Semiologic theme, Reloaded for WordPress.

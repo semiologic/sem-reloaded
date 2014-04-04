@@ -33,19 +33,6 @@ default:
 	break;
 }
 
-# load textdomain
-load_theme_textdomain('sem-reloaded', sem_path . '/lang');
-
-# kill page comments
-if ( !is_admin() )
-	add_filter('option_page_comments', 'false');
-
-# kill resource hungry queries
-remove_action('wp_head', 'index_rel_link');
-remove_action('wp_head', 'parent_post_rel_link');
-remove_action('wp_head', 'start_post_rel_link');
-remove_action('wp_head', 'adjacent_posts_rel_link');
-
 # initialize options
 add_option('sem_api_key', '');
 
@@ -65,36 +52,21 @@ if ( is_admin() ) {
 	} # load_multipart_entry()
 	endif;
 
+	include_once sem_path . '/inc/header.php';
+	include_once sem_path . '/inc/layout.php';
+	include_once sem_path . '/inc/skin.php';
+	include_once sem_path . '/inc/custom.php';
+
+
 	function sem_header_admin() {
 		include_once sem_path . '/inc/header.php';
 	}
-	
-	add_action('load-appearance_page_header', 'sem_header_admin');
+
 	foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php') as $hook ) {
 		add_action("load-$hook", 'sem_header_admin');
 		add_action("load-$hook", 'load_multipart_entry');
 	}
-	
-	function sem_layout_admin() {
-		include_once sem_path . '/inc/layout.php';
-	}
-	
-	add_action('load-appearance_page_layout', 'sem_layout_admin');
-	
-	function sem_skin_admin() {
-		include_once sem_path . '/inc/skin.php';
-	}
-	
-	add_action('load-appearance_page_skin', 'sem_skin_admin');
-	
-	function sem_custom_admin() {
-		include_once sem_path . '/inc/custom.php';
-	}
-	
-	if ( !( function_exists('is_multisite') && is_multisite() ) ) {
-		add_action('load-appearance_page_custom', 'sem_custom_admin');
-	}
-	
+
 	function sem_update() {
 		include_once sem_path . '/inc/update.php';
 	}
@@ -105,5 +77,42 @@ if ( is_admin() ) {
 //	add_action('load-update.php', 'sem_update');
 } elseif ( isset($_GET['preview']) && $_GET['preview'] == 'custom-css' ) {
 	include_once dirname(__FILE__) . '/inc/custom.php';
-} 
-?>
+}
+
+
+
+function semreloaded_postsetup() {
+	# load textdomain
+	load_theme_textdomain('sem-reloaded', sem_path . '/lang');
+
+	# kill page comments
+	if ( !is_admin() )
+		add_filter('option_page_comments', 'false');
+
+	# kill resource hungry queries
+	remove_action('wp_head', 'index_rel_link');
+	remove_action('wp_head', 'parent_post_rel_link');
+	remove_action('wp_head', 'start_post_rel_link');
+	remove_action('wp_head', 'adjacent_posts_rel_link');
+
+	# fix calendar, see http://core.trac.wordpress.org/ticket/9588
+	if ( !class_exists('sem_fixes') ) {
+		if ( function_exists('date_default_timezone_set') )
+			date_default_timezone_set('UTC');
+		wp_timezone_override_offset();
+	}
+
+	if ( function_exists('add_theme_support') ) {
+		add_theme_support('post-thumbnails');
+	    add_theme_support( 'automatic-feed-links' );
+	}
+
+	global $wp_version;
+	if ( version_compare( $wp_version, '3.4', '>=' ) )
+		add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
+	else
+		add_custom_background(array('sem_template', 'custom_background_cb'));
+
+}
+
+add_action( 'after_setup_theme', 'semreloaded_postsetup' );

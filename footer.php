@@ -37,7 +37,7 @@
 		
 			# top sidebar
 			
-			echo '<div id="top_sidebar" class="sidebar wide_sidebar">' . "\n";
+			echo '<div id="top_sidebar" class="sidebar wide_sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			sem_panels::display('top_sidebar');
 
@@ -51,7 +51,7 @@
 			
 			# left sidebar
 			
-			echo '<div id="sidebar" class="sidebar">' . "\n";
+			echo '<div id="sidebar" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 			
 			sem_panels::display('left_sidebar');
 
@@ -60,7 +60,7 @@
 			
 			# right sidebar
 			
-			echo '<div id="sidebar2" class="sidebar">' . "\n";
+			echo '<div id="sidebar2" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 			
 			sem_panels::display('right_sidebar');
 
@@ -74,7 +74,7 @@
 			
 			# bottom sidebar
 			
-			echo '<div id="bottom_sidebar" class="sidebar wide_sidebar">' . "\n";
+			echo '<div id="bottom_sidebar" class="sidebar wide_sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			sem_panels::display('bottom_sidebar');
 
@@ -107,7 +107,7 @@
 			
 			# left sidebar
 			
-			echo '<div id="sidebar" class="sidebar">' . "\n";
+			echo '<div id="sidebar" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			echo '<div class="sidebar_top"><div class="hidden"></div></div>' . "\n"
 				. '<div class="sidebar_bg">' . "\n"
@@ -134,7 +134,7 @@
 			
 			# right sidebar
 			
-			echo '<div id="sidebar2" class="sidebar">' . "\n";
+			echo '<div id="sidebar2" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			echo '<div class="sidebar_top"><div class="hidden"></div></div>' . "\n"
 				. '<div class="sidebar_bg">' . "\n"
@@ -162,7 +162,7 @@
 			
 			# left sidebar
 			
-			echo '<div id="sidebar" class="sidebar">' . "\n";
+			echo '<div id="sidebar" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			echo '<div class="sidebar_top"><div class="hidden"></div></div>' . "\n"
 				. '<div class="sidebar_bg">' . "\n"
@@ -190,7 +190,7 @@
 			
 			# left sidebar
 			
-			echo '<div id="sidebar" class="sidebar">' . "\n";
+			echo '<div id="sidebar" class="sidebar" role="complementary" itemscope="itemscope" itemtype="http://schema.org/WPSideBar">' . "\n";
 
 			echo '<div class="sidebar_top"><div class="hidden"></div></div>' . "\n"
 				. '<div class="sidebar_bg">' . "\n"
@@ -244,6 +244,8 @@ echo '</div><!-- wrapper -->' . "\n";
 do_action('after_the_canvas');
 
 do_action('wp_footer');
+
+echo '</div><!-- site_container -->' . "\n";
 ?>
 </body>
 </html>

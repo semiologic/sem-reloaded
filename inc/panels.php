@@ -6,10 +6,36 @@
  **/
 
 class sem_panels {
-    /**
-     * sem_panels()
-     */
-    function sem_panels() {
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
         sem_panels::register();
 
         if ( !defined('DOING_CRON') )
@@ -624,6 +650,5 @@ class sem_panels {
     }  # reload_widgets()
 } # sem_panels
 
-$sem_panels = new sem_panels();
-
-?>
+//$sem_panels = new sem_panels();
+sem_panels::get_instance();

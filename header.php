@@ -9,7 +9,7 @@
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>" />
-<meta name="viewport" content="width=device-width" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title><?php
 if ( $title = trim(wp_title('&#8211;', false)) ) {
 	if ( strpos($title, '&#8211;') === 0 )
@@ -22,7 +22,7 @@ if ( $title = trim(wp_title('&#8211;', false)) ) {
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo('pingback_url'); ?>" />
 <!--[if lt IE 9]>
-<script src="<?php echo get_template_directory_uri(); ?>/js/html5shiv.js" type="text/javascript"></script>
+	<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 <?php
     if ( is_singular() && get_option( 'thread_comments' ) )
@@ -31,9 +31,10 @@ if ( $title = trim(wp_title('&#8211;', false)) ) {
     do_action('wp_head');
 ?>
 </head>
-<body class="<?php echo implode(' ', get_body_class(array('skin', 'custom'))); ?>">
+<body class="<?php echo implode(' ', get_body_class(array('skin', 'custom'))); ?>" itemscope itemtype="http://schema.org/WebPage">
 <?php
 # canvas
+echo '<div id="site_container">' . "\n";
 
 do_action('before_the_canvas');
 
@@ -81,7 +82,7 @@ echo '<div id="wrapper_bg">' . "\n";
 			
 		# content
 		
-		echo '<div id="main" class="main" role="main">' . "\n";
+		echo '<div id="main" class="main" role="main" itemprop="mainContentOfPage">' . "\n";
 
 		echo '<div id="main_top"><div class="hidden"></div></div>' . "\n";
 		

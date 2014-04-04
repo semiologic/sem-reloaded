@@ -6,21 +6,46 @@
  **/
 
 class sem_custom {
-    /**
-     * sem_custom()
-     */
-    function sem_custom() {
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
         add_option('sem_custom', array(), false, 'no');
         add_option('sem_custom_published', array(), false, 'no');
 
         if ( is_admin() ) {
-        	add_action('admin_print_styles', array($this, 'styles'));
-        	add_action('admin_print_scripts', array($this, 'scripts'));
+        	add_action('admin_enqueue_scripts', array($this, 'styles'));
+        	add_action('admin_enqueue_scripts', array($this, 'scripts'));
         	add_action('admin_head', array($this, 'admin_head'));
         	add_action('admin_footer', array($this, 'admin_footer'));
-        	add_action('appearance_page_custom', array($this, 'save_options'), 0);
+        	add_action('semiologic_page_custom', array($this, 'save_options'), 0);
         } else {
-        	add_action('wp_print_scripts', array($this, 'wp_print_scripts'));
+        	add_action('wp_enqueue_scripts', array($this, 'wp_print_scripts'));
         	add_action('wp_head', array($this, 'wp_head'));
         	add_action('wp_footer', array($this, 'wp_footer'));
         }
@@ -1380,7 +1405,4 @@ EOS;
 	} # wp_footer()
 } # sem_custom
 
-
-$sem_custom = new sem_custom();
-
-?>
+sem_custom::get_instance();

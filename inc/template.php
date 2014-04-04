@@ -6,15 +6,40 @@
  **/
 
 class sem_template {
-    /**
-     * sem_template()
-     */
-    function sem_template() {
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
         if ( !is_admin() ) {
         	add_action('wp', array($this, 'wp'), 0);
         	add_action('template_redirect', array($this, 'template_redirect'), 0);
-        	add_action('wp_print_scripts', array($this, 'scripts'));
-        	add_action('wp_print_styles', array($this, 'styles'));
+        	add_action('wp_enqueue_scripts', array($this, 'scripts'));
+        	add_action('wp_enqueue_scripts', array($this, 'styles'));
         	add_action('wp_head', array($this, 'trackback_rdf'), 100);
         	add_filter('body_class', array($this, 'body_class'));
         	add_filter('widget_title', array($this, 'widget_title'));
@@ -38,8 +63,44 @@ class sem_template {
 	 **/
 
 	function admin_menu() {
+
+		$sem_menu = add_menu_page(
+			__('Semiologic', 'sem-reloaded'),
+			__('Semiologic', 'sem-reloaded'),
+			'switch_themes',
+			'sem_menu',
+			'',
+			'',
+			59
+		);
+
+		add_submenu_page(
+			'sem_menu',
+			__('Manage Header', 'sem-reloaded'),
+			__('Header', 'sem-reloaded'),
+			'switch_themes',
+			'sem_menu',
+			array('sem_header', 'edit_options')
+			);
+		add_submenu_page(
+			'sem_menu',
+			__('Manage Layout', 'sem-reloaded'),
+			__('Layout', 'sem-reloaded'),
+			'switch_themes',
+			'layout',
+			array('sem_layout', 'edit_options')
+			);
+		add_submenu_page(
+			'sem_menu',
+			__('Manage Skin', 'sem-reloaded'),
+			__('Skins', 'sem-reloaded'),
+			'switch_themes',
+			'skin',
+			array('sem_skin', 'edit_options')
+			);
 		if ( !( function_exists('is_multisite') && is_multisite() ) ) {
-			add_theme_page(
+			add_submenu_page(
+				'sem_menu',
 				__('Manage Custom', 'sem-reloaded'),
 				__('Custom CSS', 'sem-reloaded'),
 				'switch_themes',
@@ -47,29 +108,8 @@ class sem_template {
 				array('sem_custom', 'edit_options')
 				);
 		}
-		add_theme_page(
-			__('Manage Header', 'sem-reloaded'),
-			__('Header', 'sem-reloaded'),
-			'switch_themes',
-			'header',
-			array('sem_header', 'edit_options')
-			);
-		add_theme_page(
-			__('Manage Layout', 'sem-reloaded'),
-			__('Layout', 'sem-reloaded'),
-			'switch_themes',
-			'layout',
-			array('sem_layout', 'edit_options')
-			);
-		add_theme_page(
-			__('Manage Skin', 'sem-reloaded'),
-			__('Skin', 'sem-reloaded'),
-			'switch_themes',
-			'skin',
-			array('sem_skin', 'edit_options')
-			);
 	} # admin_menu()
-	
+
 	
 	/**
 	 * meta_boxes()
@@ -149,6 +189,11 @@ class sem_template {
 			wp_enqueue_script('comment-reply');
 			wp_enqueue_script('jquery');
 		}
+
+		wp_enqueue_script( 'doubletaptogo', sem_url . '/js/doubletaptogo.js', array('jquery'), '1.0.0', false );
+		wp_enqueue_script( 'hoverintent', sem_url . '/js/jquery.hoverIntent.js', array('jquery'), '1.0.0', false );
+		wp_enqueue_script( 'resp-menu', sem_url . '/js/resp-menu.js', array('jquery', 'doubletaptogo'), '1.0.0', false );
+
 	} # scripts()
 	
 	
@@ -164,7 +209,6 @@ class sem_template {
 		$skin_url = sem_url . '/skins/' . $sem_options['active_skin'];
 		
 		wp_enqueue_style('style', sem_url . '/style.css', null, sem_last_mod);
-		wp_enqueue_style('layout', sem_url . '/css/layout.css', null, sem_last_mod);
 		
 		if ( file_exists($skin_path . '/icons.css') )
 			wp_enqueue_style('custom-icons', $skin_url . '/icons.css', null, filemtime($skin_path . '/icons.css'));
@@ -181,6 +225,7 @@ class sem_template {
 				wp_enqueue_style('custom-letter', $skin_url . '/letter.css', null, filemtime($skin_path . '/letter.css'));
 		} else {
 			wp_enqueue_style('skin', $skin_url . '/skin.css', null, sem_last_mod);
+			wp_enqueue_style('responsive', sem_url . '/css/responsive.css', null, sem_last_mod);
 			if ( file_exists(sem_path . '/custom.css') )
 				wp_enqueue_style('custom-theme', sem_url . '/custom.css', null, filemtime(sem_path . '/custom.css'));
 			if ( file_exists($skin_path . '/custom.css') )
@@ -492,10 +537,10 @@ class sem_template {
 	function archive_query_string($query_string) {
 		parse_str($query_string, $qv);
 		unset($qv['paged'], $qv['debug']);
-		
+
 		if ( empty($qv) )
 			return $query_string;
-		
+
 		foreach ( array(
 			'order',
 			'pagename',
@@ -520,7 +565,7 @@ class sem_template {
 		
 		if ( !isset($args['order']) )
 			$args['order'] = 'asc';
-		
+
 		$query_string = http_build_query($args);
 		
 		return $query_string;
@@ -769,5 +814,5 @@ class sem_template {
 } # sem_template
 
 
-$sem_template = new sem_template();
-?>
+//$sem_template = new sem_template();
+sem_template::get_instance();

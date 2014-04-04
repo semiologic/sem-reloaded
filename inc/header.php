@@ -6,12 +6,38 @@
  **/
 
 class sem_header {
-    /**
-     * sem_header()
-     */
-    function sem_header() {
+
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
         add_action('admin_enqueue_scripts', array($this, 'scripts'));
-        add_action('appearance_page_header', array($this, 'save_options'), 0);
+        add_action('semiologic_page_header', array($this, 'save_options'), 0);
         add_action('save_post', array($this, 'save_entry'), 30);
     }
 
@@ -404,6 +430,5 @@ class sem_header {
 	} # save_entry()
 } # sem_header
 
-$sem_header = new sem_header();
-
-?>
+//$sem_header = new sem_header();
+sem_header::get_instance();

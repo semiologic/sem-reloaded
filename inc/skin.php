@@ -6,13 +6,39 @@
  **/
 
 class sem_skin {
-    /**
-     * sem_skin()
-     */
-    function sem_skin() {
-        add_action('appearance_page_skin', array($this, 'save_options'), 0);
+	/**
+	 * Holds the instance of this class.
+	 *
+	 * @since  0.5.0
+	 * @access private
+	 * @var    object
+	 */
+	private static $instance;
+
+
+	/**
+	 * Returns the instance.
+	 *
+	 * @since  0.5.0
+	 * @access public
+	 * @return object
+	 */
+	public static function get_instance() {
+
+		if ( !self::$instance )
+			self::$instance = new self;
+
+		return self::$instance;
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 */
+	public function __construct() {
+        add_action('semiologic_page_skin', array($this, 'save_options'), 0);
         add_action('admin_head', array($this, 'admin_head'));
-        wp_enqueue_script('jquery');
+		add_action('wp_enqueue_scripts', array($this, 'scripts'));
     }
 
     /**
@@ -140,7 +166,17 @@ jQuery(document).ready(function() {
 EOS;
 	} # admin_head()
 	
-	
+
+	/**
+	 * scripts()
+	 *
+	 * @return void
+	 **/
+
+	function scripts() {
+		wp_enqueue_script('jquery');
+	} # scripts()
+
 	/**
 	 * save_options()
 	 *
@@ -450,6 +486,5 @@ EOS;
 	} # get_fonts()
 } # sem_skin
 
-$sem_skin = new sem_skin();
-
-?>
+//$sem_skin = new sem_skin();
+sem_skin::get_instance();
