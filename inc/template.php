@@ -40,6 +40,7 @@ class sem_template {
         	add_action('template_redirect', array($this, 'template_redirect'), 0);
         	add_action('wp_enqueue_scripts', array($this, 'scripts'));
         	add_action('wp_enqueue_scripts', array($this, 'styles'));
+	        add_action('wp_head', array($this, 'fonts'));
         	add_action('wp_head', array($this, 'trackback_rdf'), 100);
         	add_filter('body_class', array($this, 'body_class'));
         	add_filter('widget_title', array($this, 'widget_title'));
@@ -67,10 +68,10 @@ class sem_template {
 		$sem_menu = add_menu_page(
 			__('Semiologic', 'sem-reloaded'),
 			__('Semiologic', 'sem-reloaded'),
-			'switch_themes',
+			'edit_theme_options',
 			'sem_menu',
 			'',
-			'',
+			'dashicons-welcome-widgets-menus',
 			59
 		);
 
@@ -78,7 +79,7 @@ class sem_template {
 			'sem_menu',
 			__('Manage Header', 'sem-reloaded'),
 			__('Header', 'sem-reloaded'),
-			'switch_themes',
+			'edit_theme_options',
 			'sem_menu',
 			array('sem_header', 'edit_options')
 			);
@@ -86,24 +87,32 @@ class sem_template {
 			'sem_menu',
 			__('Manage Layout', 'sem-reloaded'),
 			__('Layout', 'sem-reloaded'),
-			'switch_themes',
+			'edit_theme_options',
 			'layout',
 			array('sem_layout', 'edit_options')
 			);
 		add_submenu_page(
 			'sem_menu',
 			__('Manage Skin', 'sem-reloaded'),
-			__('Skins', 'sem-reloaded'),
-			'switch_themes',
+			__('Skin', 'sem-reloaded'),
+			'edit_theme_options',
 			'skin',
 			array('sem_skin', 'edit_options')
+			);
+		add_submenu_page(
+			'sem_menu',
+			__('Manage Font', 'sem-reloaded'),
+			__('Font', 'sem-reloaded'),
+			'edit_theme_options',
+			'font',
+			array('sem_font', 'edit_options')
 			);
 		if ( !( function_exists('is_multisite') && is_multisite() ) ) {
 			add_submenu_page(
 				'sem_menu',
 				__('Manage Custom', 'sem-reloaded'),
 				__('Custom CSS', 'sem-reloaded'),
-				'switch_themes',
+				'edit_theme_options',
 				'custom',
 				array('sem_custom', 'edit_options')
 				);
@@ -207,7 +216,7 @@ class sem_template {
 		global $sem_options;
 		$skin_path = sem_path . '/skins/' . $sem_options['active_skin'];
 		$skin_url = sem_url . '/skins/' . $sem_options['active_skin'];
-		
+
 		wp_enqueue_style('style', sem_url . '/style.css', null, sem_last_mod);
 		
 		if ( file_exists($skin_path . '/icons.css') )
@@ -233,7 +242,59 @@ class sem_template {
 		}
 	} # styles()
 	
-	
+
+	/**
+	 * fonts()
+	 *
+	 * @return void
+	 **/
+	function fonts() {
+		global $sem_options;
+
+		sem_template::load_font( $sem_options['active_font']);
+
+		if ( isset($sem_options['addl_fonts']))
+			foreach( $sem_options['addl_fonts'] as $font)
+				if ( $sem_options['active_font'] != $font )
+					sem_template::load_font( $font );
+	}
+
+	/**
+	 * load_font()
+	 *
+	 * @param $font
+	 * @return void
+	 */
+
+	static function load_font( $font ) {
+		switch ($font) {
+			case 'lato':
+				echo "<link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'lora':
+				echo "<link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'merriweather':
+				echo "<link href='http://fonts.googleapis.com/css?family=Merriweather:400,400italic,700,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'open_sans':
+				echo "<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'pt_sans':
+				echo "<link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'roboto':
+				echo "<link href='http://fonts.googleapis.com/css?family=Roboto:400,400italic,700,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'source_sans_pro':
+				echo "<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic' rel='stylesheet' type='text/css'>" . "\n";
+				break;
+			case 'ubuntu':
+				echo "<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic,700italic' rel='stylesheet' type='text/css'>" . "\n";
+			default:
+				break;
+		}
+	}
 	/**
 	 * strip_sidebars()
 	 *

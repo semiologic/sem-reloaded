@@ -46,15 +46,10 @@ if ( file_exists(sem_path . '/custom.php') )
 	include sem_path . '/custom.php';
 
 if ( is_admin() ) {
-	if ( !function_exists('load_multipart_entry') ) :
-	function load_multipart_entry() {
-		include_once dirname(__FILE__) . '/inc/multipart-entry/multipart-entry.php';
-	} # load_multipart_entry()
-	endif;
-
 	include_once sem_path . '/inc/header.php';
 	include_once sem_path . '/inc/layout.php';
 	include_once sem_path . '/inc/skin.php';
+	include_once sem_path . '/inc/font.php';
 	include_once sem_path . '/inc/custom.php';
 
 
@@ -64,7 +59,6 @@ if ( is_admin() ) {
 
 	foreach ( array('post.php', 'post-new.php', 'page.php', 'page-new.php') as $hook ) {
 		add_action("load-$hook", 'sem_header_admin');
-		add_action("load-$hook", 'load_multipart_entry');
 	}
 
 	function sem_update() {
@@ -112,7 +106,6 @@ function semreloaded_postsetup() {
 		add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
 	else
 		add_custom_background(array('sem_template', 'custom_background_cb'));
-
 }
 
 add_action( 'after_setup_theme', 'semreloaded_postsetup' );

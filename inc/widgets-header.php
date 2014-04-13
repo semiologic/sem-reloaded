@@ -5,7 +5,6 @@
  * @package Semiologic Reloaded
  **/
 
-
 if ( !class_exists('sem_nav_menu') )
 	include sem_path . '/inc/widgets-navmenu.php';
 
@@ -48,14 +47,6 @@ class header extends WP_Widget {
 		extract($instance, EXTR_SKIP);
 
 		$header = header::get();
-
-		if ( $header ) {
-			preg_match("/\.([^.]+)$/", $header, $ext);
-			$ext = strtolower(end($ext));
-			$flash = $ext == 'swf';
-		} else {
-			$flash = false;
-		}
 
 		echo '<div id="header" class="wrapper'
 				. ( $invert_header
@@ -134,27 +125,11 @@ class header extends WP_Widget {
 		if ( !$header )
 			return;
 
-		preg_match("/\.([^.]+)$/", $header, $ext);
-		$ext = strtolower(end($ext));
+		echo '<div id="header_img" class="pad">' . header::display_header_image($header);
 
-		if ( $ext != 'swf' ) {
-			echo '<div id="header_img" class="pad">'
-				. header::display_header_image($header);
-		} else {
-			echo '<div id="header_img">'
-				. header::display_header_flash($header);
-		}
 		echo '</div>' . "\n";
 	} # display()
-	/**
-	 * display_header_flash()
-	 *
-	 * @param string $header
-	 * @return string html
-	 */
-	function display_header_flash($header) {
-		return header::display_flash($header);
-	}
+
 	/**
 	 * display_header_image()
 	 *
@@ -212,38 +187,6 @@ class header extends WP_Widget {
 			. esc_attr(get_option('blogdescription'))
 			. '" />';
 	} # display_image()
-
-
-	/**
-	 * display_flash()
-	 *
-	 * @param string $header
-	 * @return string $html
-	 **/
-
-	static function display_flash($header = null) {
-		if ( !$header )
-			$header = header::get_header();
-
-		if ( !$header )
-			return;
-
-		list($width, $height) = wp_cache_get('sem_header', 'sem_header');
-
-		static $i = 0;
-		$player = esc_url(content_url() . $header);
-		$player_id = 'header_img_' . md5($i++ . $header);
-
-		return <<<EOS
-
-<div style="width: {$width}px; height: {$height}px;"><object id="$player_id" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$width" height="$height"><param name="movie" value="$player" /><param name="allowfullscreen" value="false" /><param name="allowscriptaccess" value="true" /><embed src="$player" pluginspage="http://www.macromedia.com/go/getflashplayer" width="$width" height="$height" allowfullscreen="false" allowscriptaccess="true" /></object></div>
-
-<script type="text/javascript">
-swfobject.embedSWF("$player", "$player_id", "$width", "$height", "9.0.0");
-</script>
-
-EOS;
-	} # display_flash()
 
 
     /**
@@ -338,12 +281,12 @@ EOS;
 		$header_basedir = header::get_basedir();
 
 		if ( defined('GLOB_BRACE') ) {
-			$header_scan = "header{,-*}.{jpg,jpeg,png,gif,swf}";
-			$skin_scan = "header.{jpg,jpeg,png,gif,swf}";
+			$header_scan = "header{,-*}.{jpg,jpeg,png,gif}";
+			$skin_scan = "header.{jpg,jpeg,png,gif}";
 			$scan_type = GLOB_BRACE;
 		} else {
-			$header_scan = "header-*.jpg";
-			$skin_scan = "header.jpg";
+			$header_scan = "header-*.{jpg,jpeg}";
+			$skin_scan = "header.{jpg,jpeg}";
 			$scan_type = false;
 		}
 
@@ -408,19 +351,9 @@ EOS;
 	 **/
 
 	function wire(&$wp) {
-		$header = header::get();
 
-		if ( !$header )
-			return;
+		add_action('wp_head', array($this, 'css'), 30);
 
-		preg_match("/\.([^.]+)$/", $header, $ext);
-		$ext = strtolower(end($ext));
-
-		if ( $ext == 'swf' ) {
-			wp_enqueue_script('swfobject');
-		} else {
-			add_action('wp_head', array($this, 'css'), 30);
-		}
 	} # wire()
 
 

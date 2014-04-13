@@ -8,7 +8,7 @@ Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
-Tags: two-columns, three-columns, fixed-width, custom-header, custom-background, sticky-post, microformats, responsive
+Tags: two-columns, three-columns, fixed-layout, custom-header, custom-background, sticky-post, microformats, responsive-layout
 
 /*
 Terms of use
@@ -284,6 +284,38 @@ Theme Fonts
 
 .lucida {
     font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
+}
+
+.lato {
+	font-family: 'Lato', sans-serif;
+}
+
+.lora {
+	font-family: 'Lora', serif;
+}
+
+.merriweather {
+	font-family: 'Merriweather', serif;
+}
+
+.open_sans {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.pt_sans {
+	font-family: 'PT Sans', sans-serif;
+}
+
+.roboto {
+	font-family: 'Roboto', sans-serif;
+}
+
+.source_sans_pro {
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+.ubuntu {
+	font-family: 'Ubuntu', sans-serif;
 }
 
 /* Headings

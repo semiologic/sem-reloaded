@@ -46,7 +46,7 @@ class sem_skin {
 	 *
 	 * @return void
 	 **/
-	
+
 	function admin_head() {
 		echo <<<EOS
 
@@ -101,57 +101,6 @@ class sem_skin {
 	border-right: none;
 }
 
-.arial {
-	font-family: Arial, "Liberation Sans", "Nimbus Sans L", "DejaVu Sans", Sans-Serif;
-	font-size: 14px;
-}
-
-.tahoma {
-	font-family: Tahoma, "Nimbus Sans L", "DejaVu Sans", Sans-Serif;
-	font-size: 14px;
-}
-
-.trebuchet {
-	font-family: "Trebuchet MS", "Nimbus Sans L", "DejaVu Sans", Sans-Serif;
-	font-size: 14px;
-}
-
-.verdana {
-	font-family: Verdana, "Nimbus Sans L", "DejaVu Sans", Sans-Serif;
-	font-size: 14px;
-}
-
-.antica,
-.bookman {
-	font-family: Palatino, "Book Antica", "Palatino Linotype", "URW Palladio L", Palladio, Georgia, "DejaVu Serif", Serif;
-	font-size: 14px;
-}
-
-.georgia {
-	font-family: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif;
-	font-size: 14px;
-}
-
-.times {
-	font-family: "Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif;
-	font-size: 14px;
-}
-
-.courier {
-	font-family: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace;
-	font-size: 14px;
-}
-
-.helvetica {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
-}
-
-.lucida {
-    font-family: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, sans-serif;
-    font-size: 14px;
-}
-
 </style>
 
 <script type="text/javascript">
@@ -193,7 +142,6 @@ EOS;
 		
 		$sem_options['active_skin'] = preg_replace("/[^a-z0-9_-]/i", "", $_POST['skin']);
 		$sem_options['skin_data'] = sem_template::get_skin_data($sem_options['active_skin']);
-		$sem_options['active_font'] = preg_replace("/[^a-z0-9_-]/i", "", $_POST['font']);
 		if ( current_user_can('unfiltered_html') )
 			$sem_options['credits'] = stripslashes($_POST['credits']);
 		
@@ -222,9 +170,9 @@ EOS;
 		
 		global $sem_options;
 		$skins = sem_skin::get_skins();
-		$fonts = sem_skin::get_fonts();
+		$fonts = sem_font::get_fonts();
 		
-		echo '<h2>' . __('Manage Skin &amp; Font', 'sem-reloaded') . '</h2>' . "\n";
+		echo '<h2>' . __('Manage Skin', 'sem-reloaded') . '</h2>' . "\n";
 		
 		echo '<h3>' . __('Current Skin &amp; Font', 'sem-reloaded') . '</h3>' . "\n";
 		
@@ -250,10 +198,6 @@ EOS;
 		
 		echo '<h4>' . sprintf($title, $name, $details['version'], $author) . '</h4>';
 		
-		$font = '<span class="' . esc_attr($sem_options['active_font']) . '">'
-			. $fonts[$sem_options['active_font']]
-			. '</span>';
-		
 		if ( $details['description'] ) {
 			echo wpautop(apply_filters('widget_text', $details['description']));
 		}
@@ -263,19 +207,31 @@ EOS;
 				. sprintf(__('Tags: %s', 'sem-reloaded'), implode(',', $details['tags']))
 				. '</p>' . "\n";
 		}
-		
-		echo '<p>'
-			. sprintf(__('Font Family: %s.', 'sem-reloaded'), $font)
-			. '</p>' . "\n";
-		
+
 		$theme_credits = sem_template::get_theme_credits();
 		$skin_credits = sem_template::get_skin_credits();
 		$credits = sprintf($sem_options['credits'], $theme_credits, $skin_credits['skin_name'], $skin_credits['skin_author']);
 		
+		if ( empty($credits) ) {
+			$credits = "Left blank";
+		}
+
+		if ($credits) {
+			echo '<p>'
+				. sprintf(__('Credits: %s', 'sem-reloaded'), $credits)
+				. '</p>' . "\n";
+		}
+
+		$font = '<span class="' . esc_attr($sem_options['active_font']) . '">'
+			. $fonts[$sem_options['active_font']]
+			. '</span>';
+
 		echo '<p>'
-			. sprintf(__('Credits: %s', 'sem-reloaded'), $credits)
+			. sprintf(__('Font Family: %s.', 'sem-reloaded'), $font)
+			. '&nbsp;&nbsp;'
+			.  __( 'To select a new font, visit the Semiologic <a href="admin.php?page=font">font</a> page.', 'sem-reloaded')
 			. '</p>' . "\n";
-		
+
 		echo '<div style="clear: both;"></div>' . "\n";
 		
 		echo '</div>' . "\n";
@@ -283,7 +239,7 @@ EOS;
 		echo '<h3>' . __('Available Skins', 'sem-reloaded') . '</h3>' . "\n";
 		
 		echo '<p class="hide-if-no-js">'
-			. __('Click on a skin below to activate it.', 'sem-reloaded')
+			. __('Click on a skin below to activate it immediately.', 'sem-reloaded')
 			. '</p>' . "\n";
 		
 		echo '<table id="available_options" cellspacing="0" cellpadding="0">' . "\n";
@@ -371,31 +327,7 @@ EOS;
 		echo '<p class="submit hide-if-js">'
 			. '<input type="submit" value="' . esc_attr(__('Save Changes', 'sem-reloaded')) . '" />'
 			. '</p>' . "\n";
-		
-		echo '<h3>' . __('Font Settings', 'sem-reloaded') . '</h3>' . "\n";
-		
-		echo '<p>' . __('This will let you set the default font on your site.', 'sem-reloaded') . '</p>' . "\n";
-		
-		echo '<ul>' . "\n";
-		
-		foreach ( $fonts as $k => $v ) {
-			echo '<li class="' . esc_attr($k) . '">'
-				. '<label>'
-				. '<input type="radio" name="font" value="' . $k . '"'
-					. checked($sem_options['active_font'], $k, false)
-					. '/>'
-				. '&nbsp;'
-				. $v
-				. '</label>'
-				. '</li>' . "\n";
-		}
-		
-		echo '</ul>' . "\n";
-		
-		echo '<div class="submit">'
-			. '<input type="submit" value="' . esc_attr(__('Save Changes', 'sem-reloaded')) . '" />'
-			. '</div>' . "\n";
-		
+
 		echo '<h3>' . __('Designer Credits', 'sem-reloaded') . '</h3>' . "\n";
 		
 		echo '<p>'
@@ -461,29 +393,6 @@ EOS;
 	static function sort($a, $b) {
 		return strnatcasecmp($a['name'], $b['name']);
 	} # sort()
-	
-	
-	/**
-	 * get_fonts()
-	 *
-	 * @return array $fonts
-	 **/
-
-	static function get_fonts() {
-		return array(
-			'' =>  __('The skin\'s default stack', 'sem-reloaded'),
-			'arial' => __('Arial stack: Arial, "Liberation Sans", "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
-			'tahoma' => __('Tahoma stack: Tahoma, "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
-			'trebuchet' =>  __('Trebuchet stack: "Trebuchet MS", "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
-			'verdana' =>  __('Verdana stack: Verdana, "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
-			'antica' => __('Antica stack: Palatino, "Book Antica", "Palatino Linotype", "URW Palladio L", Palladio, Georgia, "DejaVu Serif", Serif', 'sem-reloaded'),
-			'georgia' => __('Georgia stack: Georgia, "New Century Schoolbook", "Century Schoolbook L", "DejaVu Serif", Serif', 'sem-reloaded'),
-			'times' => __('Times stack: "Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif', 'sem-reloaded'),
-            'helvetica' => __('Helvetica stack: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif', 'sem-reloaded'),
-            'lucida' => __('Lucida stack: "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, Sans-Serif', 'sem-reloaded'),
-            'courier' => __('Courier stack: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace', 'sem-reloaded'),
-        );
-	} # get_fonts()
 } # sem_skin
 
 //$sem_skin = new sem_skin();

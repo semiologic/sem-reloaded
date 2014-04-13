@@ -36,30 +36,10 @@ class sem_header {
 	 *
 	 */
 	public function __construct() {
-        add_action('admin_enqueue_scripts', array($this, 'scripts'));
-        add_action('semiologic_page_header', array($this, 'save_options'), 0);
+		add_action('toplevel_page_sem_menu', array($this, 'save_options'), 0);
         add_action('save_post', array($this, 'save_entry'), 30);
     }
 
-    /**
-	 * scripts()
-	 *
-	 * @return void
-	 **/
-
-	function scripts() {
-		$header = header::get();
-		
-		if ( !$header )
-			return;
-		
-		preg_match("/\.([^.]+)$/", $header, $ext);
-		$ext = end($ext);
-		
-		if ( $ext == 'swf' )
-			wp_enqueue_script('swfobject');
-	} # scripts()
-	
 	
 	/**
 	 * save_options()
@@ -106,7 +86,7 @@ class sem_header {
 			$ext = end($ext);
 			$ext = strtolower($ext);
 
-			if ( !in_array($ext, defined('GLOB_BRACE') ? array('jpg', 'jpeg', 'png', 'gif', 'swf') : array('jpg')) ) {
+			if ( !in_array($ext, defined('GLOB_BRACE') ? array('jpg', 'jpeg', 'png', 'gif') : array('jpg', 'jpeg')) ) {
 				echo '<div class="error">'
 					. "<p>"
 						. "<strong>"
@@ -180,22 +160,13 @@ class sem_header {
 		echo '<h2>' . __('Manage Header', 'sem-reloaded') . '</h2>' . "\n";
 		
 		echo '<p>'
-			. __('The header\'s height will automatically adjust to fit your image or flash file. The width to use will depend on your <a href="themes.php?page=layout">layout</a>\'s canvas width, and on your <a href="themes.php?page=skin">skin</a> (strip 20px if you\'re using the Kubrick skin).', 'sem-reloaded')
+			. __('The header\'s height will automatically adjust to fit your image. The width to use will depend on your <a href="admin.php?page=layout">layout</a>\'s canvas width, and on your <a href="admin.php?page=skin">skin</a> (strip 20px if you\'re using the Kubrick skin).', 'sem-reloaded')
 			. '</p>' . "\n";
 		
 		if ( $header ) {
 			echo '<h3>' . __('Current Header', 'sem-reloaded') . '</h3>';
-			
-			preg_match("/\.([^.]+)$/", $header, $ext);
-			$ext = strtolower(end($ext));
-			
-			if ( $ext != 'swf' ) {
-				echo '<p>'
-					. header::display_image($header)
-					. '</p>' . "\n";
-			} else {
-				echo header::display_flash($header);
-			}
+
+			echo '<p>' . header::display_image($header) . '</p>' . "\n";
 			
 			if ( is_writable(WP_CONTENT_DIR . $header) ) {
 				echo '<p>'
@@ -211,7 +182,7 @@ class sem_header {
 					. '</div>' . "\n";
 			} elseif ( strpos($header, "/skins/$active_skin/") !== false ) {
 				echo '<p>'
-					. sprintf(__('This header (%s) is hard-coded in your <a href="themes.php?page=skin">skin</a>. You cannot delete it, but you can override it.', 'sem-reloaded'), 'wp-content' . $header)
+					. sprintf(__('This header (%s) is hard-coded in your <a href="admin.php?page=skin">skin</a>. You cannot delete it, but you can override it.', 'sem-reloaded'), 'wp-content' . $header)
 					. '</p>' . "\n";
 			} else {
 				echo '<p>'
@@ -228,8 +199,8 @@ class sem_header {
 				echo '<h3>'
 					. '<label for="header_file">'
 						. ( defined('GLOB_BRACE')
-							? __('Upload a New Header (jpg, png, gif, swf)', 'sem-reloaded')
-							: __('Upload a New Header (jpg)', 'sem-reloaded')
+							? __('Upload a New Header (jpg, jpeg, png, gif)', 'sem-reloaded')
+							: __('Upload a New Header (jpg, jpeg)', 'sem-reloaded')
 							)
 						. '</label>'
 					. '</h3>' . "\n";
@@ -239,11 +210,11 @@ class sem_header {
 					. '</p>' . "\n";
 			} elseif ( !is_writable(WP_CONTENT_DIR) ) {
 				echo '<p>'
-					. __('Your wp-content folder is not writeable by the server', 'sem-reloaded')
+					. __('Your wp-content folder is not writable by the server', 'sem-reloaded')
 					. '</p>' . "\n";
 			} else {
 				echo '<p>'
-					. __('Your wp-content/header folder is not writeable by the server', 'sem-reloaded')
+					. __('Your wp-content/header folder is not writable by the server', 'sem-reloaded')
 					. '</p>' . "\n";
 			}
 			
@@ -274,10 +245,10 @@ class sem_header {
 		$post_ID = $post->ID;
 		
 		if ( defined('GLOB_BRACE') ) {
-			$header_scan = "header{,-*}.{jpg,jpeg,png,gif,swf}";
+			$header_scan = "header{,-*}.{jpg,jpeg,png,gif}";
 			$scan_type = GLOB_BRACE;
 		} else {
-			$header_scan = "header-*.jpg";
+			$header_scan = "header-*.{jpg,jpeg}";
 			$scan_type = false;
 		}
 		
@@ -294,19 +265,10 @@ class sem_header {
 			echo '<h4>'
 				. __('Current Header', 'sem-reloaded')
 				. '</h4>' . "\n";
-			
-			preg_match("/\.([^.]+)$/", $header, $ext);
-			$ext = strtolower(end($ext));
-			
+
 			echo '<div style="overflow: hidden;">' . "\n";
 
-			if ( $ext != 'swf' ) {
-				echo '<p>'
-					. header::display_image($header)
-					. '</p>' . "\n";
-			} else {
-				echo header::display_flash($header);
-			}
+			echo '<p>' . header::display_image($header) . '</p>' . "\n";
 			
 			echo '</div>' . "\n";
 			
@@ -336,8 +298,8 @@ class sem_header {
 				echo '<h4>'
 					. '<label for="header_file">'
 						. ( defined('GLOB_BRACE')
-							? __('Upload a New Header (jpg, jpeg, png, gif, swf)', 'sem-reloaded')
-							: __('Upload a New Header (jpg)', 'sem-reloaded')
+							? __('Upload a New Header (jpg, jpeg, png, gif)', 'sem-reloaded')
+							: __('Upload a New Header (jpg, jpeg)', 'sem-reloaded')
 							)
 						. '</label>'
 					. '</h4>' . "\n";
@@ -349,11 +311,11 @@ class sem_header {
 					. '</p>' . "\n";
 			} elseif ( !is_writable(WP_CONTENT_DIR) ) {
 				echo '<p>'
-					. __('Your wp-content folder is not writeable by the server', 'sem-reloaded')
+					. __('Your wp-content folder is not writable by the server', 'sem-reloaded')
 					. '</p>' . "\n";
 			} else {
 				echo '<p>'
-					. __('Your wp-content/header folder is not writeable by the server', 'sem-reloaded')
+					. __('Your wp-content/header folder is not writable by the server', 'sem-reloaded')
 					. '</p>' . "\n";
 			}
 			
@@ -379,10 +341,10 @@ class sem_header {
 		$post_id = (int) $post_id;
 		
 		if ( defined('GLOB_BRACE') ) {
-			$header_scan = "header{,-*}.{jpg,jpeg,png,gif,swf}";
+			$header_scan = "header{,-*}.{jpg,jpeg,png,gif}";
 			$scan_type = GLOB_BRACE;
 		} else {
-			$header_scan = "header-*.jpg";
+			$header_scan = "header-*.{jpg,jpeg}";
 			$scan_type = false;
 		}
 		
@@ -399,7 +361,7 @@ class sem_header {
 			preg_match("/\.([^.]+)$/", $_FILES['header_file']['name'], $ext);
 			$ext = strtolower(end($ext));
 			
-			if ( !in_array($ext, defined('GLOB_BRACE') ? array('jpg', 'jpeg', 'png', 'gif', 'swf') : array('jpg')) ) {
+			if ( !in_array($ext, defined('GLOB_BRACE') ? array('jpg', 'jpeg', 'png', 'gif') : array('jpg', 'jpeg')) ) {
 				return;
 			} elseif ( !wp_mkdir_p(WP_CONTENT_DIR . header::get_basedir() . '/' .  $post_id) ) {
 				return;

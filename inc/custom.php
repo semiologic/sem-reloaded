@@ -31,6 +31,11 @@ class sem_custom {
 	}
 
 	/**
+	 * @var additional external fonts used
+	 */
+	protected $addl_fonts;
+
+	/**
 	 * Constructor.
 	 *
 	 */
@@ -361,7 +366,7 @@ EOS;
 		} elseif ( !empty($_REQUEST['publish']) ) {
 			global $wp_filesystem;
 			
-			$url = wp_nonce_url('themes.php?page=custom&publish=1', 'sem_custom');
+			$url = wp_nonce_url('admin.php?page=custom&publish=1', 'sem_custom');
 			$credentials = request_filesystem_credentials($url, '', false);
 			
 			if ( $credentials ) {
@@ -429,6 +434,11 @@ EOS;
 							$published_css = get_option('sem_custom_published');
 							$published_css[$sem_options['active_skin']] = get_option('sem_custom');
 							update_option('sem_custom_published', $published_css);
+
+							// update additional external fonts we need ot load
+							$sem_options['addl_fonts'] = $this->addl_fonts;
+							update_option('sem6_options', $sem_options);
+
 							do_action('flush_cache');
 						} else {
 							$fs_error = sprintf(__('Publish Failed: A WP filesystem error occurred (probably related to <a href="%1$s">this WP bug</a>) occurred. Paste the following code in %2$s:<pre>%3$s</pre>', 'sem-reloaded'), 'http://core.trac.wordpress.org/ticket/10889', 'wp-content/themes/sem-reloaded/skins/' . $sem_options['active_skin'] . '/custom.css',  $new_css);
@@ -506,7 +516,7 @@ EOS;
 			: array();
 		
 		echo '<div class="wrap">' . "\n"
-			. '<form method="POST" action="themes.php?page=custom">' . "\n";
+			. '<form method="POST" action="admin.php?page=custom">' . "\n";
 		
 		echo '<h2>'
 			. __('Manage Custom CSS', 'sem-reloaded')
@@ -1106,17 +1116,25 @@ EOS;
 	static function get_fonts() {
 		return array(
 			'' =>  __('- Default Font Family -', 'sem-reloaded'),
+			'antica' => __('Antica stack / Serif', 'sem-reloaded'),
 			'arial' => __('Arial stack / Sans-Serif', 'sem-reloaded'),
+			'courier' => __('Courier stack / Monospace', 'sem-reloaded'),
+			'georgia' => __('Georgia stack / Serif', 'sem-reloaded'),
+			'helvetica' => __('Helvetica stack/, Sans-Serif', 'sem-reloaded'),
+			'lucida' => __('Lucida stack / Sans-Serif', 'sem-reloaded'),
 			'tahoma' => __('Tahoma stack / Sans-Serif', 'sem-reloaded'),
+			'times' => __('Times stack / Serif', 'sem-reloaded'),
 			'trebuchet' => __('Trebuchet stack / Sans-Serif', 'sem-reloaded'),
 			'verdana' => __('Verdana stack / Sans-Serif', 'sem-reloaded'),
-			'antica' => __('Antica stack / Serif', 'sem-reloaded'),
-			'georgia' => __('Georgia stack / Serif', 'sem-reloaded'),
-			'times' => __('Times stack / Serif', 'sem-reloaded'),
-            'helvetica' => __('Helvetica stack/, Sans-Serif', 'sem-reloaded'),
-            'lucida' => __('Lucida stack / Sans-Serif', 'sem-reloaded'),
-			'courier' => __('Courier stack / Monospace', 'sem-reloaded'),
-			);
+			'lato' => __('Lato (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+			'lora' => __('Lora (Google Fonts) stack / Serif', 'sem-reloaded'),
+			'merriweather' => __('Merriweather (Google Fonts) stack / Serif', 'sem-reloaded'),
+			'open_sans' => __('Open Sans (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+			'pt_sans' => __('PT Sans (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+			'roboto' => __('Roboto (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+			'source_sans_pro' => __('Source Sans Pro (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+			'ubuntu' => __('Ubuntu (Google Fonts) stack / San-Serif', 'sem-reloaded'),
+		);
 	} # get_fonts()
 	
 	
@@ -1174,7 +1192,8 @@ EOS;
 	function get_css() {
 		$css = array();
 		$custom = get_option('sem_custom');
-		
+		$this->addl_fonts = array();
+
 		$font_families = array(
 			'arial' => 'Arial, "Liberation Sans", "Nimbus Sans L", "DejaVu Sans", Sans-Serif',
 			'tahoma' => 'Tahoma, "Nimbus Sans L", "DejaVu Sans", Sans-Serif',
@@ -1186,6 +1205,14 @@ EOS;
             'helvetica' => '"HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", Sans-Serif',
             'lucida' => '"Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", Geneva, Verdana, Sans-Serif',
 			'courier' => '"Courier New", "Liberation Mono", "Nimbus Mono L", Monospace',
+			'lato' => '"Lato", sans-serif',
+			'lora' => '"Lora", serif',
+			'merriweather' => '"Merriweather", Serif',
+			'open_sans' => '"Open Sans", sans-serif',
+			'pt_sans' => '"PT Sans", sans-serif',
+			'roboto' => '"Roboto", sans-serif',
+			'source_sans_pro' => '"Source Sans Pro", sans-serif',
+			'ubuntu' => '"Ubuntu", sans-serif',
 			);
 		$font_sizes = array();
 		for ( $i = 9; $i <= 24; $i++ )
@@ -1212,6 +1239,7 @@ EOS;
 					if ( !$v || !isset($font_families[$v]) )
 						continue;
 					$css[$pointer][] = 'font-family: ' . $font_families[$v] . ';';
+					sem_custom::add_font($v);
 					break;
 				
 				case 'font_size':
@@ -1324,7 +1352,20 @@ EOS;
 		return rtrim($o);
 	} # get_css()
 	
-	
+	/**
+	 * add_font()
+	 *
+	 * @param $font
+	 * @return void
+	 **/
+
+	function add_font( $font ) {
+		if ( in_array( $font, array( 'lato', 'lora', 'merriweather', 'open_sans', 'pt_sans', 'roboto', 'source_sans_pro', 'ubuntu')) ) {
+			if ( empty($this->addl_fonts) || !in_array( $font, $this->addl_fonts) )
+				$this->addl_fonts[] = $font;
+		}
+	}
+
 	/**
 	 * wp_print_scripts()
 	 *
@@ -1337,8 +1378,7 @@ EOS;
 		
 		wp_enqueue_script('jquery');
 	} # wp_print_scripts()
-	
-	
+
 	/**
 	 * wp_head()
 	 *
@@ -1357,11 +1397,16 @@ EOS;
 		
 		if ( method_exists('static_cache', 'disable') )
 			static_cache::disable();
-		
+
+		$css = sem_custom::get_css();
+
+		foreach( $this->addl_fonts as $font)
+			sem_template::load_font( $font );
+
 		echo '<style type="text/css">' . "\n";
-		
-		echo sem_custom::get_css() . "\n";
-		
+
+		echo $css . "\n";
+
 		echo '</style>' . "\n";
 	} # wp_head()
 	

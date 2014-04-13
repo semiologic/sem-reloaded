@@ -206,7 +206,7 @@ EOS;
 		echo '<h3>' . __('Available Layouts', 'sem-reloaded') . '</h3>' . "\n";
 		
 		echo '<p class="hide-if-no-js">'
-			. __('Click on a layout below to activate it.', 'sem-reloaded')
+			. __('Click on a layout below to activate it immediately.', 'sem-reloaded')
 			. '</p>' . "\n";
 		
 		echo '<table id="available_options" cellspacing="0" cellpadding="0">' . "\n";
