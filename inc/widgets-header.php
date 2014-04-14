@@ -471,6 +471,8 @@ class navbar extends sem_nav_menu {
 		$this->multi_level = true;
 
 		$this->ul_menu_class = "header_menu";
+
+		parent::__construct();
 	} # navbar()
 
 
@@ -664,6 +666,8 @@ class navbar extends sem_nav_menu {
 			if ( $root_id == $front_page_id )
 				continue;
 			if ( (int) get_post_meta($root_id, '_widgets_exclude', true) )
+				continue;
+			if ( (int) get_post_meta($root_id, '_menu_exclude', true) )
 				continue;
 			if ( !wp_cache_get($root_id, 'page_children') ) # only sections
 				continue;

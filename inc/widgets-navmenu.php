@@ -24,30 +24,57 @@ class sem_nav_menu extends WP_Widget {
 	 *
 	 */
 	public function __construct() {
-        foreach ( array(
-                'switch_theme',
-                'update_option_active_plugins',
-                'update_option_show_on_front',
-                'update_option_page_on_front',
-                'update_option_page_for_posts',
-                'update_option_sidebars_widgets',
-                'update_option_sem5_options',
-                'update_option_sem6_options',
-                'generate_rewrite_rules',
-
-                'flush_cache',
-                'after_db_upgrade',
-                ) as $hook )
-            add_action($hook, array($this, 'flush_cache'));
-
-        add_action('pre_post_update', array($this, 'pre_flush_post'));
-
-        foreach ( array(
-                'save_post',
-                'delete_post',
-                ) as $hook )
-            add_action($hook, array($this, 'flush_post'), 1); // before _save_post_hook()
+		add_action( 'init', array ( $this, 'init' ) );
     }
+
+
+	/**
+	 * init()
+	 *
+	 * @return void
+	 **/
+
+	function init() {
+		foreach ( array(
+          'switch_theme',
+          'update_option_active_plugins',
+          'update_option_show_on_front',
+          'update_option_page_on_front',
+          'update_option_page_for_posts',
+          'update_option_sidebars_widgets',
+          'update_option_sem5_options',
+          'update_option_sem6_options',
+          'generate_rewrite_rules',
+
+          'flush_cache',
+          'after_db_upgrade',
+          ) as $hook )
+        add_action($hook, array($this, 'flush_cache'));
+
+		add_action('pre_post_update', array($this, 'pre_flush_post'));
+
+		foreach ( array(
+		      'save_post',
+		      'delete_post',
+		      ) as $hook )
+		    add_action($hook, array($this, 'save_post'), 1); // before _save_post_hook()
+
+		if ( is_admin() ) {
+			foreach ( array('page.php', 'page-new.php') as $hook )
+			 add_action('load-' . $hook, array($this, 'editor_init'));
+		}
+	}
+
+
+	/**
+	 * editor_init()
+	 *
+	 * @return void
+	 **/
+
+	function editor_init() {
+		add_meta_box('page_meta_config', __('This Page In Menus',  'sem-reloaded'), array($this, 'page_meta_config'), 'page', 'side');
+	} # editor_init()
 
 	/**
 	 * widget()
@@ -256,7 +283,8 @@ class sem_nav_menu extends WP_Widget {
 		$ref = (int) $ref;
 		$page = get_post($ref);
 
-		if ( !$page || (int) get_post_meta($page->ID, '_widgets_exclude', true) )
+		if ( !$page || (int) get_post_meta($page->ID, '_widgets_exclude', true)
+			|| (int) get_post_meta($page->ID, '_menu_exclude', true) )
 			return;
 
 		if ( !$this->multi_level && $page->post_parent != 0 )
@@ -793,6 +821,8 @@ class sem_nav_menu extends WP_Widget {
 			;
 
 		foreach ( $pages as $page ) {
+			if ( (int) get_post_meta($page->ID, '_menu_exclude', true) )
+				continue;
 			$label = get_post_meta($page->ID, '_widgets_label', true);
 			if ( $label === '' )
 				$label = $page->post_title;
@@ -1058,6 +1088,8 @@ EOS;
 				continue;
 			if ( get_post_meta($root_id, '_widgets_exclude', true) )
 				continue;
+			if ( get_post_meta($root_id, '_menu_exclude', true) )
+				continue;
 
 			$items[] = array(
 				'type' => 'page',
@@ -1108,6 +1140,7 @@ EOS;
 		foreach ( array(
 			'widgets_label',
 			'widgets_exclude',
+			'menu_exclude'
 			) as $key ) {
 			if ( !isset($old[$key]) ) {
 				$old[$key] = get_post_meta($post_id, "_$key", true);
@@ -1115,17 +1148,39 @@ EOS;
 			}
 		}
 
-
 		if ( $update )
 			wp_cache_set($post_id, $old, 'pre_flush_post');
 	} # pre_flush_post()
 
 
 	/**
+	 * save_post()
+	 *
+	 * @param int $post_id
+	 * @return void
+     *
+	 **/
+
+	function save_post($post_id) {
+		$post = get_post($post_id);
+
+		if ( $post->post_type == 'revision' || !$_POST  )
+			return;
+
+		if ( isset($_POST['menu_exclude']) ) {
+			update_post_meta($post_id, '_menu_exclude', '1');
+		} else {
+			update_post_meta($post_id, '_menu_exclude', '0');
+		}
+
+		sem_nav_menu::flush_post($post_id);
+	}
+
+	/**
 	 * flush_post()
 	 *
 	 * @param int $post_id
-	 * @return void|mixed
+	 * @return void
      *
 	 **/
 
@@ -1153,8 +1208,13 @@ EOS;
 		foreach ( array_keys($old) as $key ) {
 			switch ( $key ) {
 			case 'widgets_label':
-			case 'widgets_exclude':
 				if ( $$key != get_post_meta($post_id, "_$key", true) )
+					return sem_nav_menu::flush_cache();
+				break;
+
+			case 'widgets_exclude':
+			case 'menu_exclude':
+				if ( (int) $$key != (int) get_post_meta($post_id, "_$key", true) )
 					return sem_nav_menu::flush_cache();
 				break;
 
@@ -1229,7 +1289,41 @@ EOS;
 
 		return $in;
 	} # flush_cache()
+
+	/**
+	 * page_meta_config()
+	 *
+	 * @param object $post
+	 * @return void
+	 **/
+
+	function page_meta_config($post) {
+		$post_ID = $post->ID;
+
+		$exclude = (int) get_post_meta($post_ID, '_menu_exclude', true) || (int) get_post_meta($post_ID, '_widgets_exclude', true);
+
+		echo '<table style="width: 100%;">';
+
+		echo '<tr valign="top">' . "\n"
+			. '<td>'
+			. '<label>'
+			. '<input type="checkbox"'
+			. ' name="menu_exclude"'
+			. ( $exclude
+				? ' checked="checked"'
+				: ''
+				)
+			. ' />'
+			. '&nbsp;'
+			. __('Exclude page', 'sem-reloaded')
+			. '</label>'
+		 	. '</td>' . "\n"
+			. '</tr>' . "\n";
+
+		echo '</table>' . "\n";
+
+		echo '<p>'
+			. __('Check to exclude this page from being listed in navigation menus.', 'sem-reloaded')
+			. '</p>' . "\n";
+	} # page_meta_config()
 } # sem_nav_menu
-
-
-//$sem_nav_menu = new sem_nav_menu();

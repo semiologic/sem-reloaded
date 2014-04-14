@@ -26,6 +26,8 @@ class footer extends sem_nav_menu {
 		$this->WP_Widget('footer', $widget_name, $widget_ops, $control_ops);
 
 		$this->ul_menu_class = "footer_menu";
+
+		parent::__construct();
 	} # footer()
 
 
@@ -205,6 +207,8 @@ class footer extends sem_nav_menu {
 			if ( $root_id == $front_page_id )
 				continue;
 			if ( get_post_meta($root_id, '_widgets_exclude', true) )
+				continue;
+			if ( get_post_meta($root_id, '_menu_exclude', true) )
 				continue;
 			if ( wp_cache_get($root_id, 'page_children') ) # only non-sections
 				continue;
