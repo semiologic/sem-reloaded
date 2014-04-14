@@ -239,6 +239,10 @@ abbr, acronym {
 	font-variant:normal;
 }
 
+.hidden {
+	display: none;
+}
+
 /*
 Theme Fonts
 -----------
@@ -1251,16 +1255,14 @@ Site Footer
 	font-size: 1.1rem;
 }
 
-
 /*
- * Miscellaneous
+Sidebars
 ---------------------------------------------------------------------------------------------------- */
-
-/* hidden class, used to fix IE6 problems */
-
-.hidden {
-	display: none;
+#sidebar li,
+#sidebar2 li {
+	word-wrap: break-word;
 }
+
 
 /* dropdowns in sidebars */
 
