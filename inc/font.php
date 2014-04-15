@@ -113,7 +113,7 @@ class sem_font {
 
 .lato {
 	font-family: 'Lato', sans-serif;
-	font-size: 15px;
+	font-size: 14px;
 }
 
 .lora {
@@ -143,7 +143,7 @@ class sem_font {
 
 .source_sans_pro {
 	font-family: 'Source Sans Pro', sans-serif;
-	font-size: 15px;
+	font-size: 14px;
 }
 
 .ubuntu {
@@ -195,6 +195,8 @@ EOS;
 		wp_nonce_field('sem_font');
 		
 		global $sem_options;
+		$standard_fonts = sem_font::get_fonts('standard');
+		$google_fonts = sem_font::get_fonts('google');
 		$fonts = sem_font::get_fonts();
 		
 		echo '<h2>' . __('Manage Font', 'sem-reloaded') . '</h2>' . "\n";
@@ -209,13 +211,14 @@ EOS;
 			. sprintf(__('Font Family: %s.', 'sem-reloaded'), $font)
 			. '</p>' . "\n";
 		
-		echo '<h3>' . __('Font Settings', 'sem-reloaded') . '</h3>' . "\n";
-		
-		echo '<p>' . __('This will let you set the default font on your site.', 'sem-reloaded') . '</p>' . "\n";
-		
+		echo '<p style="font-size: larger;"><i>' . __('Select a new font below to set as the default font on your site.', 'sem-reloaded') . '</i></p>' . "\n";
+		echo '<p>&nbsp;</p>' . "\n";
+
+		echo '<h3>' . __('Standard Web Safe Fonts', 'sem-reloaded') . '</h3>' . "\n";
+
 		echo '<ul>' . "\n";
 		
-		foreach ( $fonts as $k => $v ) {
+		foreach ( $standard_fonts as $k => $v ) {
 			echo '<li class="' . esc_attr($k) . '">'
 				. '<label>'
 				. '<input type="radio" name="font" value="' . $k . '"'
@@ -228,7 +231,25 @@ EOS;
 		}
 		
 		echo '</ul>' . "\n";
-		
+
+		echo '<h3>' . __('Google Fonts', 'sem-reloaded') . '</h3>' . "\n";
+
+		echo '<ul>' . "\n";
+
+		foreach ( $google_fonts as $k => $v ) {
+			echo '<li class="' . esc_attr($k) . '">'
+				. '<label>'
+				. '<input type="radio" name="font" value="' . $k . '"'
+					. checked($sem_options['active_font'], $k, false)
+					. '/>'
+				. '&nbsp;'
+				. $v
+				. '</label>'
+				. '</li>' . "\n";
+		}
+
+		echo '</ul>' . "\n";
+
 		echo '<div class="submit">'
 			. '<input type="submit" value="' . esc_attr(__('Save Changes', 'sem-reloaded')) . '" />'
 			. '</div>' . "\n";
@@ -244,9 +265,9 @@ EOS;
 	 * @return array $fonts
 	 **/
 
-	static function get_fonts() {
-		return array(
-			'' =>  __('The skin\'s default stack', 'sem-reloaded'),
+	static function get_fonts($type = 'all') {
+		$standard = array(
+			'' =>  __('The default font stack as defined by your skin', 'sem-reloaded'),
 			'antica' => __('Antica stack: Palatino, "Book Antica", "Palatino Linotype", "URW Palladio L", Palladio, Georgia, "DejaVu Serif", Serif', 'sem-reloaded'),
 			'arial' => __('Arial stack: Arial, "Liberation Sans", "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
 			'courier' => __('Courier stack: "Courier New", "Liberation Mono", "Nimbus Mono L", Monospace', 'sem-reloaded'),
@@ -257,6 +278,9 @@ EOS;
 			'times' => __('Times stack: "Times New Roman", Times, "Liberation Serif", "DejaVu Serif Condensed", Serif', 'sem-reloaded'),
 			'trebuchet' =>  __('Trebuchet stack: "Trebuchet MS", "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
 			'verdana' =>  __('Verdana stack: Verdana, "Nimbus Sans L", "DejaVu Sans", Sans-Serif', 'sem-reloaded'),
+		);
+
+		$google = array(
 			'lato' => __('Lato (Google Fonts) stack: "Lato", sans-serif', 'sem-reloaded'),
 			'lora' => __('Lora (Google Fonts) stack: "Lora", serif', 'sem-reloaded'),
 			'merriweather' => __('Merriweather (Google Fonts) stack: "Merriweather", Serif', 'sem-reloaded'),
@@ -265,7 +289,21 @@ EOS;
 			'roboto' => __('Roboto (Google Fonts) stack: "Roboto", sans-serif', 'sem-reloaded'),
 			'source_sans_pro' => __('Source Sans Pro (Google Fonts) stack: "Source Sans Pro", sans-serif', 'sem-reloaded'),
 			'ubuntu' => __('Ubuntu (Google Fonts) stack: "Ubuntu", sans-serif', 'sem-reloaded'),
-        );
+		);
+
+		switch ( $type ) {
+			case 'standard':
+				$fonts = $standard;
+				break;
+			case 'google':
+				$fonts = $google;
+				break;
+			default:
+				$fonts =  array_merge( $standard, $google);
+				break;
+		}
+
+		return $fonts;
 	} # get_fonts()
 } # sem_font
 
