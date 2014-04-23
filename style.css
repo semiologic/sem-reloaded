@@ -2,7 +2,7 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 1.3
+Version: 1.4
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
@@ -693,6 +693,13 @@ p.wp-caption-text {
 .sidebar select {
 	width: 99%;
 }
+
+/* prevent widget items like Recent Posts from overflowing columns */
+#sidebar li,
+#sidebar2 li {
+	word-wrap: break-word;
+}
+
 
 /* WP Search Widget */
 
