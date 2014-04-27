@@ -60,7 +60,7 @@ class header extends WP_Widget {
 				. esc_attr(get_option('blogdescription'))
 				. '" '
                 . 'role="banner"'
-				. 'itemscope="itemscope" itemtype="http://schema.org/WPHeader">';
+				. ' itemscope="itemscope" itemtype="http://schema.org/WPHeader">';
 
 		echo "\n";
 

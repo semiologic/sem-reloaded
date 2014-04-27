@@ -132,21 +132,23 @@ Media Queries
 		width: 100%;
 	}
 
-	#header_nav li.hover > ul ,
-	#header_nav li.hover > li.hover > ul {
+	#header_nav li ul.open,
+	#header_nav li ul.open ul.open {
         position: static;
 		display: block;
     }
 
+
 	#header_nav li,
-	#navbar span:first-child,
-	#navbar span:first-child a,
-	#navbar span:last-child,
-	#navbar span:last-child a {
+	#navbar li:first-child,
+	#navbar li:first-child a,
+	#navbar li:last-child,
+	#navbar li:last-child a {
 		-moz-border-radius: 0;
 		-khtml-border-radius: 0;
 		-webkit-border-radius: 0;
 		border-radius: 0;
+		margin: 0;
 	}
 
 
@@ -155,16 +157,20 @@ Media Queries
 		display: none;
 	}
 
-	#header_nav .nav_branch > a:after,
-	#header_nav .sub-menu .nav_branch > a:after {
-		content: '\f431';
-		font-family: 'Genericons';
+	#header_nav li.nav_branch > a:after,
+	#header_nav .sub-menu li.nav_branch > a:after {
+		content: '+';
 		font-size: 16px;
 		font-size: 1.6rem;
 		padding-left: 10px;
 		padding-left: 1rem;
 		vertical-align: bottom;
 		float: right;
+	}
+
+
+	#header_nav li.nav_branch  > a.open:after {
+		content: "-";
 	}
 
 	#header_nav .sub-menu a::before {
@@ -184,8 +190,7 @@ Media Queries
 	/* remove skin menu colors for now */
 	#navbar_bg,
 	#navbar a,
-	#navbar a:hover,
-	#navbar span.nav_active {
+	#navbar a:hover {
 		background-image: none;
 	}
 

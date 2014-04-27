@@ -391,6 +391,8 @@ th {
 .entry_summary img,
 .comment_content img,
 .widget img,
+.header_widget img,
+.footer_widget img,
 .wp-caption {
 	max-width: 100%;
 }
@@ -399,6 +401,9 @@ th {
 .entry_content img,
 .entry_summary img,
 .comment_content img[height],
+.widget img,
+.header_widget img,
+.footer_widget img,
 img[class*="align"],
 img[class*="wp-image-"],
 img[class*="attachment-"] {
@@ -417,6 +422,15 @@ iframe,
 object,
 video {
 	max-width: 100%;
+}
+
+p > embed,
+p > iframe,
+p > object,
+span > embed,
+span > iframe,
+span > object {
+	margin-bottom: 0;
 }
 
 /*
@@ -921,22 +935,16 @@ Site Navigation
 	float: none !important;
 }
 
-#header_nav span {
-	float: none !important;
-}
 
 #header_nav .sub-menu {
 	list-style: none;
 	position:absolute;
 	left:-9999px;
 	z-index: 150;
-	margin: 0;
-	padding: 1px 0 0;
 	width: auto;
 }
 
 #header_nav .sub-menu li {
-    padding-top:1px;
 	float:none;
 	width: 100%;
 	clear: both;
@@ -975,42 +983,38 @@ Site Navigation
 	margin: 0px;
 }
 
-#header_nav span {
-	margin-left: 0;
-	margin-right: 12px;
-	margin-right: 1.2rem;
-}
-
-.sep_nav #header_nav span {
+.sep_nav #header_nav span,
+.sep_nav #header_nav li {
 	margin-left: 0;
 	margin-right: 4px;
 	margin-right: 0.4rem;
 }
 
-#footer_nav span {
-	margin-left: 6px;
-	margin-left: 0.6rem;
-	margin-right: 6px;
-	margin-right: 0.6rem;
-}
-
-.sep_nav #footer_nav span {
+.sep_nav #footer_nav span,
+.sep_nav #footer_nav li {
 	margin-left: 2px;
 	margin-left: 0.2rem;
 	margin-right: 2px;
 	margin-right: 0.2rem;
 }
 
-.float_nav #footer_nav span {
+.float_nav #footer_nav span,
+.float_nav #footer_nav li {
 	margin-left: 12px;
 	margin-left: 1.2rem;
 	margin-right: 0;
 }
 
-.float_sep_nav #footer_nav span {
+.float_sep_nav #footer_nav span,
+.float_sep_nav #footer_nav li  {
 	margin-left: 4px;
 	margin-left: 0.4rem;
 	margin-right: 0;
+}
+
+#header_nav .nav_sep,
+#footer_nav .nav_sep {
+	float: left !important;
 }
 
 .next_prev_posts,
@@ -1025,6 +1029,9 @@ p.solo-subscribe-to-comments {
 	font-weight: bold;
 }
 
+li.nav_active > a {
+	text-decoration: none;
+}
 /*
 Content Area
 ---------------------------------------------------------------------------------------------------- */

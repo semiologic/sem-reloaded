@@ -141,21 +141,22 @@ class sem_nav_menu extends WP_Widget {
 		$did_first = false;
 
 		foreach ( $items as $item ) {
+			$add_sep = false;
 			if ( $sep && $did_first )
-				echo '<span>|</span>' . "\n";
+				$add_sep = true;
 
 			switch ( $item['type'] ) {
 			case 'home':
-				sem_nav_menu::display_home($item);
+				sem_nav_menu::display_home($item, $add_sep);
 				$did_first = true;
 				break;
 			case 'url':
-				sem_nav_menu::display_url($item);
+				sem_nav_menu::display_url($item, $add_sep);
 				$did_first = true;
 				break;
 			case 'page':
 				if ( in_array($item['ref'], $root_pages) ) {
-					sem_nav_menu::display_page($item, $menu_depth);
+					sem_nav_menu::display_page($item, $menu_depth, $add_sep);
 					$did_first = true;
 				}
 				break;
@@ -188,15 +189,19 @@ class sem_nav_menu extends WP_Widget {
 	 * display_home()
 	 *
 	 * @param array $item
+	 * @param $add_sep
 	 * @return void
-	 **/
+	 */
 
-	function display_home($item) {
+	function display_home($item, $add_sep) {
 		if ( get_option('show_on_front') == 'page' && get_option('page_on_front') ) {
 			$item['type'] = 'page';
 			$item['ref'] = get_option('page_on_front');
-			return sem_nav_menu::display_page($item);
+			return sem_nav_menu::display_page($item, $add_sep);
 		}
+
+		if ( $add_sep )
+			echo '<span class="nav_sep">|</span>' . "\n";
 
 		extract($item, EXTR_SKIP);
 		if ( !isset($label) || (string) $label === '' )
@@ -206,7 +211,7 @@ class sem_nav_menu extends WP_Widget {
 		$classes = array('nav_home');
 		$link = $label;
 
-		if ( !is_front_page() || is_front_page() && is_paged() )
+//		if ( !is_front_page() || is_front_page() && is_paged() )
 			$link = '<a href="' . $url . '" title="' . esc_attr(get_option('blogname')) . '" rel="home">'
 				. $link
 				. '</a>';
@@ -215,8 +220,10 @@ class sem_nav_menu extends WP_Widget {
 
 		echo '<li class="' . implode(' ', $classes) . '">';
 
-		echo '<span class="' . implode(' ', $classes) . '">'
-			. $link . '</span>';
+//		echo '<span class="' . implode(' ', $classes) . '">'
+//			. $link . '</span>';
+
+		echo $link;
 
 		echo '</li>';
 
@@ -228,10 +235,12 @@ class sem_nav_menu extends WP_Widget {
 	 * display_url()
 	 *
 	 * @param array $item
+	 * @param $add_sep
 	 * @return void
-	 **/
+	 */
 
-	function display_url($item) {
+	function display_url($item, $add_sep) {
+
 		extract($item, EXTR_SKIP);
 		if ( !isset($label) || (string) $label === '' )
 			$label = __('Untitled', 'sem-reloaded');
@@ -240,7 +249,10 @@ class sem_nav_menu extends WP_Widget {
 			return;
 
 		if ( rtrim($url, '/') == rtrim(home_url(), '/') )
-			return sem_nav_menu::display_home($item);
+			return sem_nav_menu::display_home($item, $add_sep);
+
+		if ( $add_sep )
+			echo '<span class="nav_sep">|</span>' . "\n";
 
 		if ( !sem_nav_menu::is_local_url($url) ) {
 			$classes = array('nav_url');
@@ -262,8 +274,10 @@ class sem_nav_menu extends WP_Widget {
 
 		echo '<li class="' . implode(' ', $classes) . '">';
 
-		echo '<span class="' . implode(' ', $classes) . '">'
-			. $link . '</span>';
+//		echo '<span class="' . implode(' ', $classes) . '">'
+//			. $link . '</span>';
+
+		echo $link;
 
 		echo '</li>';
 
@@ -275,10 +289,15 @@ class sem_nav_menu extends WP_Widget {
 	 * display_page()
 	 *
 	 * @param array $item
+	 * @param $menu_depth
+	 * @param $add_sep
 	 * @return void
-	 **/
+	 */
 
-	function display_page($item, $menu_depth) {
+	function display_page($item, $menu_depth, $add_sep) {
+		if ( $add_sep )
+			echo '<span class="nav_sep">|</span>' . "\n";
+
 		extract($item, EXTR_SKIP);
 		$ref = (int) $ref;
 		$page = get_post($ref);
@@ -316,7 +335,7 @@ class sem_nav_menu extends WP_Widget {
 
 		if ( get_option('show_on_front') == 'page' && get_option('page_on_front') == $page->ID ) {
 			$classes[] = 'nav_home';
-			if ( !is_front_page() || is_front_page() && is_paged() )
+//			if ( !is_front_page() || is_front_page() && is_paged() )
 				$link = '<a href="' . user_trailingslashit($url) . '" title="' . esc_attr($label) . '" rel="home">'
 					. $link
 					. '</a>';
@@ -324,7 +343,7 @@ class sem_nav_menu extends WP_Widget {
 				$classes[] = 'nav_active';
 		} elseif ( get_option('show_on_front') == 'page' && get_option('page_for_posts') == $page->ID ) {
 			$classes[] = 'nav_blog';
-			if ( !is_home() || is_home() && is_paged() )
+//			if ( !is_home() || is_home() && is_paged() )
 				$link = '<a href="' . $url . '" title="' . esc_attr($label) . '">'
 					. $link
 					. '</a>';
@@ -336,7 +355,7 @@ class sem_nav_menu extends WP_Widget {
 			else
 				$classes[] = 'nav_leaf';
 
-			if ( $page->ID != $page_id )
+//			if ( $page->ID != $page_id )
 				$link = '<a href="' . $url . '" title="' . esc_attr($label) . '">'
 					. $link
 					. '</a>';
@@ -348,8 +367,10 @@ class sem_nav_menu extends WP_Widget {
 
 		echo '<li class="' . implode(' ', $classes) . '">';
 
-		echo '<span class="' . implode(' ', $classes) . '">'
-			. $link . '</span>';
+//		echo '<span class="' . implode(' ', $classes) . '">'
+//			. $link . '</span>';
+
+		echo $link;
 
 		$display_sub = false;
 
@@ -366,7 +387,7 @@ class sem_nav_menu extends WP_Widget {
 					'type' => 'page',
 					'ref' => $child_id,
 					);
-				$this->display_page( $item, $menu_depth );
+				$this->display_page( $item, $menu_depth, false );
 			}
 			echo '</ul>' . "\n";
 		}
