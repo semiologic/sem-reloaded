@@ -89,5 +89,6 @@ echo '<div id="wrapper_bg">' . "\n";
 		
 		echo '<div class="pad">' . "\n";
 
-		echo '<div class="main_content">' . "\n";
+		echo '<div class="main_content' . ( is_archive() || is_404() || is_search() ? ' entry' : '' )  . '">' . "\n";
+
 ?>

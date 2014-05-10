@@ -27,6 +27,14 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.4 =
+
+- Fix: Sidebar widget lists with long post/page titles don't overflow widget boundaries
+- 404, Search and Archive pages now set with .entry class for consistency with blog, page, home and single post pages
+- WP Widget customizer compatibility
+- WP 3.9 compat
+
+
 = 1.3 =
 
 - Page-specific header functionality was creating a bogus empty extra folder (headerNNNN) in the wp-content directory.  These folders can simply be removed.
