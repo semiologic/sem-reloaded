@@ -3,7 +3,7 @@ Contributors: Denis-de-Bernardy, Mike_Koepke
 Donate link: http://www.semiologic.com/partners/
 Tags: semiologic, wordpress theme
 Requires at least: 3.2
-Tested up to: 3.6
+Tested up to: 3.9
 Stable tag: trunk
 
 The Semiologic theme, Reloaded for WordPress.
@@ -26,6 +26,11 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 1.4.1 =
+
+- Use more full proof WP version check to alter plugin behavior instead of relying on $wp_version constant.
+- Explicitly call wp_head and wp_footer instead of do_action('wp_head') and do_action('wp_footer')
 
 = 1.4 =
 

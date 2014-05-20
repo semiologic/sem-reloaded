@@ -28,7 +28,7 @@ if ( $title = trim(wp_title('&#8211;', false)) ) {
     if ( is_singular() && get_option( 'thread_comments' ) )
    		wp_enqueue_script( 'comment-reply' );
 
-    do_action('wp_head');
+    wp_head();
 ?>
 </head>
 <body class="<?php echo implode(' ', get_body_class(array('skin', 'custom'))); ?>">

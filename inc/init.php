@@ -40,8 +40,7 @@ if ( function_exists('add_theme_support') ) {
     add_theme_support( 'automatic-feed-links' );
 }
 
-global $wp_version;
-if ( version_compare( $wp_version, '3.4', '>=' ) ) 
+if ( class_exists( 'WP_Theme' ) )
 	add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
 else
 	add_custom_background(array('sem_template', 'custom_background_cb'));	

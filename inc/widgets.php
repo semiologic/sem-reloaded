@@ -2000,7 +2000,7 @@ class header extends WP_Widget {
 	 **/
 	static function display_image($header = null) {
 		if ( !$header )
-			$header = header::get_header();
+			$header = header::get();
 
 		if ( !$header )
 			return;
@@ -2026,7 +2026,7 @@ class header extends WP_Widget {
 
 	static function display_flash($header = null) {
 		if ( !$header )
-			$header = header::get_header();
+			$header = header::get();
 
 		if ( !$header )
 			return;
@@ -2373,8 +2373,7 @@ class sem_nav_menu extends WP_Widget {
 			return;
 
 		$use_caching = true;
-		global $wp_version;
-		if ( version_compare( $wp_version, '3.9', '>=' ) )
+		if ( class_exists('WP_Customize_Widgets' ) )
 			if ( $this->is_preview() )
 				$use_caching = false;
 
