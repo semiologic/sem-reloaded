@@ -27,6 +27,13 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.4.2 =
+
+- Removed wp-enhancements file and moved php widget enable to sem-fixes
+- Improved print stylesheets
+- Added new template files - ssm and mms
+
+
 = 1.4.1 =
 
 - Use more full proof WP version check to alter plugin behavior instead of relying on $wp_version constant.

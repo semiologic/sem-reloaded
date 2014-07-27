@@ -2,7 +2,7 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 1.4.1
+Version: 1.4.2
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
@@ -900,4 +900,46 @@ p.newsletter_fields {
 .ad_unit .header_widget_bg .pad,
 .ad_unit .footer_widget_bg .pad {
 	padding: 0px;
+}
+
+/**
+ * Print
+ * ----------------------------------------------------------------------------
+ */
+
+@media print {
+
+	* {
+	     background: transparent !important;
+	     color: #000 !important;
+	     box-shadow: none !important;
+	     text-shadow: none !important;
+    }
+
+	body {
+		font-size: 12pt;
+		font-family: Georgia, Times New Roman, serif;
+	}
+
+	#wrapper,
+	#body {
+        width: 100%;
+        margin: 0;
+		padding: 0;
+		border: 0;
+		float: none !important;
+		color: black;
+		background: transparent none;
+    }
+
+	#wrapper {
+	    clear: both !important;
+	    display: block !important;
+	    float: none !important;
+	    position: relative !important;
+	}
+
+	img {
+	   max-width: 100% !important;
+	}
 }

@@ -27,6 +27,8 @@ if ( function_exists('memory_get_usage') && ( (int) @ini_get('memory_limit') < 6
 
 define('sem_path', dirname(dirname(__FILE__)));
 define('sem_url', get_stylesheet_directory_uri());
+define('sem_content_path', dirname(dirname(__FILE__)) );
+define('sem_content_url', get_stylesheet_directory_uri() );
 
 # fix calendar, see http://core.trac.wordpress.org/ticket/9588
 if ( !class_exists('sem_fixes') ) {
@@ -43,7 +45,7 @@ if ( function_exists('add_theme_support') ) {
 if ( class_exists( 'WP_Theme' ) )
 	add_theme_support( 'custom-background', array ('wp-head-callback' => array('sem_template', 'custom_background_cb')) );
 else
-	add_custom_background(array('sem_template', 'custom_background_cb'));	
+	add_custom_background(array('sem_template', 'custom_background_cb'));
 
 #
 # extra functions
@@ -109,7 +111,7 @@ function dump($in = null) {
 		}
 	}
 	echo '</pre>' . "\n";
-	
+
 	return $in;
 } # dump()
 endif;
@@ -134,7 +136,7 @@ $sem_options = get_option('sem6_options');
 if ( !isset($sem_options['version']) ) {
 	# try sem5_options
 	$sem_options = get_option('sem5_options');
-	
+
 	if ( isset($sem_options['version']) ) {
 		if ( !defined('DOING_CRON') )
 			include sem_path . '/inc/upgrade.php';

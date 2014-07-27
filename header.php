@@ -34,6 +34,7 @@ if ( $title = trim(wp_title('&#8211;', false)) ) {
 <body class="<?php echo implode(' ', get_body_class(array('skin', 'custom'))); ?>">
 <?php
 # canvas
+do_action('body_open');
 
 do_action('before_the_canvas');
 

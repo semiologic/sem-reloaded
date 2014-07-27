@@ -244,6 +244,8 @@ echo '</div><!-- wrapper -->' . "\n";
 do_action('after_the_canvas');
 
 wp_footer();
+
+do_action('body_close');
 ?>
 </body>
 </html>

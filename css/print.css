@@ -6,12 +6,92 @@ To customize this file, create a print.css file in your skin's folder. Paste thi
 then only keep that which you need. Remove references to images, or adjust them accordingly. This will let
 you customize the theme's CSS without losing your changes when you upgrade.
 */
+@media print {
+	/*h2, h3 {
+	   page-break-after: avoid;
+	}
 
-body {
-	text-align: left;
-	padding: 20px;
-}
+	tr, ul, img {
+	   page-break-inside: avoid;
+	}
+	*/
+	.entry {
+		margin: 1.25em;
+		text-align: left;
+	}
 
-.entry {
-	margin: 20px;
+	article {
+		page-break-before: always;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+
+	a {
+		font-weight: bolder;
+		text-decoration: none;
+	   }
+
+
+	.entry_content a[href^=http]:after {
+	       content:" <" attr(href) "> ";
+	   }
+
+	.entry_content a[href^="javascript:"]:after,
+	   a[href^="#"]:after {
+	       content: "";
+	}
+
+	pre,
+	blockquote {
+	   border: 1px solid #999;
+	   page-break-inside: avoid;
+	}
+
+	thead {
+		display: table-header-group;
+	}
+
+	#main {
+		width: 100% !important
+	}
+
+	#sidebar,
+	#sidebars,
+	#navbar,
+	#footer_nav {
+		display: none;
+	}
+
+	#credits,
+    .edit_entry,
+	.comment_box,
+	.edit_comment,
+	#respond,
+	.reply_comment,
+	.comment-avatar{
+	    display: none;
+    }
+
+	#sitename {
+		font-size: 24pt;
+	}
+
+	#tagline {
+		font-size: 12pt;
+	}
+
+	.entry,
+	.post_list,
+	.main_widget,
+	.widget,
+	.header_widget,
+	.footer_widget {
+		border: 0;
+	}
+
+	.entry_tags a,
+	.entry_categories a {
+		padding-left: 0;
+	}
 }

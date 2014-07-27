@@ -45,8 +45,8 @@ class sem_widgets {
 		register_widget('navbar');
 		register_widget('footer');
 	} # register()
-	
-	
+
+
 	/**
 	 * admin_scripts()
 	 *
@@ -61,8 +61,8 @@ class sem_widgets {
 			add_action('admin_footer', array('sem_nav_menu', 'admin_footer'));
 		}
 	} # admin_scripts()
-	
-	
+
+
 	/**
 	 * admin_styles()
 	 *
@@ -73,8 +73,8 @@ class sem_widgets {
 		$folder = sem_url . '/css';
 		wp_enqueue_style('nav-menus', $folder . '/admin.css', null, '20090903');
 	} # admin_styles()
-	
-	
+
+
 	/**
 	 * tag_cloud_args()
 	 *
@@ -86,8 +86,8 @@ class sem_widgets {
 		$args = wp_parse_args($args, array('smallest' => '.8', 'largest' => '1.6', 'unit' => 'em'));
 		return $args;
 	} # tag_cloud_args()
-	
-	
+
+
 	/**
 	 * widget_display_callback()
 	 *
@@ -100,7 +100,7 @@ class sem_widgets {
 	function widget_display_callback($instance, $widget, $args) {
 		if ( $instance === false )
 			return $instance;
-		
+
 		switch ( get_class($widget) ) {
 		case 'WP_Widget_Calendar':
 			return sem_widgets::calendar_widget($instance, $args);
@@ -110,8 +110,8 @@ class sem_widgets {
 			return $instance;
 		}
 	} # widget_display_callback()
-	
-	
+
+
 	/**
 	 * calendar_widget()
 	 *
@@ -123,28 +123,28 @@ class sem_widgets {
 	function calendar_widget($instance, $args) {
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		ob_start();
 		get_calendar();
 		$calendar = ob_get_clean();
-		
+
 		$calendar = str_replace('<table id="wp-calendar"', '<table class="wp-calendar"', $calendar);
-		
+
 		$title = apply_filters('widget_title', $title);
-		
+
 		echo $before_widget;
-		
+
 		if ( $title )
 			echo $before_title . $title . $after_title;
-		
+
 		echo $calendar;
-		
+
 		echo $after_widget;
-		
+
 		return false;
 	} # calendar_widget()
-	
-	
+
+
 	/**
 	 * search_widget()
 	 *
@@ -156,19 +156,19 @@ class sem_widgets {
 	static function search_widget($instance, $args) {
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		if ( is_search() )
 			$query = apply_filters('the_search_form', get_search_query());
 		else
 			$query = '';
-		
+
 		$title = apply_filters('widget_title', $title);
-		
+
 		echo $before_widget;
-		
+
 		if ( $title )
 			echo $before_title . $title . $after_title;
-		
+
 		echo '<form method="get"'
 				. ' action="' . esc_url(user_trailingslashit(home_url())) . '"'
 				. ' class="searchform" name="searchform"'
@@ -182,9 +182,9 @@ class sem_widgets {
 				)
 			. '<input type="submit" class="go button submit" value="' . esc_attr__('Search', 'sem-reloaded') . '" />'
 			. '</form>';
-		
+
 		echo $after_widget;
-		
+
 		return false;
 	} # search_widget()
 } # sem_widgets
@@ -212,11 +212,11 @@ class entry_header extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('entry_header', $widget_name, $widget_ops, $control_ops);
 	} # entry_header()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -228,15 +228,15 @@ class entry_header extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_entry' || !class_exists('widget_contexts') && is_letter() )
 			return;
-		
+
 		$instance = wp_parse_args($instance, entry_header::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		$date = false;
 		if ( $show_post_date && !is_sticky() && ( is_single() || !is_singular() && !is_day() ) )
 			$date = the_date('', '', '', false);
-		
+
 		$title = the_title('', '', false);
 
 		if ( $title && !is_singular() ) {
@@ -269,7 +269,7 @@ class entry_header extends WP_Widget {
 					. '</div>' . "\n"
 					. '</div>' . "\n";
 			}
-			
+
 			if ( $title ) {
 				echo '<div class="entry_header">' . "\n"
 					. '<div class="entry_header_top"><div class="hidden"></div></div>' . "\n"
@@ -297,11 +297,11 @@ class entry_header extends WP_Widget {
 		$instance['show_post_date'] = isset($new_instance['show_post_date']);
         $instance['show_author_byline'] = isset($new_instance['show_author_byline']);
       	$instance['author_byline'] = trim(strip_tags($new_instance['author_byline']));
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -312,9 +312,9 @@ class entry_header extends WP_Widget {
 	function form($instance) {
 		$instance = wp_parse_args($instance, entry_header::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Config', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -350,8 +350,8 @@ class entry_header extends WP_Widget {
  			. '</label>'
  			. '</p>' . "\n";
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
@@ -390,14 +390,14 @@ class entry_content extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('entry_content', $widget_name, $widget_ops, $control_ops);
-		
+
 		if ( class_exists('fancy_excerpt') )
 			add_filter('the_content_more_link', array(&$this, 'more_link'), 0);
 	} # entry_content()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -409,26 +409,26 @@ class entry_content extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_entry' )
 			return;
-		
+
 		global $post;
 		$instance = wp_parse_args($instance, entry_content::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		$title = the_title('', '', false);
-		
+
 		if ( $show_excerpts && !is_singular() ) {
 			$content = apply_filters('the_excerpt', get_the_excerpt());
             $content_class = "entry-summary";
 		} else {
 			$more_link = sprintf($more_link, $title);
-			
+
 			$content = get_the_content($more_link, 0, '');
 
 			if ( is_attachment() && $post->post_parent && preg_match("/^image\//i", $post->post_mime_type) ) {
 				# strip wpautop junk
 				$content = preg_replace("/<br\s*\/>\s+$/", '', $content);
-				
+
 				# add gallery links
 				$attachments = get_children(array(
 						'post_parent' => $post->post_parent,
@@ -436,18 +436,18 @@ class entry_content extends WP_Widget {
 						'post_mime_type' => 'image',
 						'order_by' => 'menu_order ID',
 						));
-				
+
 				foreach ( $attachments as $k => $attachment )
 					if ( $attachment->ID == $post->ID )
 						break;
-				
+
 				$prev_image = isset($attachments[$k-1])
 					? wp_get_attachment_link($attachments[$k-1]->ID, 'thumbnail', true)
 					: '';
 				$next_image = isset($attachments[$k+1])
 					? wp_get_attachment_link($attachments[$k+1]->ID, 'thumbnail', true)
 					: '';
-				
+
 				if ( $prev_image || $next_image ) {
 					$content .= '<div class="gallery_nav">' . "\n"
 						. '<div class="prev_image">' . "\n"
@@ -460,9 +460,9 @@ class entry_content extends WP_Widget {
 						. '</div>' . "\n";
 				}
 			}
-			
+
 			$content = apply_filters('the_content', $content);
-			
+
 			$content .= wp_link_pages(
 				array(
 					'before' => '<div class="entry_nav"> ' . $paginate . ' ',
@@ -472,12 +472,12 @@ class entry_content extends WP_Widget {
 				);
             $content_class = "entry-content";
 		}
-		
+
 		$actions = '';
-		
+
 		if ( !isset($_GET['action']) || $_GET['action'] != 'print' ) {
 			global $post;
-			
+
 			$edit_link = get_edit_post_link($post->ID, 'raw');
 			if ( $edit_link ) {
 				$edit_link = '<a class="post-edit-link"'
@@ -486,45 +486,45 @@ class entry_content extends WP_Widget {
 					. __('Edit', 'sem-reloaded')
 					. '</a>';
 				$edit_link = apply_filters('edit_post_link', $edit_link, $post->ID);
-				
+
 				$actions .= '<span class="edit_entry">'
 					. $edit_link
 					. '</span>' . "\n";
 			}
-			
+
 			$num_comments = (int) get_comments_number();
-			
+
 			if ( $show_comment_box && ( $num_comments || comments_open() ) ) {
 				$comments_link = apply_filters('the_permalink', get_permalink());
 				$comments_link .= $num_comments ? '#comments' : '#respond';
-				
+
 				$actions .= '<span class="comment_box">'
 					. '<a href="' . esc_url($comments_link) . '">'
 					. $num_comments
 					. '</a>'
 					. '</span>' . "\n";
 			}
-			
+
 			if ( $actions ) {
 				$actions = '<div class="entry_actions">' . "\n"
 					. $actions
 					. '</div>' . "\n";
 			}
 		}
-		
+
 		$thumbnail = '';
 		if ( !is_single() && $show_thumbnail && function_exists('get_the_post_thumbnail') ) {
 			add_filter('image_downsize', array($this, 'thumbnail_downsize'), 10, 3);
 			$thumbnail = get_the_post_thumbnail();
 			remove_filter('image_downsize', array($this, 'thumbnail_downsize'), 10, 3);
 		}
-		
+
 		if ( $thumbnail ) {
 			$thumbnail = '<div class="wp_thumbnail">'
 				. $thumbnail
 				. '</div>' . "\n";
 		}
-		
+
 		if ( $actions || $content ) {
 			echo '<div class="entry_content ' . $content_class . '">' . "\n"
 				. '<div class="pad">' . "\n"
@@ -535,8 +535,8 @@ class entry_content extends WP_Widget {
 				. $after_widget;
 		}
 	} # widget()
-	
-	
+
+
 	/**
 	 * thumbnail_downsize()
 	 *
@@ -551,8 +551,8 @@ class entry_content extends WP_Widget {
 			return $in;
 		return image_downsize($id, 'thumbnail');
 	} # thumbnail_downsize()
-	
-	
+
+
 	/**
 	 * more_link()
 	 *
@@ -563,19 +563,19 @@ class entry_content extends WP_Widget {
 	function more_link($more) {
 		if ( !$this->number )
 			return $more;
-		
+
 		$instance = $this->get_settings();
 		$instance = $instance[$this->number];
 		$instance = wp_parse_args($instance, entry_content::defaults());
-		
+
 		$more = '<a href="' . apply_filters('the_permalink', get_permalink()) . '#more-' . get_the_ID() . '" class="more-link">'
 			. sprintf($instance['more_link'], get_the_title())
 			. '</a>';
-		
+
 		return $more;
 	} # more_link()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -590,11 +590,11 @@ class entry_content extends WP_Widget {
 		$instance['more_link'] = trim(strip_tags($new_instance['more_link']));
 		$instance['paginate'] = trim(strip_tags($new_instance['paginate']));
         $instance['show_thumbnail'] = isset($new_instance['show_thumbnail']);
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -605,9 +605,9 @@ class entry_content extends WP_Widget {
 	function form($instance) {
 		$instance = wp_parse_args($instance, entry_content::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Config', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -618,7 +618,7 @@ class entry_content extends WP_Widget {
 			. __('Display the box with the number of comments.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -653,7 +653,7 @@ class entry_content extends WP_Widget {
 			. ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('Pages:', 'sem-reloaded') . '</code>'
@@ -665,14 +665,14 @@ class entry_content extends WP_Widget {
 			. '</label>'
 			. '</p>' . "\n";
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'show_comment_box' => true,
@@ -697,7 +697,7 @@ class entry_categories extends WP_Widget {
 	 *
 	 * @return void
 	 **/
-	
+
 	function entry_categories() {
 		$widget_name = __('Entry: Categories', 'sem-reloaded');
 		$widget_ops = array(
@@ -707,11 +707,11 @@ class entry_categories extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('entry_categories', $widget_name, $widget_ops, $control_ops);
 	} # entry_categories()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -726,21 +726,21 @@ class entry_categories extends WP_Widget {
 		} elseif ( $args['id'] != 'the_entry' ) {
 			if ( !is_single() )
 				return;
-			
+
 			global $post, $wp_the_query;
 			$post = $wp_the_query->get_queried_object();
 			setup_postdata($post);
 		}
-		
+
 		$instance = wp_parse_args($instance, entry_categories::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		if ( !$filed_under_by )
 			return;
-		
+
 		$categories = get_the_category_list(', ');
-		
+
 		$author = get_the_author();
 		$author_url = get_author_posts_url( get_the_author_meta( 'ID' ) );
 
@@ -749,18 +749,18 @@ class entry_categories extends WP_Widget {
             . $author
             . '</a>'
             . '</span>';
-		
+
 		$date = apply_filters('the_time', get_the_time(__('M jS, Y', 'sem-reloaded')), __('M jS, Y', 'sem-reloaded'));
-		
+
 		if ( !is_day() )
 			$date = '<a href="' . esc_url(get_month_link(get_the_time('Y'), get_the_time('m'))) . '">' . $date . '</a>';
-		
+
 		$date = '<span class="entry_date">'
             . '<time class="updated" datetime="' . esc_attr( get_the_date( 'c' ) ) . '">'
             . $date
             . '</time>'
             . '</span>';
-		
+
 		$comments = '';
 		$num = get_comments_number();
 		if ( $num && !is_single() ) {
@@ -778,7 +778,7 @@ class entry_categories extends WP_Widget {
 			$anchor = '#respond';
 			$class = 'leave_reply';
 		}
-		
+
 		if ( $comments ) {
 			$comments = '<span class="' . $class . '">'
 				. '<a href="' . esc_url(apply_filters('the_permalink', get_permalink()) . $anchor) . '">'
@@ -786,18 +786,18 @@ class entry_categories extends WP_Widget {
 				. '</a>'
 				. '</span>';
 		}
-		
+
 		$link = '&nbsp;'
 			. '<span class="link_entry">'
 			. '<a href="' . esc_url(apply_filters('the_permalink', get_permalink())) . '" title="#">'
 			. '<img src="' . sem_url . '/icons/pixel.gif' . '" width="14" height="12" class="no_icon" alt="#" />'
 			. '</a>'
 			. '</span>' . "\n";
-		
+
 		$title = $args['id'] != 'the_entry' && $title
 			? apply_filters('widget_title', $title)
 			: false;
-			
+
 		echo $before_widget
 			. ( $title
 				? $before_title . $title . $after_title
@@ -809,8 +809,8 @@ class entry_categories extends WP_Widget {
 			. '</p>' . "\n"
 			. $after_widget;
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -822,24 +822,24 @@ class entry_categories extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		foreach ( array_keys(entry_categories::defaults()) as $field )
 			$instance[$field] = trim(strip_tags($new_instance[$field]));
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
 	 * @param array $instance widget options
 	 * @return void
 	 **/
-	
+
 	function form($instance) {
 		$instance = wp_parse_args($instance, entry_categories::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. __('Title:', 'sem-reloaded')
@@ -851,11 +851,11 @@ class entry_categories extends WP_Widget {
 				. ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. __('This widget\'s title is displayed only when this widget is placed out of the loop (each entry).', 'sem-reloaded')
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('Filed under %1$s by %2$s on %3$s. %4$s.', 'sem-reloaded') . '</code>'
@@ -868,7 +868,7 @@ class entry_categories extends WP_Widget {
             . ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('1 Comment', 'sem-reloaded') . '</code>'
@@ -879,7 +879,7 @@ class entry_categories extends WP_Widget {
 			. ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('%d Comments', 'sem-reloaded') . '</code>'
@@ -890,7 +890,7 @@ class entry_categories extends WP_Widget {
 			. ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('Comment', 'sem-reloaded') . '</code>'
@@ -902,14 +902,14 @@ class entry_categories extends WP_Widget {
 			. '</label>'
 			. '</p>' . "\n";
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'title' => __('Categories', 'sem-reloaded'),
@@ -944,11 +944,11 @@ class entry_tags extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('entry_tags', $widget_name, $widget_ops, $control_ops);
 	} # entry_tags()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -963,22 +963,22 @@ class entry_tags extends WP_Widget {
 		} elseif ( !in_the_loop() ) {
 			if ( !is_singular() )
 				return;
-			
+
 			global $post, $wp_the_query;
 			$post = $wp_the_query->get_queried_object();
 			setup_postdata($post);
 		}
-		
+
 		if ( !class_exists('widget_contexts') && is_letter() )
 			return;
-		
+
 		$instance = wp_parse_args($instance, entry_tags::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		$term_links = array();
 		$terms = get_the_terms(get_the_ID(), 'post_tag');
-		
+
 		if ( $terms && !is_wp_error($terms) ) {
 			foreach ( $terms as $term ) {
 				if ( $term->count == 0 )
@@ -991,12 +991,12 @@ class entry_tags extends WP_Widget {
 
 			$term_links = apply_filters( "term_links-post_tag", $term_links );
 		}
-		
+
 		$_tags = apply_filters('the_tags', join(', ', $term_links));
-		
+
 		if ( $_tags ) {
 			$title = apply_filters('widget_title', $title);
-			
+
 			echo $before_widget
 				. ( $args['id'] != 'the_entry' && $title
 					? $before_title . $title . $after_title
@@ -1008,8 +1008,8 @@ class entry_tags extends WP_Widget {
 				. $after_widget;
 		}
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -1021,11 +1021,11 @@ class entry_tags extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		foreach ( array_keys(entry_tags::defaults()) as $field )
 			$instance[$field] = trim(strip_tags($new_instance[$field]));
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -1036,9 +1036,9 @@ class entry_tags extends WP_Widget {
 	function form($instance) {
 		$instance = wp_parse_args($instance, entry_tags::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. __('Title:', 'sem-reloaded')
@@ -1050,11 +1050,11 @@ class entry_tags extends WP_Widget {
 				. ' />'
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. __('This widget\'s title is displayed only when this widget is placed out of the loop (each entry).', 'sem-reloaded')
 			. '</p>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<code>' . __('Tags: %s.', 'sem-reloaded') . '</code>'
@@ -1066,14 +1066,14 @@ class entry_tags extends WP_Widget {
 			. '</label>'
 			. '</p>' . "\n";
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'title' => __('Tags', 'sem-reloaded'),
@@ -1105,11 +1105,11 @@ class entry_comments extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('entry_comments', $widget_name, $widget_ops, $control_ops);
 	} # entry_comments()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1121,21 +1121,21 @@ class entry_comments extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_entry' || !is_singular() || !get_comments_number() && !comments_open() )
 			return;
-		
+
 		if ( !class_exists('widget_contexts') && is_letter() )
 			return;
-		
+
 		echo '<div class="entry_comments">' . "\n";
-		
+
 		global $comments_captions;
 		$comments_captions = wp_parse_args($instance, entry_comments::defaults());
-		
+
 		comments_template('/comments.php');
-		
+
 		echo '</div>' . "\n";
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -1153,17 +1153,17 @@ class entry_comments extends WP_Widget {
 				else
 					$instance[$field] = $old_instance[$field];
 				break;
-				
+
 			default:
 				$instance[$field] = trim(strip_tags($new_instance[$field]));
 				break;
 			}
 		}
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -1175,9 +1175,9 @@ class entry_comments extends WP_Widget {
 		$defaults = entry_comments::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		foreach ( $defaults as $field => $default ) {
 			switch ( $field ) {
 			case 'policy':
@@ -1193,7 +1193,7 @@ class entry_comments extends WP_Widget {
 					. '</label>'
 					. '</p>' . "\n";
 				break;
-			
+
 			default:
 				echo '<p>'
 					. '<label>'
@@ -1209,14 +1209,14 @@ class entry_comments extends WP_Widget {
 			}
 		}
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'pings_on' => __('Pings on %s', 'sem-reloaded'),
@@ -1258,11 +1258,11 @@ class blog_header extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('blog_header', $widget_name, $widget_ops, $control_ops);
 	} # blog_header()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1274,13 +1274,13 @@ class blog_header extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'before_the_entries' || !is_archive() && !is_search() && !is_404() )
 			return;
-		
+
 		$desc = '';
-		
+
 		extract($args, EXTR_SKIP);
 		$instance = wp_parse_args($instance, blog_header::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		echo $before_widget;
 
 		echo '<h1>';
@@ -1298,7 +1298,7 @@ class blog_header extends WP_Widget {
 				$date = single_month_title(' ', false);
 			else
 				$date = date_i18n(__('M jS, Y', 'sem-reloaded'), strtotime(get_query_var('year') . '-' . zeroise(get_query_var('monthnum'), 2) . '-' . zeroise(get_query_var('day'), 2) . ' GMT'), true);
-			
+
 			echo sprintf(trim($archives_title), $date);
 			$desc = '<div class="posts_nav">'
 				. blog_footer::date_nav()
@@ -1336,8 +1336,8 @@ class blog_header extends WP_Widget {
 
 		echo $after_widget;
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -1359,11 +1359,11 @@ class blog_header extends WP_Widget {
 				$instance[$field] = trim(strip_tags($new_instance[$field]));
 			}
 		}
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -1375,9 +1375,9 @@ class blog_header extends WP_Widget {
 		$defaults = blog_header::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		foreach ( $defaults as $field => $default ) {
 			switch ( $field ) {
 			case 'desc_404':
@@ -1408,14 +1408,14 @@ class blog_header extends WP_Widget {
 			}
 		}
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'title_404' => __('404: Not Found', 'sem-reloaded'),
@@ -1449,11 +1449,11 @@ class blog_footer extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('blog_footer', $widget_name, $widget_ops, $control_ops);
 	} # blog_footer()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1465,24 +1465,24 @@ class blog_footer extends WP_Widget {
 	function widget($args, $instance) {
 		global $wp_the_query;
 		$max_num_pages = (int) $wp_the_query->max_num_pages;
-		
+
 		if ( $args['id'] != 'after_the_entries' || is_singular() || ( !is_date() && $max_num_pages <= 1 ) )
 			return;
-		
+
 		extract($args, EXTR_SKIP);
 		$instance = wp_parse_args($instance, blog_footer::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		$paged = (int) get_query_var('paged');
 		if ( !$paged )
 			$paged = 1;
-		
+
 		$pages = array();
-		
+
 		if ( $max_num_pages > 1 ) {
 			if ( $paged >= 2 )
 				$pages[] = get_previous_posts_link(trim('&laquo; ' . $previous));
-			
+
 			$range = array($paged);
 
 			for ( $i = 1; $i <= 3; $i++ ) {
@@ -1526,54 +1526,54 @@ class blog_footer extends WP_Widget {
 				$pages[] = get_next_posts_link(trim($next . ' &raquo;'));
 			}
 		}
-		
+
 		$pages = implode(' ', $pages);
-		
+
 		$dates = blog_footer::date_nav();
-		
+
 		$o = array();
-		
+
 		foreach ( array('pages', 'dates') as $var ) {
 			if ( $$var )
 				$o[] = $$var;
 		}
-		
+
 		$o = "<p>" . implode("</p>\n<p>", $o) . "</p>\n";
-		
+
 		echo $before_widget
 			. $o
 			. $after_widget;
 	} # widget()
-	
-	
+
+
 	/**
 	 * date_nav()
 	 *
 	 * @return string $nav
 	 **/
 
-	function date_nav() {
+	static function date_nav() {
 		if ( !is_date() )
 			return false;
-		
+
 		$dates = array();
-		
+
 		global $wpdb;
-		
+
 		$y = get_query_var('year');
 		$m = get_query_var('monthnum');
 		$d = get_query_var('day');
-		
+
 		$m = $m ? zeroise($m, 2) : false;
 		$d = $d ? zeroise($d, 2) : false;
-		
+
 		if ( $d )
 			$stop = "$y-$m-$d";
 		elseif ( $m )
 			$stop = "$y-$m-01";
 		else
 			$stop = "$y-01-01";
-		
+
 		$sql = "
 			SELECT	MAX(post_date)
 			FROM	$wpdb->posts
@@ -1582,7 +1582,7 @@ class blog_footer extends WP_Widget {
 			AND		post_status = 'publish'
 			";
 		$cache_id = md5($sql);
-		
+
 		$date = wp_cache_get($cache_id, 'widget_queries');
 		if ( $date === false ) {
 			$date = $wpdb->get_var($sql);
@@ -1590,10 +1590,10 @@ class blog_footer extends WP_Widget {
 				$date = 0;
 			wp_cache_add($cache_id, $date, 'widget_queries');
 		}
-		
+
 		if ( $date ) {
 			$date = strtotime("$date GMT");
-			
+
 			if ( $d ) {
 				$dates[] = '<a href="' . get_day_link(gmdate('Y', $date), gmdate('m', $date), gmdate('d', $date)) . '">'
 					. '&laquo; ' . date_i18n(__('M jS, Y', 'sem-reloaded'), $date, true)
@@ -1608,20 +1608,20 @@ class blog_footer extends WP_Widget {
 					. '</a>';
 			}
 		}
-		
+
 		if ( $d ) {
 			$dates[] = '<a href="' . get_month_link($y, $m) . '">'
 				. date_i18n(__('M, Y', 'sem-reloaded'), strtotime("$y-$m-$d GMT"), true)
 				. '</a>';
 		}
-		
+
 		if ( $d )
 			$stop = gmdate('Y-m-d', strtotime("$y-$m-$d GMT + 1 day"));
 		elseif ( $m )
 			$stop = gmdate('Y-m-d', strtotime("$y-$m-01 GMT + 1 month"));
 		else
 			$stop = gmdate('Y-m-d', strtotime("$y-01-01 GMT + 1 year"));
-		
+
 		$sql = "
 			SELECT	MIN(post_date)
 			FROM	$wpdb->posts
@@ -1630,7 +1630,7 @@ class blog_footer extends WP_Widget {
 			AND		post_status = 'publish'
 			";
 		$cache_id = md5($sql);
-		
+
 		$date = wp_cache_get($cache_id, 'widget_queries');
 		if ( $date === false ) {
 			$date = $wpdb->get_var($sql);
@@ -1638,10 +1638,10 @@ class blog_footer extends WP_Widget {
 				$date = 0;
 			wp_cache_add($cache_id, $date, 'widget_queries');
 		}
-		
+
 		if ( $date ) {
 			$date = strtotime("$date GMT");
-			
+
 			if ( $d ) {
 				$dates[] = '<a href="' . get_day_link(gmdate('Y', $date), gmdate('m', $date), gmdate('d', $date)) . '">'
 					. date_i18n(__('M jS, Y', 'sem-reloaded'), $date, true) . ' &raquo;'
@@ -1656,13 +1656,13 @@ class blog_footer extends WP_Widget {
 					. '</a>';
 			}
 		}
-		
+
 		$dates = implode(' &bull; ', $dates);
-		
+
 		return $dates;
 	} # date_nav()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -1674,11 +1674,11 @@ class blog_footer extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		foreach ( array_keys(blog_footer::defaults()) as $field )
 			$instance[$field] = trim(strip_tags($new_instance[$field]));
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -1690,9 +1690,9 @@ class blog_footer extends WP_Widget {
 		$defaults = blog_footer::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		foreach ( $defaults as $field => $default ) {
 			echo '<p>'
 				. '<label>'
@@ -1706,14 +1706,14 @@ class blog_footer extends WP_Widget {
 				. '</p>' . "\n";
 		}
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'next' => __('Next', 'sem-reloaded'),
@@ -1742,11 +1742,11 @@ class header_boxes extends WP_Widget {
 			'classname' => 'header_boxes',
 			'description' => __('Lets you decide where the Footer Boxes Bar panel goes. Must be placed in the header area.', 'sem-reloaded'),
 			);
-		
+
 		$this->WP_Widget('header_boxes', $widget_name, $widget_ops);
 	} # header_boxes()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1758,7 +1758,7 @@ class header_boxes extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_header' )
 			return;
-		
+
 		sem_panels::display('the_header_boxes');
 	} # widget()
 } # header_boxes
@@ -1783,11 +1783,11 @@ class footer_boxes extends WP_Widget {
 			'classname' => 'footer_boxes',
 			'description' => __('Lets you decide where the Footer Boxes Bar panel goes. Must be placed in the footer area.', 'sem-reloaded'),
 			);
-		
+
 		$this->WP_Widget('footer_boxes', $widget_name, $widget_ops);
 	} # footer_boxes()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1799,7 +1799,7 @@ class footer_boxes extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_footer' )
 			return;
-		
+
 		sem_panels::display('the_footer_boxes');
 	} # widget()
 } # footer_boxes
@@ -1831,11 +1831,11 @@ class header extends WP_Widget {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('header', $widget_name, $widget_ops, $control_ops);
 	} # header()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -1847,12 +1847,12 @@ class header extends WP_Widget {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_header' )
 			return;
-		
+
 		$instance = wp_parse_args($instance, header::defaults());
 		extract($instance, EXTR_SKIP);
-		
+
 		$header = header::get();
-		
+
 		if ( $header ) {
 			preg_match("/\.([^.]+)$/", $header, $ext);
 			$ext = strtolower(end($ext));
@@ -1860,7 +1860,7 @@ class header extends WP_Widget {
 		} else {
 			$flash = false;
 		}
-		
+
 		echo '<div id="header" class="wrapper'
 				. ( $invert_header
 					? ' invert_header'
@@ -1875,13 +1875,13 @@ class header extends WP_Widget {
                 . 'role="banner"';
 
 		echo '>' . "\n";
-		
+
 		echo '<div id="header_top"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '<div id="header_bg">' . "\n";
-		
+
 		echo '<div class="wrapper_item">' . "\n";
-		
+
 		if ( !$header ) {
 			echo '<div id="header_img" class="pad">' . "\n";
 
@@ -1895,7 +1895,7 @@ class header extends WP_Widget {
 					: get_option('blogname')
 					)
 				. '</div>' . "\n";
-			
+
 			if ( $invert_header ) {
 				echo $site_name;
 				echo $tagline;
@@ -1903,26 +1903,26 @@ class header extends WP_Widget {
 				echo $tagline;
 				echo $site_name;
 			}
-			
+
 			echo '</div>' . "\n";
 		} else {
 			echo header::display($header);
 		}
-		
+
 		echo '</div>' . "\n";
-		
+
 		echo '</div>' . "\n";
-		
+
 		echo '<div id="header_bottom"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '</div><!-- header -->' . "\n";
-		
+
 		global $did_header;
 		global $did_navbar;
 		$did_header = intval($did_navbar) + 1;
 	} # widget()
-	
-	
+
+
 	/**
 	 * display()
 	 *
@@ -1933,25 +1933,25 @@ class header extends WP_Widget {
 	function display($header = null) {
 		if ( !$header )
 			$header = header::get();
-		
+
 		if ( !$header )
 			return;
-		
+
 		preg_match("/\.([^.]+)$/", $header, $ext);
 		$ext = strtolower(end($ext));
-		
+
 		if ( $ext != 'swf' ) {
 			echo '<div id="header_img" class="pad">'
 				. header::display_header_image($header);
 		} else {
-			echo '<div id="header_img">' 
+			echo '<div id="header_img">'
 				. header::display_header_flash($header);
 		}
 		echo '</div>' . "\n";
 	} # display()
 	/**
 	 * display_header_flash()
-	 * 
+	 *
 	 * @param string $header
 	 * @return string html
 	 */
@@ -1960,7 +1960,7 @@ class header extends WP_Widget {
 	}
 	/**
 	 * display_header_image()
-	 * 
+	 *
 	 * @param string $header
 	 * @return string html
 	 */
@@ -1968,7 +1968,7 @@ class header extends WP_Widget {
 		if (false === $header_size = wp_cache_get('sem_header', 'sem_header'))
 			$header_size = @getimagesize(WP_CONTENT_DIR . $header);
 		list($width, $height) = $header_size;
-		
+
 		$html = '<img src="' . sem_url . '/icons/pixel.gif"'
 			. ' height="' . intval($height) . '"'
 			. ' alt="'
@@ -1977,7 +1977,7 @@ class header extends WP_Widget {
 				. esc_attr(get_option('blogdescription'))
 				. '"'
 			. ' />';
-		
+
 		if ( !( is_front_page() && !is_paged() ) ) {
 			$html = '<a'
 			. ' href="' . esc_url(user_trailingslashit(home_url())) . '"'
@@ -1988,10 +1988,10 @@ class header extends WP_Widget {
 				. '"'
 			. '>' . $html . '</a>';
 		}
-		
+
 		return $html;
 	}
-	
+
 	/**
 	 * display_image()
 	 *
@@ -2004,19 +2004,19 @@ class header extends WP_Widget {
 
 		if ( !$header )
 			return;
-		
+
 		list($width, $height) = wp_cache_get('sem_header', 'sem_header');
-		
+
 		$header = esc_url(content_url() . $header);
-		
+
 		return '<img src="' . $header . '" height="' . $height . '" width="' . $width . '" alt="'
 			. esc_attr(get_option('blogname'))
 			. ' &bull; '
 			. esc_attr(get_option('blogdescription'))
 			. '" />';
 	} # display_image()
-	
-	
+
+
 	/**
 	 * display_flash()
 	 *
@@ -2030,13 +2030,13 @@ class header extends WP_Widget {
 
 		if ( !$header )
 			return;
-		
+
 		list($width, $height) = wp_cache_get('sem_header', 'sem_header');
-		
+
 		static $i = 0;
 		$player = esc_url(content_url() . $header);
 		$player_id = 'header_img_' . md5($i++ . $header);
-		
+
 		return <<<EOS
 
 <div style="width: {$width}px; height: {$height}px;"><object id="$player_id" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" width="$width" height="$height"><param name="movie" value="$player" /><param name="allowfullscreen" value="false" /><param name="allowscriptaccess" value="true" /><embed src="$player" pluginspage="http://www.macromedia.com/go/getflashplayer" width="$width" height="$height" allowfullscreen="false" allowscriptaccess="true" /></object></div>
@@ -2058,14 +2058,14 @@ EOS;
 
 	static function letter() {
 		$header = header::get();
-		
+
 		if ( !$header || $header != get_post_meta(get_the_ID(), '_sem_header', true) )
 			return;
-		
+
 		echo header::display($header);
 	} # letter()
-	
-	
+
+
 	/**
 	 * get_basedir()
 	 *
@@ -2073,10 +2073,10 @@ EOS;
 	 **/
 	static function get_basedir() {
 		static $header_basedir;
-		
+
 		if ( isset($header_basedir) )
 			return $header_basedir;
-		
+
 		$header_basedir = '/header';
 		if ( defined('SUBDOMAIN_INSTALL') && SUBDOMAIN_INSTALL )
 			$header_basedir .= '/' . $_SERVER['HTTP_HOST'];
@@ -2085,11 +2085,11 @@ EOS;
 			$home_path = isset($home_path['path']) ? rtrim($home_path['path'], '/') : '';
 			$header_basedir .= $home_path;
 		}
-		
+
 		return $header_basedir;
 	}
-	
-	
+
+
 	/**
 	 * get()
 	 *
@@ -2098,12 +2098,12 @@ EOS;
 
 	static function get() {
 		static $header;
-		
+
 		if ( !is_admin() && isset($header) )
 			return $header;
-		
+
 		global $sem_options;
-		
+
 		# try post specific header
 		if ( is_singular() ) {
 			global $wp_the_query;
@@ -2111,7 +2111,7 @@ EOS;
 		} else {
 			$post_ID = false;
 		}
-		
+
 		# try cached header
 		if ( !is_admin() && !sem_header_cache_debug ) {
 			switch ( is_singular() ) {
@@ -2129,7 +2129,7 @@ EOS;
 		} else {
 			$header = false;
 		}
-		
+
 		if ( !empty($header) ) {
 			$header_size = @getimagesize(WP_CONTENT_DIR . $header);
 			if ( $header_size ) {
@@ -2137,9 +2137,9 @@ EOS;
 				return $header;
 			}
 		}
-		
+
 		$header_basedir = header::get_basedir();
-		
+
 		if ( defined('GLOB_BRACE') ) {
 			$header_scan = "header{,-*}.{jpg,jpeg,png,gif,swf}";
 			$skin_scan = "header.{jpg,jpeg,png,gif,swf}";
@@ -2149,7 +2149,7 @@ EOS;
 			$skin_scan = "header.jpg";
 			$scan_type = false;
 		}
-		
+
 		if ( is_singular() ) {
 			# entry-specific header
 			$header = glob(WP_CONTENT_DIR . "$header_basedir/$post_ID/$header_scan", $scan_type);
@@ -2165,28 +2165,28 @@ EOS;
 				}
 			}
 		}
-		
+
 		switch ( true ) {
 		default:
 			# uploaded header
 			$header = glob(WP_CONTENT_DIR . "$header_basedir/$header_scan", $scan_type);
 			if ( $header )
 				break;
-			
+
 			# skin-specific header
 			$active_skin = $sem_options['active_skin'];
 			$header = glob(sem_path . "/skins/$active_skin/$skin_scan", $scan_type);
 			if ( $header )
 				break;
-			
+
 			# no header
 			$header = false;
 			break;
 		}
-		
+
 		if ( is_singular() && get_post_meta($post_ID, '_sem_header', true) != 'default' )
 			update_post_meta($post_ID, '_sem_header', 'default');
-		
+
 		if ( $header ) {
 			$header = current($header);
 			$header = str_replace(WP_CONTENT_DIR, '', $header);
@@ -2197,12 +2197,12 @@ EOS;
 				return $header;
 			}
 		}
-		
+
 		set_transient('sem_header', '0');
 		return false;
 	} # get()
-	
-	
+
+
 	/**
 	 * wire()
 	 *
@@ -2212,21 +2212,21 @@ EOS;
 
 	function wire(&$wp) {
 		$header = header::get();
-		
+
 		if ( !$header )
 			return;
-		
+
 		preg_match("/\.([^.]+)$/", $header, $ext);
 		$ext = strtolower(end($ext));
-		
+
 		if ( $ext == 'swf' ) {
 			wp_enqueue_script('swfobject');
 		} else {
 			add_action('wp_head', array($this, 'css'), 30);
 		}
 	} # wire()
-	
-	
+
+
 	/**
 	 * css()
 	 *
@@ -2235,14 +2235,14 @@ EOS;
 
 	function css() {
 		$header = header::get();
-		
+
 		list($width, $height) = wp_cache_get('sem_header', 'sem_header');
-		
+
 		if ( !$height )
 			return;
-		
+
 		$header = esc_url(content_url() . $header);
-		
+
 		echo <<<EOS
 
 <style type="text/css">
@@ -2262,8 +2262,8 @@ EOS;
 
 EOS;
 	} # css()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -2274,11 +2274,11 @@ EOS;
 
 	function update($new_instance, $old_instance) {
 		$instance['invert_header'] = isset($new_instance['invert_header']);
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -2290,9 +2290,9 @@ EOS;
 		$defaults = header::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Config', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -2304,14 +2304,14 @@ EOS;
 			. '</label>'
 			. '</p>' . "\n";
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array(
 			'invert_header' => false,
@@ -2407,24 +2407,24 @@ class sem_nav_menu extends WP_Widget {
 		}
 
 		sem_nav_menu::cache_pages();
-		
+
 		if ( !$items ) {
 //			$items = call_user_func(array(get_class($this), 'default_items'));
             $items = $this->default_items();
 		}
-		
+
 		$root_pages = wp_cache_get(0, 'page_children');
-		
+
 		ob_start();
-		
+
 		echo '<div>' . "\n";
-		
+
 		$did_first = false;
-		
+
 		foreach ( $items as $item ) {
 			if ( $sep && $did_first )
 				echo '<span>|</span>' . "\n";
-			
+
 			switch ( $item['type'] ) {
 			case 'home':
 				sem_nav_menu::display_home($item);
@@ -2442,11 +2442,11 @@ class sem_nav_menu extends WP_Widget {
 				break;
 			}
 		}
-		
+
 		echo '</div>' . "\n";
-		
+
 		$o = ob_get_clean();
-		
+
 		if ( !is_preview() && $use_caching ) {
 			if ( is_page() ) {
 				if ( $_wp_using_ext_object_cache )
@@ -2458,11 +2458,11 @@ class sem_nav_menu extends WP_Widget {
 				set_transient($cache_id, $cache);
 			}
 		}
-		
+
 		echo $o;
 	} # widget()
-	
-	
+
+
 	/**
 	 * display_home()
 	 *
@@ -2476,29 +2476,29 @@ class sem_nav_menu extends WP_Widget {
 			$item['ref'] = get_option('page_on_front');
 			return sem_nav_menu::display_page($item);
 		}
-		
+
 		extract($item, EXTR_SKIP);
 		if ( !isset($label) || (string) $label === '' )
 			$label = __('Home', 'sem-reloaded');
 		$url = esc_url(user_trailingslashit(home_url()));
-		
+
 		$classes = array('nav_home');
 		$link = $label;
-		
+
 		if ( !is_front_page() || is_front_page() && is_paged() )
 			$link = '<a href="' . $url . '" title="' . esc_attr(get_option('blogname')) . '" rel="home">'
 				. $link
 				. '</a>';
 		if ( !is_search() && !is_404() && !is_page() )
 			$classes[] = 'nav_active';
-		
+
 		echo '<span class="' . implode(' ', $classes) . '">'
 			. $link;
-		
+
 		echo '</span>' . "\n";
 	} # display_home()
-	
-	
+
+
 	/**
 	 * display_url()
 	 *
@@ -2513,10 +2513,10 @@ class sem_nav_menu extends WP_Widget {
 		$url = esc_url($ref);
 		if ( !$url || $url == 'http://' )
 			return;
-		
+
 		if ( rtrim($url, '/') == rtrim(home_url(), '/') )
 			return sem_nav_menu::display_home($item);
-		
+
 		if ( !sem_nav_menu::is_local_url($url) ) {
 			$classes = array('nav_url');
 		} else {
@@ -2530,17 +2530,17 @@ class sem_nav_menu extends WP_Widget {
 			else
 				$classes = array('nav_branch');
 		}
-		
+
 		$link = '<a href="' . $url . '" title="' . esc_attr($label) . '">'
 			. $label
 			. '</a>';
-		
+
 		echo '<span class="' . implode(' ', $classes) . '">'
 			. $link
 			. '</span>' . "\n";
 	} # display_url()
-	
-	
+
+
 	/**
 	 * display_page()
 	 *
@@ -2552,10 +2552,10 @@ class sem_nav_menu extends WP_Widget {
 		extract($item, EXTR_SKIP);
 		$ref = (int) $ref;
 		$page = get_post($ref);
-		
+
 		if ( !$page || $page->post_parent != 0 && get_post_meta($page->ID, '_widgets_exclude', true) )
 			return;
-		
+
 		if ( is_page() ) {
 			global $wp_the_query;
 			$page_id = $wp_the_query->get_queried_object_id();
@@ -2564,22 +2564,22 @@ class sem_nav_menu extends WP_Widget {
 		} else {
 			$page_id = 0;
 		}
-		
+
 		if ( !isset($label) || (string) $label === '' )
 			$label = get_post_meta($page->ID, '_widgets_label', true);
 		if ( (string) $label === '' )
 			$label = $page->post_title;
 		if ( (string) $label === '' )
 			$label = __('Untitled', 'sem-reloaded');
-		
+
 		$url = esc_url(apply_filters('the_permalink', get_permalink($page->ID)));
-		
+
 		$ancestors = $page_id ? wp_cache_get($page_id, 'page_ancestors') : array();
 		$children = wp_cache_get($page->ID, 'page_children');
-		
+
 		$classes = array();
 		$link = $label;
-		
+
 		if ( get_option('show_on_front') == 'page' && get_option('page_on_front') == $page->ID ) {
 			$classes[] = 'nav_home';
 			if ( !is_front_page() || is_front_page() && is_paged() )
@@ -2601,24 +2601,24 @@ class sem_nav_menu extends WP_Widget {
 				$classes[] = 'nav_branch';
 			else
 				$classes[] = 'nav_leaf';
-			
+
 			if ( $page->ID != $page_id )
 				$link = '<a href="' . $url . '" title="' . esc_attr($label) . '">'
 					. $link
 					. '</a>';
-			
+
 			$classes[] = 'nav_page-' . sanitize_html_class($page->post_name, $page->ID);
 			if ( $page->ID == $page_id || in_array($page->ID, $ancestors) )
 				$classes[] = 'nav_active';
 		}
-		
+
 		echo '<span class="' . implode(' ', $classes) . '">'
 			. $link;
-		
+
 		echo '</span>' . "\n";
 	} # display_page()
-	
-	
+
+
 	/**
 	 * cache_pages()
 	 *
@@ -2634,7 +2634,7 @@ class sem_nav_menu extends WP_Widget {
 			$page_id = 0;
 			$page = null;
 		}
-		
+
 		if ( get_option('show_on_front') == 'page' ) {
 			$front_page_id = (int) get_option('page_on_front');
 			$front_page = get_post($front_page_id);
@@ -2646,7 +2646,7 @@ class sem_nav_menu extends WP_Widget {
 			$blog_page_id = 0;
 			$blog_page = null;
 		}
-		
+
 		$ancestors = $page_id ? wp_cache_get($page_id, 'page_ancestors') : array();
 		if ( $ancestors === false ) {
 			$ancestors = array();
@@ -2657,7 +2657,7 @@ class sem_nav_menu extends WP_Widget {
 			$ancestors = array_reverse($ancestors);
 			wp_cache_set($page_id, $ancestors, 'page_ancestors');
 		}
-		
+
 		$front_page_ancestors = $front_page_id ? wp_cache_get($front_page_id, 'page_ancestors') : array();
 		if ( $front_page_ancestors === false ) {
 			$front_page_ancestors = array();
@@ -2668,7 +2668,7 @@ class sem_nav_menu extends WP_Widget {
 			$front_page_ancestors = array_reverse($front_page_ancestors);
 			wp_cache_set($front_page_id, $front_page_ancestors, 'page_ancestors');
 		}
-		
+
 		$blog_page_ancestors = $blog_page_id ? wp_cache_get($blog_page_id, 'page_ancestors') : array();
 		if ( $blog_page_ancestors === false ) {
 			$blog_page_ancestors = array();
@@ -2679,7 +2679,7 @@ class sem_nav_menu extends WP_Widget {
 			$blog_page_ancestors = array_reverse($blog_page_ancestors);
 			wp_cache_set($blog_page_id, $blog_page_ancestors, 'page_ancestors');
 		}
-		
+
 		$parent_ids = array_merge($ancestors, $front_page_ancestors, $blog_page_ancestors);
 		array_unshift($parent_ids, 0);
 		if ( $page_id )
@@ -2691,7 +2691,7 @@ class sem_nav_menu extends WP_Widget {
 		$parent_ids = array_map('intval', $parent_ids);
 		$parent_ids = array_unique($parent_ids);
 		sort($parent_ids);
-		
+
 		$cached = true;
 		foreach ( $parent_ids as $parent_id ) {
 			$children_ids = wp_cache_get($parent_id, 'page_children');
@@ -2704,12 +2704,12 @@ class sem_nav_menu extends WP_Widget {
 					break 2;
 			}
 		}
-		
+
 		if ( $cached )
 			return;
-		
+
 		global $wpdb;
-		
+
 		$root_ids = array();
 		if ( $page_id ) {
 			$parent_page = get_post($page_id);
@@ -2722,7 +2722,7 @@ class sem_nav_menu extends WP_Widget {
 		$root_ids = array_map('intval', $root_ids);
 		$root_ids = array_unique($root_ids);
 		sort($root_ids);
-		
+
 		$roots = (array) $wpdb->get_col("
 			SELECT	posts.ID
 			FROM	$wpdb->posts as posts
@@ -2730,12 +2730,12 @@ class sem_nav_menu extends WP_Widget {
 			AND		post_status IN ( 'publish', 'private' )
 			AND		posts.post_parent IN ( " . implode(',', $root_ids) . " )
 			");
-		
+
 		$parent_ids = array_merge($parent_ids, $roots, array($page_id, $front_page_id, $blog_page_id));
 		$parent_ids = array_map('intval', $parent_ids);
 		$parent_ids = array_unique($parent_ids);
 		sort($parent_ids);
-		
+
 		$pages = (array) $wpdb->get_results("
 			SELECT	posts.*
 			FROM	$wpdb->posts as posts
@@ -2744,32 +2744,32 @@ class sem_nav_menu extends WP_Widget {
 			AND		posts.post_parent IN ( " . implode(',', $parent_ids) . " )
 			ORDER BY posts.menu_order, posts.post_title
 			");
-		
+
 		$children = array();
 		$to_cache = array();
-		
+
 		foreach ( $parent_ids as $parent_id )
 			$children[$parent_id] = array();
-		
+
 		foreach ( $pages as $page ) {
 			$children[$page->post_parent][] = $page->ID;
 			$to_cache[] = $page->ID;
 		}
-		
+
 		$all_ancestors = array();
-		
+
 		foreach ( $children as $parent => $child_ids ) {
 			foreach ( $child_ids as $key => $child_id )
 				$all_ancestors[$child_id][] = $parent;
 			wp_cache_set($parent, $child_ids, 'page_children');
 		}
-		
+
 		foreach ( $all_ancestors as $child_id => $parent_ids ) {
 			while ( $parent_ids[0] && $all_ancestors[$parent_ids[0]] )
 				$parent_ids = array_merge($all_ancestors[$parent_ids[0]], $parent_ids);
 			wp_cache_set($child_id, $parent_ids, 'page_ancestors');
 		}
-		
+
 		foreach ( array_keys($pages) as $k ) {
 			$ancestors = wp_cache_get($pages[$k]->ID, 'page_ancestors');
 			array_shift($ancestors);
@@ -2780,8 +2780,8 @@ class sem_nav_menu extends WP_Widget {
 		update_post_cache($pages);
 		update_postmeta_cache($to_cache);
 	} # cache_pages()
-	
-	
+
+
 	/**
 	 * is_local_url()
 	 *
@@ -2794,15 +2794,15 @@ class sem_nav_menu extends WP_Widget {
 			return true;
 		elseif ( preg_match("~/go(/|\.)~i", $url) )
 			return false;
-		
+
 		static $site_domain;
-		
+
 		if ( !isset($site_domain) ) {
 			$site_domain = home_url();
 			$site_domain = parse_url($site_domain);
 			$site_domain = $site_domain['host'];
 			$site_domain = preg_replace("/^www\./i", '', $site_domain);
-			
+
 			# The following is not bullet proof, but it's good enough for a WP site
 			if ( $site_domain != 'localhost' && !preg_match("/\d+(\.\d+){3}/", $site_domain) ) {
 				if ( preg_match("/\.([^.]+)$/", $site_domain, $tld) ) {
@@ -2811,9 +2811,9 @@ class sem_nav_menu extends WP_Widget {
 					$site_domain = false;
 					return false;
 				}
-				
+
 				$site_domain = substr($site_domain, 0, strlen($site_domain) - 1 - strlen($tld));
-				
+
 				if ( preg_match("/\.([^.]+)$/", $site_domain, $subtld) ) {
 					$subtld = end($subtld);
 					if ( strlen($subtld) <= 4 ) {
@@ -2825,21 +2825,21 @@ class sem_nav_menu extends WP_Widget {
 						$site_domain = $subtld;
 					}
 				}
-				
+
 				$site_domain .= ".$tld";
 			}
-			
+
 			$site_domain = strtolower($site_domain);
 		}
-		
+
 		if ( !$site_domain )
 			return false;
-		
+
 		$link_domain = parse_url($url);
 		$link_domain = $link_domain['host'];
 		$link_domain = preg_replace("/^www\./i", '', $link_domain);
 		$link_domain = strtolower($link_domain);
-		
+
 		if ( $site_domain == $link_domain ) {
 			return true;
 		} elseif ( function_exists('is_multisite') && is_multisite() ) {
@@ -2847,17 +2847,17 @@ class sem_nav_menu extends WP_Widget {
 		} else {
 			$site_elts = explode('.', $site_domain);
 			$link_elts = explode('.', $link_domain);
-			
+
 			while ( ( $site_elt = array_pop($site_elts) ) && ( $link_elt = array_pop($link_elts) ) ) {
 				if ( $site_elt !== $link_elt )
 					return false;
 			}
-			
+
 			return empty($link_elts) || empty($site_elts);
 		}
 	} # is_local_url()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -2872,13 +2872,13 @@ class sem_nav_menu extends WP_Widget {
 		foreach ( array_keys((array) $new_instance['items']['type']) as $key ) {
 			$item = array();
 			$item['type'] = $new_instance['items']['type'][$key];
-			
+
 			if ( !in_array($item['type'], array('home', 'url', 'page')) ) {
 				continue;
 			}
-			
+
 			$label = trim(strip_tags($new_instance['items']['label'][$key]));
-			
+
 			switch ( $item['type'] ) {
 				case 'home':
 					$item['label'] = $label;
@@ -2897,16 +2897,16 @@ class sem_nav_menu extends WP_Widget {
 					}
 					break;
 			}
-			
+
 			$instance['items'][] = $item;
 		}
-		
+
 		sem_nav_menu::flush_cache();
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -2917,7 +2917,7 @@ class sem_nav_menu extends WP_Widget {
 	function form($instance) {
 		$instance = wp_parse_args($instance, sem_nav_menu::defaults());
 		$pages = wp_cache_get('nav_menu_roots', 'nav_menu_roots');
-		
+
 		if ( $pages === false ) {
 			global $wpdb;
 			$pages = $wpdb->get_results("
@@ -2935,9 +2935,9 @@ class sem_nav_menu extends WP_Widget {
 			update_postmeta_cache($to_cache);
 			wp_cache_set('nav_menu_roots', $pages, 'nav_menu_roots');
 		}
-		
+
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -2948,21 +2948,21 @@ class sem_nav_menu extends WP_Widget {
 			. __('Split navigation menu items with a |.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
-		
-		
+
+
 		echo '<div class="hide-if-no-js">' . "\n";
-		
+
 		echo '<h3>' . __('Menu Items', 'sem-reloaded') . '</h3>' . "\n";
-		
-		
+
+
 		echo '<div class="nav_menu_items">' . "\n";
-		
+
 		echo '<input type="hidden" class="nav_menu_base"'
 			. ' value="' . $this->get_field_name('items') . '" />' . "\n";
-		
-		
+
+
 		echo '<div class="nav_menu_items_controller">' . "\n";
-		
+
 		echo '<select class="nav_menu_item_select">' . "\n"
 			. '<option value="">'
 				. esc_attr(__('- Select a menu item -', 'sem-reloaded'))
@@ -2979,7 +2979,7 @@ class sem_nav_menu extends WP_Widget {
 				. ' label="' . esc_attr(__('Pages', 'sem-reloaded')) . '"'
 				. '>' . "\n"
 			;
-		
+
 		foreach ( $pages as $page ) {
 			$label = get_post_meta($page->ID, '_widgets_label', true);
 			if ( $label === '' )
@@ -2991,24 +2991,24 @@ class sem_nav_menu extends WP_Widget {
 				. esc_attr($label)
 				. '</option>' . "\n";
 		}
-		
+
 		echo '</optgroup>' . "\n";
-		
+
 		echo '</select>';
-		
+
 		echo '&nbsp;';
-		
+
 		echo '<input type="button" class="nav_menu_item_add" value="&nbsp;+&nbsp;" />' . "\n";
-		
+
 		echo '</div>' . "\n"; # controller
-		
+
 		echo '<p>'
 			. __('Drag and drop menu items to rearrange them.', 'sem-reloaded')
 			. '</p>' . "\n";
-		
-		
+
+
 		echo '<div class="nav_menu_item_sortables">' . "\n";
-		
+
 		foreach ( $items as $item ) {
             $label = isset($item['label']) ? $item['label'] : '';
 			$type = $item['type'];
@@ -3037,7 +3037,7 @@ class sem_nav_menu extends WP_Widget {
 					$label = __('Untitled', 'sem-reloaded');
 				break;
 			}
-			
+
 			echo '<div class="nav_menu_item nav_menu_item-' . $handle . ' button">' . "\n"
 				. '<div class="nav_menu_item_data">' ."\n"
 				. '<input type="text" class="nav_menu_item_label"'
@@ -3066,7 +3066,7 @@ class sem_nav_menu extends WP_Widget {
 				. '</div>' . "\n" # preview
 				. '</div>' . "\n"; # item
 		}
-		
+
 		if ( !$items ) {
 			echo '<div class="nav_menu_item_blank">' . "\n"
 				. '<p>' . __('Empty Navigation Menu. Leave it empty to populate it automatically.', 'sem-reloaded') . '</p>' . "\n"
@@ -3078,15 +3078,15 @@ jQuery('div.nav_menu_item_sortables:has(.nav_menu_item)').sortable({});
 </script>
 EOS;
 		}
-		
+
 		echo '</div>' . "\n"; # sortables
-		
+
 		echo '</div>' . "\n"; # items
-		
+
 		echo '</div>' . "\n"; # hide-if-no-js
 	} # form()
-	
-	
+
+
 	/**
 	 * admin_footer()
 	 *
@@ -3095,7 +3095,7 @@ EOS;
 
 	static function admin_footer() {
 		$pages = wp_cache_get('nav_menu_roots', 'nav_menu_roots');
-		
+
 		if ( $pages === false ) {
 			global $wpdb;
 			$pages = $wpdb->get_results("
@@ -3113,13 +3113,13 @@ EOS;
 			update_postmeta_cache($to_cache);
 			wp_cache_set('nav_menu_roots', $pages, 'nav_menu_roots');
 		}
-		
+
 		echo '<div id="nav_menu_item_defaults" style="display: none;">' . "\n";
-		
+
 		echo '<div class="nav_menu_item_blank">' . "\n"
 			. '<p>' . __('Empty Navigation Menu. Leave it empty to populate it automatically.', 'sem-reloaded') . '</p>' . "\n"
 			. '</div>' . "\n";
-		
+
 		$default_items = array(
 			array(
 				'type' => 'home',
@@ -3131,7 +3131,7 @@ EOS;
 				'label' => __('Url Label', 'sem-reloaded'),
 				),
 			);
-		
+
 		foreach ( $pages as $page ) {
 			$label = get_post_meta($page->ID, '_widgets_label', true);
 			if ( $label === '' )
@@ -3145,7 +3145,7 @@ EOS;
 				'label' => $label,
 				);
 		}
-		
+
 		foreach ( $default_items as $item ) {
 			$label = $item['label'];
 			$type = $item['type'];
@@ -3173,7 +3173,7 @@ EOS;
 				$label = strip_tags($label);
 				break;
 			}
-			
+
 			echo '<div class="nav_menu_item nav_menu_item-' . $handle . ' button">' . "\n"
 				. '<div class="nav_menu_item_data">' ."\n"
 				. '<input type="text" class="nav_menu_item_label"'
@@ -3203,11 +3203,11 @@ EOS;
 				. '</div>' . "\n" # preview
 				. '</div>' . "\n"; # item
 		}
-		
+
 		echo '</div>' . "\n"; # defaults
 	} # admin_footer()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
@@ -3220,8 +3220,8 @@ EOS;
 			'items' => array(),
 			);
 	} # defaults()
-	
-	
+
+
 	/**
 	 * default_items()
 	 *
@@ -3230,12 +3230,12 @@ EOS;
 
 	function default_items() {
 		$items = array(array('type' => 'home'));
-		
+
 		$roots = wp_cache_get(0, 'page_children');
-		
+
 		if ( !$roots )
 			return $items;
-		
+
 		$front_page_id = get_option('show_on_front') == 'page'
 			? (int) get_option('page_on_front')
 			: 0;
@@ -3245,17 +3245,17 @@ EOS;
 				continue;
 			if ( get_post_meta($root_id, '_widgets_exclude', true) )
 				continue;
-			
+
 			$items[] = array(
 				'type' => 'page',
 				'ref' => $root_id,
 				);
 		}
-		
+
 		return $items;
 	} # default_items()
-	
-	
+
+
 	/**
 	 * pre_flush_post()
 	 *
@@ -3267,15 +3267,15 @@ EOS;
 		$post_id = (int) $post_id;
 		if ( !$post_id )
 			return;
-		
+
 		$post = get_post($post_id);
 		if ( !$post || $post->post_type != 'page' || wp_is_post_revision($post_id) )
 			return;
-		
+
 		$old = wp_cache_get($post_id, 'pre_flush_post');
 		if ( $old === false )
 			$old = array();
-		
+
 		$update = false;
 		foreach ( array(
 			'post_title',
@@ -3286,12 +3286,12 @@ EOS;
 				$update = true;
 			}
 		}
-		
+
 		if ( !isset($old['permalink']) ) {
 			$old['permalink'] = apply_filters('the_permalink', get_permalink($post_id));
 			$update = true;
 		}
-		
+
 		foreach ( array(
 			'widgets_label',
 			'widgets_exclude',
@@ -3301,13 +3301,13 @@ EOS;
 				$update = true;
 			}
 		}
-		
-		
+
+
 		if ( $update )
 			wp_cache_set($post_id, $old, 'pre_flush_post');
 	} # pre_flush_post()
-	
-	
+
+
 	/**
 	 * flush_post()
 	 *
@@ -3320,22 +3320,22 @@ EOS;
 		$post_id = (int) $post_id;
 		if ( !$post_id )
 			return;
-		
+
 		# prevent mass-flushing when the permalink structure hasn't changed
 		remove_action('generate_rewrite_rules', array($this, 'flush_cache'));
-		
+
 		$post = get_post($post_id);
 		if ( !$post || $post->post_type != 'page' || wp_is_post_revision($post_id) )
 			return;
-		
+
 		$old = wp_cache_get($post_id, 'pre_flush_post');
-		
+
 		if ( $post->post_status != 'publish' && ( !$old || $old['post_status'] != 'publish' ) )
 			return;
-		
+
 		if ( $old === false )
 			return sem_nav_menu::flush_cache();
-		
+
 		extract($old, EXTR_SKIP);
 		foreach ( array_keys($old) as $key ) {
 			switch ( $key ) {
@@ -3344,12 +3344,12 @@ EOS;
 				if ( $$key != get_post_meta($post_id, "_$key", true) )
 					return sem_nav_menu::flush_cache();
 				break;
-			
+
 			case 'permalink':
 				if ( $$key != apply_filters('the_permalink', get_permalink($post_id)) )
 					return sem_nav_menu::flush_cache();
 				break;
-			
+
 			case 'post_title':
 			case 'post_status':
 				if ( $$key != $post->$key )
@@ -3357,35 +3357,35 @@ EOS;
 			}
 		}
 	} # flush_post()
-	
-	
+
+
 	/**
 	 * flush_cache()
 	 *
 	 * @param mixed $in
 	 * @return mixed $in
 	 **/
-	
+
 	function flush_cache($in = null) {
 		static $done = false;
 		if ( $done )
 			return $in;
-		
+
 		$done = true;
 		$cache_ids = array();
-		
+
 		foreach ( array('navbar', 'footer') as $option_name ) {
 			$widgets = get_option("widget_$option_name");
-			
+
 			if ( !$widgets )
 				continue;
-			
+
 			unset($widgets['_multiwidget']);
 			unset($widgets['number']);
-			
+
 			if ( !$widgets )
 				continue;
-			
+
 			global $_wp_using_ext_object_cache;
 			foreach ( array_keys($widgets) as $widget_id ) {
 				$cache_id = "$option_name-$widget_id";
@@ -3395,7 +3395,7 @@ EOS;
 					$cache_ids[] = $cache_id;
 			}
 		}
-		
+
 		if ( $cache_ids ) {
 			$page_ids = wp_cache_get('page_ids', 'widget_queries');
 			if ( $page_ids === false ) {
@@ -3413,7 +3413,7 @@ EOS;
 					wp_cache_delete($page_id, $cache_id);
 			}
 		}
-		
+
 		return $in;
 	} # flush_cache()
 } # sem_nav_menu
@@ -3441,11 +3441,11 @@ class navbar extends sem_nav_menu {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('navbar', $widget_name, $widget_ops, $control_ops);
 	} # navbar()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -3457,27 +3457,27 @@ class navbar extends sem_nav_menu {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_header' )
 			return;
-		
+
 		$instance = wp_parse_args($instance, navbar::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		$navbar_class = '';
 		if ( $show_search_form )
 			$navbar_class .= ' float_nav';
 		if ( $sep )
 			$navbar_class .= ' sep_nav';
-		
+
 		echo '<div id="navbar" class="wrapper navbar' . $navbar_class . '">' . "\n";
-		
+
 		echo '<div id="navbar_top"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '<div id="navbar_bg">' . "\n";
-		
+
 		echo '<div class="wrapper_item">' . "\n";
-		
+
 		echo '<div class="pad">' . "\n";
-		
+
 		echo '<div id="header_nav" class="header_nav inline_menu" role="navigation">';
 
 		parent::widget($args, $instance);
@@ -3491,7 +3491,7 @@ class navbar extends sem_nav_menu {
 				$search = apply_filters('the_search_form', get_search_query());
 			else
 				$search = $search_field;
-			
+
 			$search_caption = addslashes(esc_attr($search_field));
 			if ( $search_caption ) {
 				$onfocusblur = ' onfocus="if ( this.value == \'' . $search_caption . '\' )'
@@ -3499,14 +3499,14 @@ class navbar extends sem_nav_menu {
 						. ' onblur="if ( this.value == \'\' )'
 						 	. ' this.value = \'' . $search_caption . '\';"';
 			} else {
-				$onfocus_blur = '';
+				$onfocusblur = '';
 			}
-			
+
 			$go = $search_button;
-			
+
 			if ( $go !== '' )
 				$go = '<input type="submit" id="go" class="go button submit" value="' . esc_attr($go) . '" />';
-			
+
 			echo '<form method="get"'
 					. ' action="' . esc_url(user_trailingslashit(home_url())) . '"'
 					. ' id="searchform" name="searchform"'
@@ -3518,7 +3518,7 @@ class navbar extends sem_nav_menu {
 					. ' />'
 				. $go
 				. '</form>';
-			
+
 			echo '</div><!-- search_form -->';
 		}
 
@@ -3526,17 +3526,17 @@ class navbar extends sem_nav_menu {
 			. '</div>' . "\n"
 			. '</div>' . "\n"
 			. '</div>' . "\n";
-		
+
 		echo '<div id="navbar_bottom"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '</div><!-- navbar -->' . "\n";
-		
+
 		global $did_header;
 		global $did_navbar;
 		$did_navbar = intval($did_header) + 1;
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -3550,11 +3550,11 @@ class navbar extends sem_nav_menu {
 		$instance['show_search_form'] = isset($new_instance['show_search_form']);
 		$instance['search_field'] = trim(strip_tags($new_instance['search_field']));
 		$instance['search_button'] = trim(strip_tags($new_instance['search_button']));
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -3566,9 +3566,9 @@ class navbar extends sem_nav_menu {
 		$defaults = navbar::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		foreach ( array('search_field', 'search_button') as $field ) {
 			echo '<p>'
 				. '<label>'
@@ -3581,9 +3581,9 @@ class navbar extends sem_nav_menu {
 				. '</label>'
 				. '</p>' . "\n";
 		}
-		
+
 		echo '<h3>' . __('Config', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -3594,17 +3594,17 @@ class navbar extends sem_nav_menu {
 			. __('Show a search form in the navigation menu.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		parent::form($instance);
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array_merge(array(
 			'search_field' => __('Search', 'sem-reloaded'),
@@ -3612,8 +3612,8 @@ class navbar extends sem_nav_menu {
 			'show_search_form' => true,
 			), parent::defaults());
 	} # defaults()
-	
-	
+
+
 	/**
 	 * default_items()
 	 *
@@ -3622,12 +3622,12 @@ class navbar extends sem_nav_menu {
 
 	function default_items() {
 		$items = array(array('type' => 'home'));
-		
+
 		$roots = wp_cache_get(0, 'page_children');
-		
+
 		if ( !$roots )
 			return $items;
-		
+
 		$front_page_id = get_option('show_on_front') == 'page'
 			? (int) get_option('page_on_front')
 			: 0;
@@ -3639,13 +3639,13 @@ class navbar extends sem_nav_menu {
 				continue;
 			if ( !wp_cache_get($root_id, 'page_children') ) # only sections
 				continue;
-			
+
 			$items[] = array(
 				'type' => 'page',
 				'ref' => $root_id,
 				);
 		}
-		
+
 		return $items;
 	} # default_items()
 } # navbar
@@ -3673,11 +3673,11 @@ class footer extends sem_nav_menu {
 		$control_ops = array(
 			'width' => 330,
 			);
-		
+
 		$this->WP_Widget('footer', $widget_name, $widget_ops, $control_ops);
 	} # footer()
-	
-	
+
+
 	/**
 	 * widget()
 	 *
@@ -3689,11 +3689,11 @@ class footer extends sem_nav_menu {
 	function widget($args, $instance) {
 		if ( $args['id'] != 'the_footer' )
 			return;
-		
+
 		$instance = wp_parse_args($instance, footer::defaults());
 		extract($args, EXTR_SKIP);
 		extract($instance, EXTR_SKIP);
-		
+
 		$footer_class = '';
 		if ( $sep )
 			$footer_class .= ' sep_nav';
@@ -3702,46 +3702,46 @@ class footer extends sem_nav_menu {
 			if ( $sep )
 				$footer_class .= ' float_sep_nav';
 		}
-		
+
 		echo '<div id="footer" class="wrapper' . $footer_class . '" role="contentinfo">' . "\n";
-		
+
 		echo '<div id="footer_top"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '<div id="footer_bg">' . "\n"
 			. '<div class="wrapper_item">' . "\n"
 			. '<div class="pad">' . "\n";
-		
+
 		echo '<div id="footer_nav" class="inline_menu">';
-		
+
 		sem_nav_menu::widget($args, $instance);
-		
+
 		echo '</div><!-- footer_nav -->' . "\n";
-		
+
 		$year = date('Y');
 		$site_name = strip_tags(get_option('blogname'));
-		
+
 		$copyright = sprintf($copyright, $site_name, $year);
-		
+
 		if ( $copyright ) {
 			echo '<div id="copyright_notice">';
 			echo $copyright;
 			echo '</div><!-- #copyright_notice -->' . "\n";
 		}
-		
+
 		echo '<div class="spacer"></div>' . "\n"
 			. '</div>' . "\n"
 			. '</div>' . "\n"
 			. '</div>' . "\n";
-		
+
 		echo '<div id="footer_bottom"><div class="hidden"></div></div>' . "\n";
-		
+
 		echo '</div><!-- footer -->' . "\n";
-		
+
 		global $did_footer;
 		$did_footer = true;
 	} # widget()
-	
-	
+
+
 	/**
 	 * update()
 	 *
@@ -3758,11 +3758,11 @@ class footer extends sem_nav_menu {
 		} else {
 			$instance['copyright'] = $old_instance['copyright'];
 		}
-		
+
 		return $instance;
 	} # update()
-	
-	
+
+
 	/**
 	 * form()
 	 *
@@ -3774,9 +3774,9 @@ class footer extends sem_nav_menu {
 		$defaults = footer::defaults();
 		$instance = wp_parse_args($instance, $defaults);
 		extract($instance, EXTR_SKIP);
-		
+
 		echo '<h3>' . __('Captions', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		foreach ( array('copyright') as $field ) {
 			echo '<p>'
 				. '<label for="' . $this->get_field_id($field) . '">'
@@ -3799,9 +3799,9 @@ class footer extends sem_nav_menu {
 				. '</textarea>'
 				. '</p>' . "\n";
 		}
-		
+
 		echo '<h3>' . __('Config', 'sem-reloaded') . '</h3>' . "\n";
-		
+
 		echo '<p>'
 			. '<label>'
 			. '<input type="checkbox"'
@@ -3812,17 +3812,17 @@ class footer extends sem_nav_menu {
 			. __('Place the footer navigation menu and the copyright on a single line.', 'sem-reloaded')
 			. '</label>'
 			. '</p>' . "\n";
-		
+
 		parent::form($instance);
 	} # form()
-	
-	
+
+
 	/**
 	 * defaults()
 	 *
 	 * @return array $defaults
 	 **/
-	
+
 	function defaults() {
 		return array_merge(array(
 			'copyright' => __('Copyright %1$s, %2$s', 'sem-reloaded'),
@@ -3830,8 +3830,8 @@ class footer extends sem_nav_menu {
 			'float_footer' => false,
 			), parent::defaults());
 	} # defaults()
-	
-	
+
+
 	/**
 	 * default_items()
 	 *
@@ -3840,12 +3840,12 @@ class footer extends sem_nav_menu {
 
 	function default_items() {
 		$items = array(array('type' => 'home'));
-		
+
 		$roots = wp_cache_get(0, 'page_children');
-		
+
 		if ( !$roots )
 			return $items;
-		
+
 		$front_page_id = get_option('show_on_front') == 'page'
 			? (int) get_option('page_on_front')
 			: 0;
@@ -3857,13 +3857,13 @@ class footer extends sem_nav_menu {
 				continue;
 			if ( wp_cache_get($root_id, 'page_children') ) # only non-sections
 				continue;
-			
+
 			$items[] = array(
 				'type' => 'page',
 				'ref' => $root_id,
 				);
 		}
-		
+
 		return $items;
 	} # default_items()
 } # footer

@@ -53,7 +53,6 @@ add_option('sem_api_key', '');
 include sem_path . '/inc/panels.php';
 include sem_path . '/inc/widgets.php';
 include sem_path . '/inc/template.php';
-include sem_path . '/inc/wp-enhancements.php';
 
 if ( file_exists(sem_path . '/custom.php') )
 	include sem_path . '/custom.php';
