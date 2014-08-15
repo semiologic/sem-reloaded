@@ -27,6 +27,10 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 == Change Log ==
 
+= 1.4.3 =
+
+- Bug fix in 1.4.2 to handle text widgets above header and footer widgets had it's own bug.  Corrected.
+
 = 1.4.2 =
 
 - Removed wp-enhancements file and moved php widget enable to sem-fixes

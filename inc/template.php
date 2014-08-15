@@ -639,7 +639,7 @@ class sem_template {
 			if ( is_a($wp_registered_widgets[$widget_id]['callback'][0], 'WP_Widget') ) {
 				if ( !$did_footer ) {
 					if ( !$did_top_widgets ) {
-						echo '<div id="footer_top_wrapper" class="footer_section">' . "\n";
+						echo '<div id="footer_top_wrapper"><div id="footer_top_wrapper_bg">' . "\n";
 						$did_top_widgets = true;
 					}
 				}
