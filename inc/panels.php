@@ -9,7 +9,7 @@ class sem_panels {
     /**
      * sem_panels()
      */
-    function sem_panels() {
+	public function __construct() {
         sem_panels::register();
 
         if ( !defined('DOING_CRON') )

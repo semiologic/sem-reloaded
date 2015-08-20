@@ -9,7 +9,7 @@ class sem_skin {
     /**
      * sem_skin()
      */
-    function sem_skin() {
+	public function __construct() {
         add_action('appearance_page_skin', array($this, 'save_options'), 0);
         add_action('admin_head', array($this, 'admin_head'));
         wp_enqueue_script('jquery');

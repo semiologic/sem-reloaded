@@ -9,7 +9,7 @@ class sem_custom {
     /**
      * sem_custom()
      */
-    function sem_custom() {
+	public function __construct() {
         add_option('sem_custom', array(), false, 'no');
         add_option('sem_custom_published', array(), false, 'no');
 

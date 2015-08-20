@@ -48,7 +48,17 @@ body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fiel
 	padding:0;
 }
 
-fieldset, img {
+img {
+	-ms-interpolation-mode: bicubic;
+	border: 0;
+	vertical-align: middle;
+}
+
+figure {
+	margin: 0;
+}
+
+fieldset {
 	border:0;
 }
 
@@ -374,6 +384,48 @@ th {
 	margin: 5px 0px;
 }
 
+/*
+ * Responsive images
+ *
+ * Fluid images for posts, comments, and widgets
+ */
+img,
+.wp-caption {
+	max-width: 100%;
+}
+
+/* Make sure images with WordPress-added height and width attributes are scaled correctly. */
+img,
+img[class*="align"],
+img[class*="wp-image-"],
+img[class*="attachment-"] {
+	height: auto;
+}
+
+img.size-full,
+img.size-large,
+img.wp-post-image {
+	height: auto;
+	max-width: 100%;
+}
+
+embed,
+iframe,
+object,
+video {
+	max-width: 100%;
+}
+
+
+p > embed,
+p > iframe,
+p > object,
+span > embed,
+span > iframe,
+span > object {
+	margin-bottom: 0;
+}
+
 
 /*
  * Avatars
@@ -523,6 +575,7 @@ h2 a {
 .entry {
     word-wrap: break-word;
     overflow: hidden;
+	width: 100%;
 }
 /* Margins and Padding */
 

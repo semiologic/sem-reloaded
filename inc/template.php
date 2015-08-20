@@ -9,7 +9,7 @@ class sem_template {
     /**
      * sem_template()
      */
-    function sem_template() {
+	public function __construct() {
         if ( !is_admin() ) {
         	add_action('wp', array($this, 'wp'), 0);
         	add_action('template_redirect', array($this, 'template_redirect'), 0);

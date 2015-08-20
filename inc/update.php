@@ -9,7 +9,7 @@ class sem_update {
     /**
      * sem_update()
      */
-    function sem_update() {
+	public function __construct() {
         //if ( !empty($_REQUEST['action']) && ($_REQUEST['action'] == 'upgrade-theme' || $_REQUEST['action'] == 'update-selected-themes') ) {
             add_filter('upgrader_source_selection', array($this, 'upgrader_source_selection'), 10, 3);
         //}

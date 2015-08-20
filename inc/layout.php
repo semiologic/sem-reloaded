@@ -10,7 +10,7 @@ class sem_layout {
      * sem_layout()
      *
      */
-    function sem_layout() {
+	public function __construct() {
         add_action('appearance_page_layout', array($this, 'save_options'), 0);
         add_action('admin_head', array($this, 'admin_head'));
         wp_enqueue_script('jquery');

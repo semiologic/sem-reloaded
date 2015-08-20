@@ -9,7 +9,7 @@ class sem_header {
     /**
      * sem_header()
      */
-    function sem_header() {
+	public function __construct() {
         add_action('admin_enqueue_scripts', array($this, 'scripts'));
         add_action('appearance_page_header', array($this, 'save_options'), 0);
         add_action('save_post', array($this, 'save_entry'), 30);
