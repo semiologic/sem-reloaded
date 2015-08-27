@@ -1970,8 +1970,9 @@ class header extends WP_Widget {
 		list($width, $height) = $header_size;
 
 		$html = '<img src="' . sem_url . '/icons/pixel.gif"'
-			. ' height="' . intval($height) . '"'
-			. ' alt="'
+		        . ' width="' . intval($width) . '"'
+		        . ' height="' . intval($height) . '"'
+				. ' alt="'
 				. esc_attr(get_option('blogname'))
 				. ' &bull; '
 				. esc_attr(get_option('blogdescription'))
@@ -2257,6 +2258,7 @@ EOS;
 }
 .skin #header_img img {
     width: 100%;
+    height: 100%;
 }
 </style>
 

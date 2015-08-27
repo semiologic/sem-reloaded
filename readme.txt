@@ -1,9 +1,9 @@
 === Semiologic theme ===
 Contributors: Denis-de-Bernardy, Mike_Koepke
-Donate link: http://www.semiologic.com/partners/
-Tags: semiologic, wordpress theme
+Donate link: https://www.semiologic.com/partners/
+Tags: semiologic, sem-reloaded, wordpress theme
 Requires at least: 3.2
-Tested up to: 4.0
+Tested up to: 4.3
 Stable tag: trunk
 
 The Semiologic theme, Reloaded for WordPress.
@@ -16,7 +16,7 @@ The Semiologic theme, Reloaded for WordPress.
 
 = Help Me! =
 
-The [Semiologic forum](http://forum.semiologic.com) is the best place to report issues.
+The [Semiologic Support Page](https://www.semiologic.com/support/) is the best place to report issues.
 
 
 == Installation ==
@@ -26,6 +26,15 @@ The [Semiologic forum](http://forum.semiologic.com) is the best place to report 
 
 
 == Change Log ==
+
+= 1.6 =
+
+- Make images responsive and relative to their parent container.
+- Ensure header image fits it's max and min size and clickable region doesn't overextended
+- Minor bugs and css tweaks
+- Updated to use PHP5 constructors as WP deprecated PHP4 constructor type in 4.3.
+- WP 4.3 compat
+- Tested against PHP 5.6
 
 = 1.5 =
 

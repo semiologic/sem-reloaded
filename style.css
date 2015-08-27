@@ -2,7 +2,7 @@
 Theme Name: Semiologic
 Theme URI: http://www.semiologic.com/software/sem-reloaded/
 Description: The Semiologic theme, Reloaded.
-Version: 1.5
+Version: 1.6
 Author: Denis de Bernardy & Mike Koepke
 Author URI: http://www.semiologic.com
 Text Domain: sem-reloaded
@@ -389,41 +389,22 @@ th {
  *
  * Fluid images for posts, comments, and widgets
  */
+embed,
+iframe,
 img,
+object,
+video,
 .wp-caption {
 	max-width: 100%;
 }
 
-/* Make sure images with WordPress-added height and width attributes are scaled correctly. */
-img,
-img[class*="align"],
-img[class*="wp-image-"],
-img[class*="attachment-"] {
+img {
 	height: auto;
 }
 
-img.size-full,
-img.size-large,
-img.wp-post-image {
-	height: auto;
-	max-width: 100%;
-}
-
-embed,
-iframe,
-object,
-video {
-	max-width: 100%;
-}
-
-
-p > embed,
-p > iframe,
-p > object,
-span > embed,
-span > iframe,
-span > object {
-	margin-bottom: 0;
+.featured-content img,
+.gallery img {
+	width: auto;
 }
 
 
@@ -447,6 +428,10 @@ img.avatar {
 .now-reading ul,
 .widget_democracy ul {
 	list-style: none !important;
+}
+
+.widget.author_image {
+	overflow: hidden;
 }
 
 .entry_actions a,
