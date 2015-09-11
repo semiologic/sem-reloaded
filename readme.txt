@@ -27,6 +27,10 @@ The [Semiologic Support Page](https://www.semiologic.com/support/) is the best p
 
 == Change Log ==
 
+= 1.6.1 =
+
+- Add css tweak to not make image sizes in tables in page/post content responsive
+
 = 1.6 =
 
 - Make images responsive and relative to their parent container.
