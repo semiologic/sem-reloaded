@@ -399,7 +399,12 @@ video,
 }
 
 /* exclude out those images in a table used in entry content formatting */
-.entry_content td embed, iframe, img, object, video, .wp-caption {
+.entry_content td embed,
+.entry_content td iframe,
+.entry_content td img,
+.entry_content td object,
+.entry_content td video,
+.entry_content td .wp-caption {
     max-width: none;
 }
 
